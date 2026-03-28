@@ -111,7 +111,10 @@
     .quote-layout { display: grid; grid-template-columns: .95fr 1fr; gap: 24px; align-items: start; }
     .book-area { display: flex; justify-content: center; }
     .book {
-      width: min(100%, 520px); aspect-ratio: 10 / 7.2; position: relative; perspective: 1800px;
+      width: min(100%, 560px);
+      height: 860px;
+      position: relative;
+      perspective: 1800px;
     }
     .book-cover {
       position: absolute; inset: 0; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
@@ -127,6 +130,7 @@
     .book-pages {
       position: absolute; inset: 0; border-radius: 22px; padding: 14px; background: linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
       box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.08);
+      height: 860px;
     }
     .page-sheet {
       height: 100%; border-radius: 18px; padding: 20px; background:
@@ -134,13 +138,37 @@
       linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.2)),
       var(--paper);
       color: var(--ink); box-shadow: inset 0 0 0 1px rgba(80,50,20,.1), 0 12px 26px rgba(0,0,0,.18); display: flex; flex-direction: column;
+      min-height: 832px;
     }
     .page-header { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; }
     .page-title { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 1.7rem; color: #402819; }
     .page-num { font-size: .85rem; color: var(--ink-soft); }
-    .page-body { overflow: auto; padding-right: 6px; }
-    .book-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; }
-    .book-nav button { box-shadow: none; }
+    .page-body {
+      overflow: visible;
+      padding-right: 6px;
+      flex: 1;
+    }
+    .book-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .book-nav button {
+      box-shadow: none;
+      background: #111;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .book-nav button:hover {
+      background: #000;
+    }
+    .book-nav button:disabled {
+      background: #333;
+      color: rgba(255,255,255,.6);
+      cursor: not-allowed;
+      transform: none;
+    }
     .quote-entry { border-radius: 14px; padding: 12px; background: rgba(255,255,255,.45); border: 1px solid rgba(80,50,20,.12); margin-bottom: 10px; }
     .quote-topic { font-size: 1rem; font-weight: 900; color: #4a2e1c; margin-bottom: 4px; }
     .quote-ref-mini { font-size: .82rem; color: var(--ink-soft); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
@@ -167,7 +195,9 @@
 
     @media (max-width: 1020px) {
       .grid, .quote-layout { grid-template-columns: 1fr; }
-      .book { width: min(100%, 680px); }
+      .book { width: min(100%, 680px); height: 900px; }
+      .book-pages { height: 900px; }
+      .page-sheet { min-height: 872px; }
     }
   </style>
 </head>
@@ -222,7 +252,7 @@
             <div class="book-cover" id="bookCover">
               <div style="font-size:4rem;">📚</div>
               <div class="book-cover-title">Quote Book</div>
-              <div class="book-cover-sub">Click to open, then flick through the pages. Each page holds a normal-sized set of quotations rather than one long stretched list.</div>
+              <div class="book-cover-sub">The top only bible quotes you'll need to get A* for sure</div>
             </div>
             <div class="book-pages">
               <div class="page-sheet">
