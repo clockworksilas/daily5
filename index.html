@@ -25,6 +25,7 @@
       --highlight: #fff0a8;
       --book-cover: #6b4527;
       --book-cover-2: #8a5b34;
+      --rewrite-blue: #8ec5ff;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -71,6 +72,7 @@
       transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease; box-shadow: 0 10px 24px rgba(0,0,0,0.18);
     }
     button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: .7; cursor: not-allowed; transform: none !important; }
     .primary { background: linear-gradient(135deg, var(--accent), #b6c8ff); color: #11172c; }
     .secondary { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
     .hidden { display: none !important; }
@@ -86,9 +88,11 @@
       border: 1px solid rgba(145,242,195,.18); padding: 8px 10px; border-radius: 999px; white-space: nowrap;
     }
     .q-title { margin: 0; font-size: 1.08rem; line-height: 1.45; }
+    .textarea-anim-wrap { position: relative; }
     textarea {
       width: 100%; min-height: 128px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: var(--panel-2);
       color: var(--text); padding: 14px; resize: vertical; font: inherit; line-height: 1.5; outline: none;
+      transition: box-shadow .25s ease, border-color .25s ease, color .25s ease;
     }
     textarea:focus { border-color: rgba(124,156,255,.5); box-shadow: 0 0 0 4px rgba(124,156,255,.12); }
     .helper { margin-top: 8px; color: var(--muted); font-size: .88rem; }
@@ -107,6 +111,48 @@
     .footer-note { margin-top: 12px; padding: 14px; border-radius: 16px; background: rgba(255,255,255,.04); border: 1px solid var(--border); color: var(--muted); font-size: .9rem; line-height: 1.55; }
     .topic-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .topic { border-radius: 999px; padding: 8px 10px; background: rgba(255,255,255,.06); border: 1px solid var(--border); color: var(--muted); font-size: .82rem; }
+    .rewrite-btn { margin-top: 10px; }
+
+    .answer-falling {
+      animation: answerFall 700ms ease-in forwards;
+      transform-origin: center top;
+    }
+    .answer-hammered {
+      color: var(--rewrite-blue) !important;
+      border-color: rgba(142,197,255,.5) !important;
+      animation: hammerIn 850ms cubic-bezier(.2,.9,.2,1);
+      box-shadow: 0 0 0 1px rgba(142,197,255,.15), 0 0 30px rgba(124,156,255,.18) !important;
+    }
+    @keyframes answerFall {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+        filter: blur(0);
+      }
+      35% { transform: translateY(18px) rotate(-2deg) scale(0.99); }
+      100% {
+        opacity: 0;
+        transform: translateY(180px) rotate(-14deg) scale(0.9);
+        filter: blur(6px);
+      }
+    }
+    @keyframes hammerIn {
+      0% {
+        transform: translateY(-55px) scale(1.04);
+        opacity: 0;
+        letter-spacing: 0.02em;
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+      }
+      45% {
+        transform: translateY(12px) scale(1.01);
+        opacity: 1;
+      }
+      65% { transform: translateY(-6px) scale(1); }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
 
     .quote-layout { display: grid; grid-template-columns: .95fr 1fr; gap: 24px; align-items: start; }
     .book-area { display: flex; justify-content: center; }
@@ -143,17 +189,8 @@
     .page-header { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; }
     .page-title { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 1.7rem; color: #402819; }
     .page-num { font-size: .85rem; color: var(--ink-soft); }
-    .page-body {
-      overflow: visible;
-      padding-right: 6px;
-      flex: 1;
-    }
-    .book-nav {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 14px;
-    }
+    .page-body { overflow: visible; padding-right: 6px; flex: 1; }
+    .book-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; }
     .book-nav button {
       box-shadow: none;
       background: #111;
@@ -205,12 +242,7 @@
       border-color: rgba(124,156,255,.5);
       box-shadow: 0 0 0 4px rgba(124,156,255,.12);
     }
-    .login-status {
-      margin-top: 12px;
-      font-size: .92rem;
-      color: var(--muted);
-      min-height: 1.3em;
-    }
+    .login-status { margin-top: 12px; font-size: .92rem; color: var(--muted); min-height: 1.3em; }
 
     @media (max-width: 1020px) {
       .grid, .quote-layout { grid-template-columns: 1fr; }
@@ -534,11 +566,9 @@
     function getSavedPassword() {
       return localStorage.getItem(STORAGE_KEYS.sitePassword) || '';
     }
-
     function savePassword(password) {
       localStorage.setItem(STORAGE_KEYS.sitePassword, password);
     }
-
     function clearSavedPassword() {
       localStorage.removeItem(STORAGE_KEYS.sitePassword);
     }
@@ -665,6 +695,41 @@
       }
     }
 
+    async function rewriteAnswerWithAI(question, answer) {
+      const password = getSavedPassword();
+      if (!password) return null;
+
+      const trimmed = (answer || '').trim();
+      if (trimmed.length < MIN_MEANINGFUL_CHARS) return null;
+
+      try {
+        const res = await fetch(`${WORKER_BASE_URL}/api/rewrite`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            password,
+            question: question.question,
+            topic: question.topic,
+            requiresScripture: question.requiresScripture,
+            keywords: question.keywords,
+            model: question.model,
+            answer
+          })
+        });
+
+        if (!res.ok) {
+          if (res.status === 401) clearSavedPassword();
+          return null;
+        }
+
+        const data = await res.json().catch(() => null);
+        if (!data || !data.ok || !data.rewrittenAnswer) return null;
+        return data.rewrittenAnswer;
+      } catch {
+        return null;
+      }
+    }
+
     function renderQuestions() {
       questionsWrap.innerHTML = currentSet.map((q, i) => `
         <article class="q-card">
@@ -675,7 +740,9 @@
             </div>
             <div class="q-type">${q.type}</div>
           </div>
-          <textarea id="answer-${i}" placeholder="Type your answer here..."></textarea>
+          <div class="textarea-anim-wrap">
+            <textarea id="answer-${i}" placeholder="Type your answer here..."></textarea>
+          </div>
           <div class="helper">Tip: short but accurate answers can still be correct. Only use scripture if the question specifically asks for it.</div>
         </article>
       `).join('');
@@ -698,7 +765,8 @@
           label: 'Not enough yet',
           cls: 'incorrect',
           feedback: 'Type at least one small accurate point so the marker can judge it.',
-          hits: []
+          hits: [],
+          aiModelAnswer: question.model
         };
       }
 
@@ -758,6 +826,26 @@
       return { percentage, label, cls, feedback, hits: matchedKeywords, aiModelAnswer: question.model };
     }
 
+    async function animateRewriteIntoTextarea(index, newText) {
+      const textarea = document.getElementById(`answer-${index}`);
+      if (!textarea) return;
+
+      textarea.classList.remove('answer-hammered');
+      textarea.classList.add('answer-falling');
+
+      await new Promise(resolve => setTimeout(resolve, 720));
+
+      textarea.value = newText;
+      textarea.classList.remove('answer-falling');
+
+      void textarea.offsetWidth;
+      textarea.classList.add('answer-hammered');
+
+      setTimeout(() => {
+        textarea.classList.remove('answer-hammered');
+      }, 1200);
+    }
+
     function renderMarkedResults(evaluations) {
       const avg = Math.round(evaluations.reduce((sum, item) => sum + item.result.percentage, 0) / evaluations.length);
       overallScore.textContent = `${avg}%`;
@@ -784,6 +872,7 @@
           <div class="small"><strong>Feedback:</strong> ${item.result.feedback}</div>
           <div class="small" style="margin-top:8px;"><strong>Model answer idea:</strong> ${item.result.aiModelAnswer || item.question.model}</div>
           <div class="small" style="margin-top:8px;"><strong>${item.question.requiresScripture ? 'Scripture hint' : 'Extra support hint'}:</strong> ${item.question.quote}</div>
+          <button class="primary rewrite-btn" data-rewrite-index="${i}">Generate me a model answer</button>
           <div class="topic-list">
             ${item.result.hits.length
               ? item.result.hits.slice(0, 8).map(hit => `<span class="topic">✓ ${hit}</span>`).join('')
@@ -791,6 +880,37 @@
           </div>
         </div>
       `).join('');
+
+      document.querySelectorAll('.rewrite-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const index = Number(btn.dataset.rewriteIndex);
+          const item = evaluations[index];
+          const currentAnswer = document.getElementById(`answer-${index}`)?.value || '';
+
+          if (!currentAnswer.trim()) {
+            btn.textContent = 'Write something first';
+            setTimeout(() => btn.textContent = 'Generate me a model answer', 1200);
+            return;
+          }
+
+          btn.disabled = true;
+          btn.textContent = 'Generating...';
+
+          const rewritten = await rewriteAnswerWithAI(item.question, currentAnswer);
+
+          if (rewritten) {
+            await animateRewriteIntoTextarea(index, rewritten);
+            btn.textContent = 'Done';
+          } else {
+            btn.textContent = 'Failed';
+          }
+
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = 'Generate me a model answer';
+          }, 1400);
+        });
+      });
     }
 
     async function markAnswers() {
@@ -959,14 +1079,8 @@
     });
 
     bookCover.addEventListener('click', () => book.classList.toggle('open'));
-    prevPageBtn.addEventListener('click', () => {
-      currentPageIndex--;
-      renderQuotePage();
-    });
-    nextPageBtn.addEventListener('click', () => {
-      currentPageIndex++;
-      renderQuotePage();
-    });
+    prevPageBtn.addEventListener('click', () => { currentPageIndex--; renderQuotePage(); });
+    nextPageBtn.addEventListener('click', () => { currentPageIndex++; renderQuotePage(); });
 
     loginBtn.addEventListener('click', () => {
       const password = passwordInput.value.trim();
