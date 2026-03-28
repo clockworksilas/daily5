@@ -5,880 +5,880 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daily 5 Questions Complete</title>
   <style>
-  :root {
-    --bg: #203a2d;
-    --bg-deep: #16281f;
-    --chalk: #f6f7ef;
-    --chalk-soft: #d7dfd2;
-    --board-line: rgba(255,255,255,0.05);
-
-    --panel: #fffdf6;
-    --panel-2: #f8f2dd;
-    --paper: #fffdf5;
-    --paper-clean: #fffdf7;
-    --paper-edge: #efe4c8;
-    --paper-shadow: rgba(73, 54, 30, 0.14);
-
-    --text: #2f2418;
-    --muted: #6e6253;
-    --accent: #e1b85c;
-    --accent-2: #b7dfb1;
-    --danger: #b94d4d;
-    --warning: #c7861f;
-    --border: rgba(70, 48, 24, 0.14);
-    --shadow: 0 22px 50px rgba(0,0,0,0.22);
-    --radius: 24px;
-
-    --highlight: #fff0a8;
-    --book-cover: #6a4727;
-    --book-cover-2: #8d6237;
-    --rewrite-blue: #4f7fc7;
-    --sidebar-w: 118px;
-
-    --cork-1: #b98555;
-    --cork-2: #9f6e45;
-    --cork-3: #d0a171;
-    --pin-red: #c84b4b;
-    --pin-blue: #4f7fc7;
-    --pin-green: #4f8a5b;
-  }
-
-  * { box-sizing: border-box; }
-
-  html, body {
-    margin: 0;
-    min-height: 100%;
-    font-family: "Trebuchet MS", "Segoe UI", Inter, system-ui, sans-serif;
-    color: var(--text);
-    background:
-      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.08), transparent 0 18%),
-      radial-gradient(circle at 80% 15%, rgba(255,255,255,0.04), transparent 0 14%),
-      repeating-linear-gradient(
-        to bottom,
-        transparent 0 34px,
-        var(--board-line) 34px 35px
-      ),
-      linear-gradient(180deg, #2a523e 0%, var(--bg) 35%, var(--bg-deep) 100%);
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at center, transparent 0 60%, rgba(0,0,0,0.12) 100%);
-    z-index: 0;
-  }
-
-  body.sidebar-open { padding-left: calc(var(--sidebar-w) + 16px); }
-
-  .left-subjects {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: var(--sidebar-w);
-    padding: 18px 12px;
-    border-right: 2px solid rgba(255,255,255,0.06);
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.05)),
-      linear-gradient(180deg, #1f3a2d, #15261d);
-    box-shadow: inset -8px 0 18px rgba(0,0,0,0.12);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 50;
-  }
-
-  .subject-brand {
-    border-radius: 18px;
-    padding: 16px 10px;
-    text-align: center;
-    font-weight: 900;
-    letter-spacing: .06em;
-    border: 2px dashed rgba(255,255,255,0.18);
-    background: rgba(0,0,0,0.12);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-    font-size: .82rem;
-    color: var(--chalk);
-    line-height: 1.45;
-    text-transform: uppercase;
-  }
-
-  .subject-btn {
-    width: 100%;
-    border: 2px solid rgba(255,255,255,.08);
-    border-radius: 24px;
-    padding: 16px 10px;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
-      rgba(0,0,0,0.12);
-    color: var(--chalk);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 12px 24px rgba(0,0,0,.16);
-    min-height: 120px;
-    position: relative;
-  }
-
-  .subject-btn::after {
-    content: "";
-    position: absolute;
-    inset: 8px;
-    border-radius: 18px;
-    border: 1px dashed rgba(255,255,255,0.08);
-    pointer-events: none;
-  }
-
-  .subject-btn .icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 16px;
-    display: grid;
-    place-items: center;
-    font-size: 1.5rem;
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.12);
-  }
-
-  .subject-btn .label {
-    font-weight: 900;
-    font-size: .88rem;
-    line-height: 1.25;
-    text-align: center;
-  }
-
-  .subject-btn .small-label {
-    font-size: .72rem;
-    color: rgba(255,255,255,0.72);
-    text-align: center;
-    line-height: 1.3;
-  }
-
-  .subject-btn.active {
-    background: linear-gradient(180deg, #f0d596, #ddb35b);
-    color: #2b2114;
-    border-color: rgba(78,51,16,.18);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.2);
-    transform: translateY(-1px);
-  }
-
-  .subject-btn.active .small-label { color: #5d4527; }
-
-  .subject-btn.active .icon {
-    background: rgba(255,255,255,.35);
-    border-color: rgba(78,51,16,.12);
-  }
-
-  .wrap {
-    position: relative;
-    z-index: 1;
-    width: min(1280px, calc(100% - 28px));
-    margin: 26px auto 60px;
-  }
-
-  .wrap::before,
-  .wrap::after {
-    position: fixed;
-    z-index: 0;
-    pointer-events: none;
-    color: rgba(255,255,255,0.14);
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    white-space: pre;
-  }
-
-  .wrap::before {
-    content: "A+\A ?\A ★";
-    left: 140px;
-    top: 120px;
-    transform: rotate(-8deg);
-  }
-
-  .wrap::after {
-    content: "✓\A revise\A →";
-    right: 36px;
-    bottom: 80px;
-    transform: rotate(6deg);
-  }
-
-  .top-tabs-shell {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 18px;
-  }
-
-  .top-tabs {
-    display: inline-flex;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 22px;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.08)),
-      linear-gradient(180deg, #234030, #1a2e23);
-    border: 2px solid rgba(255,255,255,0.08);
-    box-shadow: 0 14px 34px rgba(0,0,0,0.2);
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .tab-btn {
-    cursor: pointer;
-    user-select: none;
-    min-width: 210px;
-    text-align: center;
-    padding: 15px 22px;
-    border-radius: 18px 18px 12px 12px;
-    font-weight: 900;
-    letter-spacing: 0.01em;
-    border: 2px solid rgba(86,58,28,0.12);
-    color: var(--text);
-    background: linear-gradient(180deg, #fffef9, #f2ead3);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-    transition: .18s ease;
-    position: relative;
-    top: 0;
-  }
-
-  .tab-btn:hover { transform: translateY(-2px); }
-
-  .tab-btn.active {
-    background: linear-gradient(180deg, #f3dda7, #deb05b);
-    color: #2a2014;
-    border-color: rgba(86,58,28,0.14);
-    box-shadow: 0 12px 20px rgba(0,0,0,0.16);
-  }
-
-  .hero,
-  .quote-view,
-  .modal {
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.8), rgba(248,240,216,0.98)),
-      var(--panel);
-    border: 2px solid var(--border);
-    box-shadow: var(--shadow);
-    position: relative;
-  }
-
-  .panel {
-    border-radius: var(--radius);
-    padding: 20px;
-    background:
-      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 0 2px, transparent 2px 100%),
-      radial-gradient(circle at 70% 40%, rgba(0,0,0,0.05) 0 2px, transparent 2px 100%),
-      radial-gradient(circle at 40% 80%, rgba(255,255,255,0.06) 0 1.5px, transparent 1.5px 100%),
-      linear-gradient(135deg, var(--cork-3), var(--cork-1) 45%, var(--cork-2));
-    border: 2px solid rgba(87,55,29,0.2);
-    box-shadow: var(--shadow);
-    position: relative;
-  }
-
-  .hero::before,
-  .quote-view::before,
-  .modal::before {
-    content: "";
-    position: absolute;
-    inset: 10px;
-    border: 1px dashed rgba(116,88,52,0.12);
-    border-radius: inherit;
-    pointer-events: none;
-  }
-
-  .panel::before {
-    content: "";
-    position: absolute;
-    inset: 10px;
-    border: 1px dashed rgba(255,244,220,0.22);
-    border-radius: inherit;
-    pointer-events: none;
-  }
-
-  .hero {
-    border-radius: 30px;
-    padding: 28px;
-    margin-bottom: 20px;
-  }
-
-  .hero::after {
-    content: "★  revision notes   +  test yourself   ✓";
-    position: absolute;
-    right: 28px;
-    bottom: 16px;
-    font-size: 1rem;
-    letter-spacing: .04em;
-    color: rgba(255,255,255,0.18);
-    font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
-    pointer-events: none;
-    transform: rotate(-2deg);
-  }
-
-  .hero-top {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  h1 {
-    margin: 0 0 8px;
-    font-size: clamp(2rem, 4vw, 3.1rem);
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: #2b2014;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
-  }
-
-  .sub {
-    color: var(--muted);
-    font-size: 1rem;
-    max-width: 850px;
-    line-height: 1.65;
-    margin: 0;
-  }
-
-  .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-
-  .badge,
-  .topic,
-  .pill {
-    border-radius: 999px;
-    font-weight: 800;
-  }
-
-  .badge {
-    background: #fff8df;
-    color: #5a4427;
-    padding: 10px 14px;
-    border: 2px solid rgba(120,86,34,0.12);
-    font-size: .92rem;
-    box-shadow: 0 5px 12px rgba(0,0,0,0.06);
-  }
-
-  .btns { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-
-  button {
-    border: 0;
-    border-radius: 14px;
-    padding: 12px 16px;
-    font-size: .98rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.14);
-  }
-
-  button:hover { transform: translateY(-1px); }
-  button:disabled { opacity: .7; cursor: not-allowed; transform: none !important; }
-
-  .primary {
-    background: linear-gradient(180deg, #f0d58e, #dcae53);
-    color: #2b2114;
-    border: 1px solid rgba(90,64,28,0.14);
-  }
-
-  .secondary {
-    background: linear-gradient(180deg, #fefcf5, #eee2bf);
-    color: #3a2c1d;
-    border: 1px solid rgba(90,64,28,0.12);
-  }
-
-  .hidden { display: none !important; }
-
-  .grid { display: grid; grid-template-columns: 1.55fr .9fr; gap: 20px; align-items: start; }
-
-  .q-card,
-  .result-card,
-  .essay-result-card,
-  .score-box,
-  .footer-note,
-  .quote-card {
-    background: linear-gradient(180deg, var(--paper-clean), var(--paper-edge));
-    color: var(--text);
-    border: 2px solid rgba(111,82,45,0.12);
-    box-shadow: 0 10px 20px var(--paper-shadow);
-    position: relative;
-  }
-
-  .q-card::before,
-  .score-box::before,
-  .result-card::before,
-  .essay-result-card::before,
-  .quote-card::before,
-  .footer-note::before {
-    content: "";
-    position: absolute;
-    width: 22px;
-    height: 34px;
-    top: -14px;
-    right: 20px;
-    border: 3px solid #9aa3ad;
-    border-bottom: 0;
-    border-radius: 12px 12px 0 0;
-    transform: rotate(8deg);
-    opacity: 0.95;
-    pointer-events: none;
-  }
-
-  .q-card::after,
-  .score-box::after,
-  .result-card::after,
-  .essay-result-card::after,
-  .quote-card::after,
-  .footer-note::after {
-    content: "";
-    position: absolute;
-    width: 12px;
-    height: 20px;
-    top: -6px;
-    right: 25px;
-    border: 3px solid #cfd5db;
-    border-bottom: 0;
-    border-radius: 9px 9px 0 0;
-    transform: rotate(8deg);
-    pointer-events: none;
-  }
-
-  .q-card {
-    border-radius: 20px;
-    padding: 18px;
-    margin-bottom: 16px;
-  }
-
-  .q-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: start;
-    margin-bottom: 10px;
-  }
-
-  .q-type {
-    font-size: .76rem;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #315233;
-    background: #edf7e7;
-    border: 1px solid rgba(49,82,51,.18);
-    padding: 8px 10px;
-    border-radius: 999px;
-    white-space: nowrap;
-    font-weight: 900;
-  }
-
-  .q-title { margin: 0; font-size: 1.08rem; line-height: 1.45; color: #2f2418; }
-  .textarea-anim-wrap { position: relative; }
-
-  textarea, .input, select {
-    width: 100%;
-    border-radius: 16px;
-    border: 2px solid rgba(88,70,42,.12);
-    background: linear-gradient(180deg, #fffefb, #f6eed7);
-    color: var(--text);
-    padding: 14px 16px;
-    font: inherit;
-    line-height: 1.7;
-    outline: none;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
-  }
-
-  textarea {
-    min-height: 128px;
-    resize: vertical;
-    transition: box-shadow .25s ease, border-color .25s ease, color .25s ease;
-  }
-
-  textarea:focus, .input:focus, select:focus {
-    border-color: rgba(186,142,61,.6);
-    box-shadow: 0 0 0 4px rgba(222,176,91,.18);
-  }
-
-  .helper {
-    margin-top: 8px;
-    color: var(--muted);
-    font-size: .88rem;
-  }
-
-  .side-title {
-    margin: 0 0 14px;
-    font-size: 1.12rem;
-    color: #2f2418;
-    position: relative;
-  }
-
-  .side-title::before {
-    content: "";
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-right: 10px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #fff6f6 0 20%, var(--pin-red) 22% 100%);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.18);
-    vertical-align: middle;
-  }
-
-  .score-box {
-    padding: 16px;
-    border-radius: 18px;
-    margin-bottom: 16px;
-  }
-
-  .score-box > .small:first-child::before {
-    content: "";
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-right: 10px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #fff6f6 0 20%, var(--pin-red) 22% 100%);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.18);
-    vertical-align: middle;
-  }
-
-  .big-score {
-    font-size: 2.8rem;
-    font-weight: 900;
-    margin: 4px 0 6px;
-    letter-spacing: -0.04em;
-    color: #2d2417;
-  }
-
-  .small {
-    color: var(--muted);
-    font-size: .92rem;
-    line-height: 1.5;
-  }
-
-  .result-card, .essay-result-card {
-    border-radius: 10px;
-    padding: 14px 14px 22px;
-    margin-bottom: 18px;
-    background: linear-gradient(180deg, #fffefc, #f3ead4);
-    border: 1px solid rgba(80,50,20,.14);
-    box-shadow:
-      0 14px 24px rgba(0,0,0,0.14),
-      0 2px 0 rgba(255,255,255,0.55) inset;
-    transform: rotate(-1.2deg);
-  }
-
-  .result-card:nth-child(even),
-  .essay-result-card:nth-child(even) {
-    transform: rotate(1.1deg);
-  }
-
-  .result-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed rgba(90,64,28,0.16);
-  }
-
-  .pill {
-    padding: 8px 10px;
-    font-size: .8rem;
-    white-space: nowrap;
-  }
-
-  .correct {
-    background: rgba(166,215,164,.18);
-    color: #2f6a34;
-    border: 1px solid rgba(47,106,52,.2);
-  }
-
-  .partial {
-    background: rgba(232,191,101,.18);
-    color: #8a6212;
-    border: 1px solid rgba(138,98,18,.18);
-  }
-
-  .incorrect {
-    background: rgba(201,102,102,.15);
-    color: #9e3838;
-    border: 1px solid rgba(158,56,56,.16);
-  }
-
-  .progress {
-    height: 14px;
-    border-radius: 999px;
-    background: rgba(70,52,28,.08);
-    overflow: hidden;
-    margin: 12px 0 4px;
-    border: 1px solid rgba(70,52,28,.08);
-  }
-
-  .progress > div {
-    height: 100%;
-    background: linear-gradient(90deg, #d9aa49, #98c78d);
-    width: 0%;
-    transition: width .25s ease;
-  }
-
-  .footer-note {
-    margin-top: 12px;
-    padding: 14px;
-    border-radius: 16px;
-    font-size: .9rem;
-    line-height: 1.6;
-  }
-
-  .topic-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-
-  .topic {
-    padding: 8px 10px;
-    background: #fff8e0;
-    border: 1px solid rgba(90,64,28,.12);
-    color: #6e6253;
-    font-size: .82rem;
-  }
-
-  .rewrite-btn { margin-top: 10px; }
-
-  .essay-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; align-items: start; }
-  .essay-controls { display: grid; grid-template-columns: 1fr 260px; gap: 14px; margin-bottom: 14px; }
-  .essay-meta { display: grid; gap: 12px; }
-  .essay-answer-box textarea { min-height: 360px; }
-  .essay-improve-output textarea { min-height: 360px; }
-  .essay-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-  .essay-list { margin: 10px 0 0; padding-left: 18px; color: var(--muted); }
-  .essay-list li { margin-bottom: 8px; }
-  .essay-grade { font-size: 1.05rem; font-weight: 800; color: #466e3f; }
-
-  .answer-falling { animation: answerFall 700ms ease-in forwards; transform-origin: center top; }
-
-  .answer-hammered {
-    color: var(--rewrite-blue) !important;
-    border-color: rgba(79,127,199,.45) !important;
-    animation: hammerIn 850ms cubic-bezier(.2,.9,.2,1);
-    box-shadow: 0 0 0 1px rgba(79,127,199,.12), 0 0 28px rgba(79,127,199,.12) !important;
-  }
-
-  @keyframes answerFall {
-    0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); filter: blur(0); }
-    35% { transform: translateY(18px) rotate(-2deg) scale(0.99); }
-    100% { opacity: 0; transform: translateY(180px) rotate(-14deg) scale(0.9); filter: blur(6px); }
-  }
-
-  @keyframes hammerIn {
-    0% { transform: translateY(-55px) scale(1.04); opacity: 0; letter-spacing: 0.02em; }
-    45% { transform: translateY(12px) scale(1.01); opacity: 1; }
-    65% { transform: translateY(-6px) scale(1); }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
-  }
-
-  .quote-layout { display: grid; grid-template-columns: .95fr 1fr; gap: 24px; align-items: start; }
-  .book-area { display: flex; justify-content: center; }
-  .book { width: min(100%, 560px); height: 860px; position: relative; perspective: 1800px; }
-
-  .book-cover {
-    position: absolute;
-    inset: 0;
-    border-radius: 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    background:
-      linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.12)),
-      repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 12px),
-      linear-gradient(135deg, var(--book-cover), var(--book-cover-2) 54%, #4b2d17);
-    border: 2px solid rgba(255,255,255,.08);
-    box-shadow: var(--shadow);
-    transform-origin: left center;
-    transition: transform .7s ease;
-    z-index: 3;
-    cursor: pointer;
-    color: #fffdf4;
-  }
-
-  .book-cover::after {
-    content: "";
-    position: absolute;
-    inset: 16px;
-    border: 1px dashed rgba(255,255,255,0.18);
-    border-radius: 14px;
-  }
-
-  .book.open .book-cover { transform: rotateY(-140deg); }
-  .book-cover-title { font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 900; letter-spacing: -.03em; }
-  .book-cover-sub { max-width: 280px; text-align: center; color: rgba(255,255,255,.88); line-height: 1.6; }
-
-  .book-pages {
-    position: absolute;
-    inset: 0;
-    border-radius: 22px;
-    padding: 14px;
-    background: linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(255,255,255,.08);
-    height: 860px;
-  }
-
-  .page-sheet {
-    height: 100%;
-    border-radius: 18px;
-    padding: 20px;
-    background: linear-gradient(180deg, #fffef8, #f8efd7);
-    color: #3a2819;
-    box-shadow: inset 0 0 0 1px rgba(80,50,20,.08), 0 12px 26px rgba(0,0,0,.18);
-    display: flex;
-    flex-direction: column;
-    min-height: 832px;
-    position: relative;
-  }
-
-  .page-sheet::before {
-    content: "";
-    position: absolute;
-    width: 18px;
-    height: 30px;
-    top: -10px;
-    right: 34px;
-    border: 3px solid #a5adb6;
-    border-bottom: 0;
-    border-radius: 12px 12px 0 0;
-    transform: rotate(6deg);
-    pointer-events: none;
-  }
-
-  .page-header { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; }
-  .page-title { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 1.7rem; color: #402819; }
-  .page-num { font-size: .85rem; color: #6d5848; }
-  .page-body { overflow: visible; padding-right: 6px; flex: 1; }
-
-  .book-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; }
-
-  .book-nav button {
-    box-shadow: none;
-    background: linear-gradient(180deg, #f1d59a, #ddb25f);
-    color: #2b2114;
-    border: 1px solid rgba(80,50,20,.12);
-  }
-
-  .book-nav button:hover { background: linear-gradient(180deg, #f4ddb0, #e1b96d); }
-  .book-nav button:disabled { background: #d1c8b5; color: rgba(50,40,30,.6); cursor: not-allowed; transform: none; }
-
-  .quote-entry {
-    border-radius: 14px;
-    padding: 12px;
-    background: rgba(255,255,255,.58);
-    border: 1px solid rgba(80,50,20,.1);
-    margin-bottom: 10px;
-  }
-
-  .quote-topic { font-size: 1rem; font-weight: 900; color: #4a2e1c; margin-bottom: 4px; }
-  .quote-ref-mini { font-size: .82rem; color: #7a6450; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
-  .quote-mini { font-family: Georgia, "Times New Roman", serif; line-height: 1.6; color: #3f2b1d; }
-
-  .open-quote {
-    margin-top: 8px;
-    padding: 9px 12px;
-    border-radius: 999px;
-    background: #fff3bf;
-    color: #3d2a1a;
-    border: 1px solid rgba(80,50,20,.14);
-    box-shadow: none;
-  }
-
-  .quote-view {
-    border-radius: 26px;
-    padding: 22px;
-    min-height: 420px;
-  }
-
-  .quote-card {
-    border-radius: 22px;
-    padding: 18px;
-    margin-bottom: 16px;
-  }
-
-  .quote-ref {
-    color: #4d6e3d;
-    font-size: .88rem;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    margin-bottom: 8px;
-    font-weight: 900;
-  }
-
-  .full-verse {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 1.1rem;
-    line-height: 1.9;
-    color: #332619;
-    margin: 0;
-  }
-
-  mark.note-highlight {
-    background: var(--highlight);
-    color: #2a2110;
-    padding: .08em .2em;
-    border-radius: 6px;
-  }
-
-  .interp { color: var(--muted); line-height: 1.75; font-size: .98rem; }
-  .interp strong { color: #2d2417; }
-
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(10,18,14,.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-  }
-
-  .modal {
-    width: min(560px, 100%);
-    border-radius: 24px;
-    padding: 22px;
-  }
-
-  .modal h3 { margin: 0 0 10px; font-size: 1.2rem; color: #2b2014; }
-  .modal p { margin: 0; color: var(--muted); line-height: 1.7; }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
-  .login-status { margin-top: 12px; font-size: .92rem; color: var(--muted); min-height: 1.3em; }
-
-  @media (max-width: 1080px) {
-    body.sidebar-open { padding-left: 0; }
-
-    .left-subjects {
-      position: static;
-      width: calc(100% - 28px);
-      margin: 18px auto 0;
-      border-right: 0;
-      border: 2px solid rgba(255,255,255,.08);
-      border-radius: 24px;
-      flex-direction: row;
-      align-items: stretch;
-      justify-content: center;
+    :root {
+      --bg: #203a2d;
+      --bg-deep: #16281f;
+      --chalk: #f6f7ef;
+      --chalk-soft: #d7dfd2;
+      --board-line: rgba(255,255,255,0.05);
+
+      --panel: #fffdf6;
+      --panel-2: #f8f2dd;
+      --paper: #fffdf5;
+      --paper-clean: #fffdf7;
+      --paper-edge: #efe4c8;
+      --paper-shadow: rgba(73, 54, 30, 0.14);
+
+      --text: #2f2418;
+      --muted: #6e6253;
+      --accent: #e1b85c;
+      --accent-2: #b7dfb1;
+      --danger: #b94d4d;
+      --warning: #c7861f;
+      --border: rgba(70, 48, 24, 0.14);
+      --shadow: 0 22px 50px rgba(0,0,0,0.22);
+      --radius: 24px;
+
+      --highlight: #fff0a8;
+      --book-cover: #6a4727;
+      --book-cover-2: #8d6237;
+      --rewrite-blue: #4f7fc7;
+      --sidebar-w: 118px;
+
+      --cork-1: #b98555;
+      --cork-2: #9f6e45;
+      --cork-3: #d0a171;
+      --pin-red: #c84b4b;
+      --pin-blue: #4f7fc7;
+      --pin-green: #4f8a5b;
     }
 
-    .subject-brand { display: none; }
-    .subject-btn { min-height: unset; }
-    .grid, .quote-layout, .essay-grid, .essay-controls { grid-template-columns: 1fr; }
-    .book { width: min(100%, 680px); height: 900px; }
-    .book-pages { height: 900px; }
-    .page-sheet { min-height: 872px; }
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Trebuchet MS", "Segoe UI", Inter, system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.08), transparent 0 18%),
+        radial-gradient(circle at 80% 15%, rgba(255,255,255,0.04), transparent 0 14%),
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0 34px,
+          var(--board-line) 34px 35px
+        ),
+        linear-gradient(180deg, #2a523e 0%, var(--bg) 35%, var(--bg-deep) 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, transparent 0 60%, rgba(0,0,0,0.12) 100%);
+      z-index: 0;
+    }
+
+    body.sidebar-open { padding-left: calc(var(--sidebar-w) + 16px); }
+
+    .left-subjects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      padding: 18px 12px;
+      border-right: 2px solid rgba(255,255,255,0.06);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.05)),
+        linear-gradient(180deg, #1f3a2d, #15261d);
+      box-shadow: inset -8px 0 18px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 50;
+    }
+
+    .subject-brand {
+      border-radius: 18px;
+      padding: 16px 10px;
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: .06em;
+      border: 2px dashed rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.12);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      font-size: .82rem;
+      color: var(--chalk);
+      line-height: 1.45;
+      text-transform: uppercase;
+    }
+
+    .subject-btn {
+      width: 100%;
+      border: 2px solid rgba(255,255,255,.08);
+      border-radius: 24px;
+      padding: 16px 10px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+        rgba(0,0,0,0.12);
+      color: var(--chalk);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 12px 24px rgba(0,0,0,.16);
+      min-height: 120px;
+      position: relative;
+    }
+
+    .subject-btn::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 18px;
+      border: 1px dashed rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+
+    .subject-btn .icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .subject-btn .label {
+      font-weight: 900;
+      font-size: .88rem;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .subject-btn .small-label {
+      font-size: .72rem;
+      color: rgba(255,255,255,0.72);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .subject-btn.active {
+      background: linear-gradient(180deg, #f0d596, #ddb35b);
+      color: #2b2114;
+      border-color: rgba(78,51,16,.18);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.2);
+      transform: translateY(-1px);
+    }
+
+    .subject-btn.active .small-label { color: #5d4527; }
+
+    .subject-btn.active .icon {
+      background: rgba(255,255,255,.35);
+      border-color: rgba(78,51,16,.12);
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1280px, calc(100% - 28px));
+      margin: 26px auto 60px;
+    }
 
     .wrap::before,
     .wrap::after {
-      display: none;
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+      color: rgba(255,255,255,0.14);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      white-space: pre;
     }
-  }
-</style>
+
+    .wrap::before {
+      content: "A+\A ?\A ★";
+      left: 140px;
+      top: 120px;
+      transform: rotate(-8deg);
+    }
+
+    .wrap::after {
+      content: "✓\A revise\A →";
+      right: 36px;
+      bottom: 80px;
+      transform: rotate(6deg);
+    }
+
+    .top-tabs-shell {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .top-tabs {
+      display: inline-flex;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.08)),
+        linear-gradient(180deg, #234030, #1a2e23);
+      border: 2px solid rgba(255,255,255,0.08);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.2);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      cursor: pointer;
+      user-select: none;
+      min-width: 210px;
+      text-align: center;
+      padding: 15px 22px;
+      border-radius: 18px 18px 12px 12px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      border: 2px solid rgba(86,58,28,0.12);
+      color: var(--text);
+      background: linear-gradient(180deg, #fffef9, #f2ead3);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+      transition: .18s ease;
+      position: relative;
+      top: 0;
+    }
+
+    .tab-btn:hover { transform: translateY(-2px); }
+
+    .tab-btn.active {
+      background: linear-gradient(180deg, #f3dda7, #deb05b);
+      color: #2a2014;
+      border-color: rgba(86,58,28,0.14);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.16);
+    }
+
+    .hero,
+    .quote-view,
+    .modal {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.8), rgba(248,240,216,0.98)),
+        var(--panel);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .panel {
+      border-radius: var(--radius);
+      padding: 20px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 0 2px, transparent 2px 100%),
+        radial-gradient(circle at 70% 40%, rgba(0,0,0,0.05) 0 2px, transparent 2px 100%),
+        radial-gradient(circle at 40% 80%, rgba(255,255,255,0.06) 0 1.5px, transparent 1.5px 100%),
+        linear-gradient(135deg, var(--cork-3), var(--cork-1) 45%, var(--cork-2));
+      border: 2px solid rgba(87,55,29,0.2);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .hero::before,
+    .quote-view::before,
+    .modal::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px dashed rgba(116,88,52,0.12);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px dashed rgba(255,244,220,0.22);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .hero {
+      border-radius: 30px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .hero::after {
+      content: "★  revision notes   +  test yourself   ✓";
+      position: absolute;
+      right: 28px;
+      bottom: 16px;
+      font-size: 1rem;
+      letter-spacing: .04em;
+      color: rgba(255,255,255,0.18);
+      font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
+      pointer-events: none;
+      transform: rotate(-2deg);
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: #2b2014;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 850px;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+    .badge,
+    .topic,
+    .pill {
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .badge {
+      background: #fff8df;
+      color: #5a4427;
+      padding: 10px 14px;
+      border: 2px solid rgba(120,86,34,0.12);
+      font-size: .92rem;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.06);
+    }
+
+    .btns { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: .98rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.14);
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: .7; cursor: not-allowed; transform: none !important; }
+
+    .primary {
+      background: linear-gradient(180deg, #f0d58e, #dcae53);
+      color: #2b2114;
+      border: 1px solid rgba(90,64,28,0.14);
+    }
+
+    .secondary {
+      background: linear-gradient(180deg, #fefcf5, #eee2bf);
+      color: #3a2c1d;
+      border: 1px solid rgba(90,64,28,0.12);
+    }
+
+    .hidden { display: none !important; }
+
+    .grid { display: grid; grid-template-columns: 1.55fr .9fr; gap: 20px; align-items: start; }
+
+    .q-card,
+    .result-card,
+    .essay-result-card,
+    .score-box,
+    .footer-note,
+    .quote-card {
+      background: linear-gradient(180deg, var(--paper-clean), var(--paper-edge));
+      color: var(--text);
+      border: 2px solid rgba(111,82,45,0.12);
+      box-shadow: 0 10px 20px var(--paper-shadow);
+      position: relative;
+    }
+
+    .q-card::before,
+    .score-box::before,
+    .result-card::before,
+    .essay-result-card::before,
+    .quote-card::before,
+    .footer-note::before {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 34px;
+      top: -14px;
+      right: 20px;
+      border: 3px solid #9aa3ad;
+      border-bottom: 0;
+      border-radius: 12px 12px 0 0;
+      transform: rotate(8deg);
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    .q-card::after,
+    .score-box::after,
+    .result-card::after,
+    .essay-result-card::after,
+    .quote-card::after,
+    .footer-note::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 20px;
+      top: -6px;
+      right: 25px;
+      border: 3px solid #cfd5db;
+      border-bottom: 0;
+      border-radius: 9px 9px 0 0;
+      transform: rotate(8deg);
+      pointer-events: none;
+    }
+
+    .q-card {
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .q-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .q-type {
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #315233;
+      background: #edf7e7;
+      border: 1px solid rgba(49,82,51,.18);
+      padding: 8px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-weight: 900;
+    }
+
+    .q-title { margin: 0; font-size: 1.08rem; line-height: 1.45; color: #2f2418; }
+    .textarea-anim-wrap { position: relative; }
+
+    textarea, .input, select {
+      width: 100%;
+      border-radius: 16px;
+      border: 2px solid rgba(88,70,42,.12);
+      background: linear-gradient(180deg, #fffefb, #f6eed7);
+      color: var(--text);
+      padding: 14px 16px;
+      font: inherit;
+      line-height: 1.7;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
+    }
+
+    textarea {
+      min-height: 128px;
+      resize: vertical;
+      transition: box-shadow .25s ease, border-color .25s ease, color .25s ease;
+    }
+
+    textarea:focus, .input:focus, select:focus {
+      border-color: rgba(186,142,61,.6);
+      box-shadow: 0 0 0 4px rgba(222,176,91,.18);
+    }
+
+    .helper {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .side-title {
+      margin: 0 0 14px;
+      font-size: 1.12rem;
+      color: #2f2418;
+      position: relative;
+    }
+
+    .side-title::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff6f6 0 20%, var(--pin-red) 22% 100%);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+      vertical-align: middle;
+    }
+
+    .score-box {
+      padding: 16px;
+      border-radius: 18px;
+      margin-bottom: 16px;
+    }
+
+    .score-box > .small:first-child::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff6f6 0 20%, var(--pin-red) 22% 100%);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+      vertical-align: middle;
+    }
+
+    .big-score {
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin: 4px 0 6px;
+      letter-spacing: -0.04em;
+      color: #2d2417;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+
+    .result-card, .essay-result-card {
+      border-radius: 10px;
+      padding: 14px 14px 22px;
+      margin-bottom: 18px;
+      background: linear-gradient(180deg, #fffefc, #f3ead4);
+      border: 1px solid rgba(80,50,20,.14);
+      box-shadow:
+        0 14px 24px rgba(0,0,0,0.14),
+        0 2px 0 rgba(255,255,255,0.55) inset;
+      transform: rotate(-1.2deg);
+    }
+
+    .result-card:nth-child(even),
+    .essay-result-card:nth-child(even) {
+      transform: rotate(1.1deg);
+    }
+
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(90,64,28,0.16);
+    }
+
+    .pill {
+      padding: 8px 10px;
+      font-size: .8rem;
+      white-space: nowrap;
+    }
+
+    .correct {
+      background: rgba(166,215,164,.18);
+      color: #2f6a34;
+      border: 1px solid rgba(47,106,52,.2);
+    }
+
+    .partial {
+      background: rgba(232,191,101,.18);
+      color: #8a6212;
+      border: 1px solid rgba(138,98,18,.18);
+    }
+
+    .incorrect {
+      background: rgba(201,102,102,.15);
+      color: #9e3838;
+      border: 1px solid rgba(158,56,56,.16);
+    }
+
+    .progress {
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(70,52,28,.08);
+      overflow: hidden;
+      margin: 12px 0 4px;
+      border: 1px solid rgba(70,52,28,.08);
+    }
+
+    .progress > div {
+      height: 100%;
+      background: linear-gradient(90deg, #d9aa49, #98c78d);
+      width: 0%;
+      transition: width .25s ease;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      font-size: .9rem;
+      line-height: 1.6;
+    }
+
+    .topic-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+    .topic {
+      padding: 8px 10px;
+      background: #fff8e0;
+      border: 1px solid rgba(90,64,28,.12);
+      color: #6e6253;
+      font-size: .82rem;
+    }
+
+    .rewrite-btn { margin-top: 10px; }
+
+    .essay-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; align-items: start; }
+    .essay-controls { display: grid; grid-template-columns: 1fr 260px; gap: 14px; margin-bottom: 14px; }
+    .essay-meta { display: grid; gap: 12px; }
+    .essay-answer-box textarea { min-height: 360px; }
+    .essay-improve-output textarea { min-height: 360px; }
+    .essay-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .essay-list { margin: 10px 0 0; padding-left: 18px; color: var(--muted); }
+    .essay-list li { margin-bottom: 8px; }
+    .essay-grade { font-size: 1.05rem; font-weight: 800; color: #466e3f; }
+
+    .answer-falling { animation: answerFall 700ms ease-in forwards; transform-origin: center top; }
+
+    .answer-hammered {
+      color: var(--rewrite-blue) !important;
+      border-color: rgba(79,127,199,.45) !important;
+      animation: hammerIn 850ms cubic-bezier(.2,.9,.2,1);
+      box-shadow: 0 0 0 1px rgba(79,127,199,.12), 0 0 28px rgba(79,127,199,.12) !important;
+    }
+
+    @keyframes answerFall {
+      0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); filter: blur(0); }
+      35% { transform: translateY(18px) rotate(-2deg) scale(0.99); }
+      100% { opacity: 0; transform: translateY(180px) rotate(-14deg) scale(0.9); filter: blur(6px); }
+    }
+
+    @keyframes hammerIn {
+      0% { transform: translateY(-55px) scale(1.04); opacity: 0; letter-spacing: 0.02em; }
+      45% { transform: translateY(12px) scale(1.01); opacity: 1; }
+      65% { transform: translateY(-6px) scale(1); }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .quote-layout { display: grid; grid-template-columns: .95fr 1fr; gap: 24px; align-items: start; }
+    .book-area { display: flex; justify-content: center; }
+    .book { width: min(100%, 560px); height: 860px; position: relative; perspective: 1800px; }
+
+    .book-cover {
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.12)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 12px),
+        linear-gradient(135deg, var(--book-cover), var(--book-cover-2) 54%, #4b2d17);
+      border: 2px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      transform-origin: left center;
+      transition: transform .7s ease;
+      z-index: 3;
+      cursor: pointer;
+      color: #fffdf4;
+    }
+
+    .book-cover::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border: 1px dashed rgba(255,255,255,0.18);
+      border-radius: 14px;
+    }
+
+    .book.open .book-cover { transform: rotateY(-140deg); }
+    .book-cover-title { font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 900; letter-spacing: -.03em; }
+    .book-cover-sub { max-width: 280px; text-align: center; color: rgba(255,255,255,.88); line-height: 1.6; }
+
+    .book-pages {
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      padding: 14px;
+      background: linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.08);
+      height: 860px;
+    }
+
+    .page-sheet {
+      height: 100%;
+      border-radius: 18px;
+      padding: 20px;
+      background: linear-gradient(180deg, #fffef8, #f8efd7);
+      color: #3a2819;
+      box-shadow: inset 0 0 0 1px rgba(80,50,20,.08), 0 12px 26px rgba(0,0,0,.18);
+      display: flex;
+      flex-direction: column;
+      min-height: 832px;
+      position: relative;
+    }
+
+    .page-sheet::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 30px;
+      top: -10px;
+      right: 34px;
+      border: 3px solid #a5adb6;
+      border-bottom: 0;
+      border-radius: 12px 12px 0 0;
+      transform: rotate(6deg);
+      pointer-events: none;
+    }
+
+    .page-header { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .page-title { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 1.7rem; color: #402819; }
+    .page-num { font-size: .85rem; color: #6d5848; }
+    .page-body { overflow: visible; padding-right: 6px; flex: 1; }
+
+    .book-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; }
+
+    .book-nav button {
+      box-shadow: none;
+      background: linear-gradient(180deg, #f1d59a, #ddb25f);
+      color: #2b2114;
+      border: 1px solid rgba(80,50,20,.12);
+    }
+
+    .book-nav button:hover { background: linear-gradient(180deg, #f4ddb0, #e1b96d); }
+    .book-nav button:disabled { background: #d1c8b5; color: rgba(50,40,30,.6); cursor: not-allowed; transform: none; }
+
+    .quote-entry {
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,.58);
+      border: 1px solid rgba(80,50,20,.1);
+      margin-bottom: 10px;
+    }
+
+    .quote-topic { font-size: 1rem; font-weight: 900; color: #4a2e1c; margin-bottom: 4px; }
+    .quote-ref-mini { font-size: .82rem; color: #7a6450; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
+    .quote-mini { font-family: Georgia, "Times New Roman", serif; line-height: 1.6; color: #3f2b1d; }
+
+    .open-quote {
+      margin-top: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #fff3bf;
+      color: #3d2a1a;
+      border: 1px solid rgba(80,50,20,.14);
+      box-shadow: none;
+    }
+
+    .quote-view {
+      border-radius: 26px;
+      padding: 22px;
+      min-height: 420px;
+    }
+
+    .quote-card {
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .quote-ref {
+      color: #4d6e3d;
+      font-size: .88rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 8px;
+      font-weight: 900;
+    }
+
+    .full-verse {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.1rem;
+      line-height: 1.9;
+      color: #332619;
+      margin: 0;
+    }
+
+    mark.note-highlight {
+      background: var(--highlight);
+      color: #2a2110;
+      padding: .08em .2em;
+      border-radius: 6px;
+    }
+
+    .interp { color: var(--muted); line-height: 1.75; font-size: .98rem; }
+    .interp strong { color: #2d2417; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,18,14,.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal {
+      width: min(560px, 100%);
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .modal h3 { margin: 0 0 10px; font-size: 1.2rem; color: #2b2014; }
+    .modal p { margin: 0; color: var(--muted); line-height: 1.7; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+    .login-status { margin-top: 12px; font-size: .92rem; color: var(--muted); min-height: 1.3em; }
+
+    @media (max-width: 1080px) {
+      body.sidebar-open { padding-left: 0; }
+
+      .left-subjects {
+        position: static;
+        width: calc(100% - 28px);
+        margin: 18px auto 0;
+        border-right: 0;
+        border: 2px solid rgba(255,255,255,.08);
+        border-radius: 24px;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: center;
+      }
+
+      .subject-brand { display: none; }
+      .subject-btn { min-height: unset; }
+      .grid, .quote-layout, .essay-grid, .essay-controls { grid-template-columns: 1fr; }
+      .book { width: min(100%, 680px); height: 900px; }
+      .book-pages { height: 900px; }
+      .page-sheet { min-height: 872px; }
+
+      .wrap::before,
+      .wrap::after {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body class="sidebar-open">
   <aside class="left-subjects">
@@ -894,6 +894,12 @@
       <div class="icon">⚖️</div>
       <div class="label">Philosophy<br>& Ethics</div>
       <div class="small-label">Mind + evil + arguments</div>
+    </button>
+
+    <button class="subject-btn" id="subjectPoliticsBtn" data-subject="politics">
+      <div class="icon">🏛️</div>
+      <div class="label">Politics</div>
+      <div class="small-label">UK politics + ideologies</div>
     </button>
   </aside>
 
@@ -1010,7 +1016,7 @@
                   <option value="15">15 marker – Evaluate (AO2)</option>
                 </select>
               </div>
-              <div class="footer-note">
+              <div class="footer-note" id="essayModeNote">
                 10 marker = examine knowledge and understanding.<br>
                 15 marker = evaluate and argue.
               </div>
@@ -1083,67 +1089,99 @@
         icon: '✝️',
         subtitle: 'Christian thought, doctrine, scholars and set texts.',
         bookCoverSub: 'Best theology revision quotes booklet',
-
-        // PASTE YOUR FULL THEOLOGY QUESTION BANK HERE
+        hasQuotes: true,
         questionBank: [
-          {type:'Explain',topic:'Bible authority',question:'Explain verbal plenary inspiration.',keywords:['verbal plenary inspiration','dictated','all scripture inspired','word of god','inerrant'],mustIncludeAny:[['verbal plenary inspiration','dictated'],['word of god','inerrant']],quote:"2 Timothy 3:16 'God-breathed'",requiresScripture:false,model:'Verbal plenary inspiration is the Evangelical Protestant idea that every part of the Bible is inspired or dictated by God, so scripture is fully authoritative and inerrant.'},
-          {type:'Criticism',topic:'Bible authority',question:'Give one criticism of biblical inerrancy.',keywords:['scientific errors','historical errors','genesis','contradictions','literalism'],mustIncludeAny:[['scientific errors','historical errors','contradictions']],quote:'Creation narratives may conflict with science.',requiresScripture:false,model:'A criticism is that the Bible appears to contain historical or scientific problems, so absolute inerrancy can be difficult to defend.'},
-          {type:'Explain',topic:'Catholicism',question:'Why do Catholics believe the Magisterium is needed to interpret the Bible?',keywords:['magisterium','living tradition','apostolic succession','human error','translation','holy spirit','church'],mustIncludeAny:[['magisterium','church'],['living tradition','apostolic succession','interpretation']],quote:'Catholics rely on living tradition.',requiresScripture:false,model:'Catholics believe scripture is inspired, but because humans translated and copied it, the Church needs an interpreting authority. The Magisterium, rooted in apostolic succession and guided by the Holy Spirit, provides this.'},
-          {type:'Define',topic:'Catholicism',question:'What is apostolic succession?',keywords:['unbroken chain','bishops','popes','apostles','authority','passed down'],mustIncludeAny:[['bishops','apostles'],['unbroken chain','passed down','popes']],quote:"Mark 16 'Go into the world and preach'",requiresScripture:false,model:'Apostolic succession is the belief that Church authority has been passed down in an unbroken chain from the apostles through bishops and popes.'},
-          {type:'Define',topic:'Scripture',question:'What is canon in Christianity?',keywords:['collection of books','inspired by god','authoritative scripture','old testament','new testament'],mustIncludeAny:[['collection of books','authoritative scripture','inspired by god']],quote:'Canon is the accepted body of scripture.',requiresScripture:false,model:'Canon is the collection of books accepted as inspired by God and therefore authoritative scripture, especially the Old and New Testaments.'},
-          {type:'Explain',topic:'Neo-Orthodoxy',question:'Explain Karl Barth’s view that the Bible contains the Word of God.',keywords:['barth','contains the word of god','not inerrant','vehicle','experience god','authoritative when encountered'],mustIncludeAny:[['barth'],['contains the word of god','vehicle','experience god']],quote:"John 1:1 'The Word was God'",requiresScripture:false,model:'Barth rejected simple biblical inerrancy. He argued that the Bible contains the Word of God and becomes authoritative when believers encounter God through it.'},
-          {type:'Explain',topic:'Liberalism',question:'How does the Social Gospel Movement view biblical authority?',keywords:['social gospel','gospels','social issues','poverty','war','racism','put into practice'],mustIncludeAny:[['social gospel','gospels'],['poverty','war','racism','practice']],quote:'The Gospels guide social action.',requiresScripture:false,model:'The Social Gospel Movement sees the Gospels as authoritative mainly for guiding action on poverty, war and racism rather than for proving inerrancy.'},
-          {type:'Explain',topic:'Process theology',question:'Why does process theology reject traditional biblical inspiration?',keywords:['god not omnipotent','cannot inspire','human writings','no miracles','completely human','science'],mustIncludeAny:[['not omnipotent','cannot inspire'],['human writings','no miracles','completely human']],quote:'The Bible is treated as fully human.',requiresScripture:false,model:'Process theologians say God is not omnipotent in the classical sense, so God cannot simply dictate human writings. The Bible is therefore treated as a fully human document.'},
-          {type:'Explain',topic:'Church authority',question:'What is sola scriptura?',keywords:['sola scriptura','scripture alone','martin luther','highest authority','church depends on scripture'],mustIncludeAny:[['sola scriptura','scripture alone'],['martin luther','highest authority','church depends on scripture']],quote:"Luther's 'sure rule of God's Word'",requiresScripture:false,model:'Sola scriptura is the Protestant doctrine, associated with Luther, that scripture alone is the final authority for doctrine and practice.'},
-          {type:'Explain',topic:'Church authority',question:'Explain the priesthood of all believers.',keywords:['priesthood of all believers','baptism','royal priesthood','1 peter 2','all christians','self interpretation'],mustIncludeAny:[['priesthood of all believers','all christians'],['royal priesthood','baptism','self interpretation']],quote:"1 Peter 2 'a royal priesthood'",requiresScripture:false,model:'The priesthood of all believers means every baptised Christian can approach God directly and engage with scripture, rather than depending completely on a priestly hierarchy.'},
-          {type:'Criticism',topic:'Church authority',question:'Give one criticism of relying on the Magisterium.',keywords:['outdated','corrupt','indulgences','homosexuality','tradition','less appealing'],mustIncludeAny:[['outdated','corrupt','indulgences','tradition']],quote:"Leviticus 20 'he shall be put to death'",requiresScripture:false,model:'A criticism is that Church authority can preserve outdated views or become corrupt, as seen in abuses such as indulgences.'},
-          {type:'Explain',topic:'Jesus',question:'What does the title Son of God suggest about Jesus?',keywords:['fully divine','gods powers','all authority','miracles','trinity'],mustIncludeAny:[['fully divine','all authority'],['miracles','trinity','gods powers']],quote:"Matthew 28:18 'All authority in heaven and on earth'",requiresScripture:false,model:'Son of God suggests Jesus is divine and shares in God’s authority, which is why Christians connect the title with miracles and the Trinity.'},
-          {type:'Explain',topic:'Jesus',question:'What does the title Son of Man emphasise?',keywords:['fully human','suffering','hardship','messianic secret','conceal divinity'],mustIncludeAny:[['fully human','suffering','hardship'],['messianic secret','conceal divinity']],quote:"Luke 9:58 'The Son of Man has nowhere to lay his head'",requiresScripture:false,model:'Son of Man emphasises Jesus’ humanity, suffering and vulnerability, while also fitting the idea that he concealed his divinity during his ministry.'},
-          {type:'Define',topic:'Heresy',question:'What was Arianism?',keywords:['arius','jesus not fully divine','human','heresy','council of nicaea'],mustIncludeAny:[['arius','not fully divine'],['heresy','nicaea','human']],quote:'Arianism denied full divinity.',requiresScripture:false,model:'Arianism was the teaching of Arius that Jesus was not fully divine in the same way as the Father. It was condemned as heresy at Nicaea.'},
-          {type:'Define',topic:'Heresy',question:'What is Adoptionism?',keywords:['jesus not born divine','received powers at baptism','theodotus','rejected'],mustIncludeAny:[['not born divine','baptism'],['theodotus','received powers']],quote:'Jesus was adopted at baptism.',requiresScripture:false,model:'Adoptionism is the view that Jesus was not divine from birth but received divine status or power at his baptism.'},
-          {type:'Criticism',topic:'Jesus ethics',question:'Why might Jesus’ teaching against retaliation be difficult to take literally?',keywords:['impractical','pacifism','violence in temple','idealistic','counter intuitive'],mustIncludeAny:[['impractical','pacifism','idealistic'],['violence in temple','counter intuitive']],quote:'Jesus may be giving an ideal rather than a strict law.',requiresScripture:false,model:'Some Christians think complete pacifism is too impractical, especially since Jesus also used force in the temple, so his teaching may be an ideal about rejecting revenge.'},
-          {type:'Explain',topic:'Jesus ethics',question:'What is one metaphorical reading of love for enemies?',keywords:['ideal','impossible to put into practice','moving on','negative impact of hatred','specific historical context'],mustIncludeAny:[['ideal','moving on','hatred'],['historical context','impossible']],quote:'The teaching can be read as an ideal to aim for.',requiresScripture:false,model:'A metaphorical reading is that Jesus was not giving a rigid literal command in every situation, but urging people to reject hatred and revenge as destructive.'},
-          {type:'Define',topic:'God',question:'What is ethical monotheism?',keywords:['one god','worthy of worship','moral obedience','covenant','ten commandments','shema'],mustIncludeAny:[['one god','worthy of worship'],['moral obedience','covenant','ten commandments','shema']],quote:"Deuteronomy 6:4 'the Lord alone'",requiresScripture:false,model:'Ethical monotheism is the belief that there is only one God and that humans owe this God moral and religious obedience.'},
-          {type:'Explain',topic:'God',question:'Why do Christians describe God as omnipotent?',keywords:['only god','unchallenged authority','all things are possible','sovereign','power'],mustIncludeAny:[['only god','all things are possible'],['sovereign','power','unchallenged authority']],quote:"Matthew 19 'With God all things are possible'",requiresScripture:false,model:'Christians describe God as omnipotent because as the one true God, God is sovereign and unmatched in authority and power.'},
-          {type:'Compare',topic:'God',question:'What is the difference between ex nihilo and ex deo?',keywords:['ex nihilo','out of nothing','ex deo','out of god','pre existing matter','process theology'],mustIncludeAny:[['ex nihilo','out of nothing'],['ex deo','pre existing matter','out of god']],quote:'Ex nihilo and ex deo give different creation models.',requiresScripture:false,model:'Ex nihilo means creation out of nothing, while ex deo means creation out of God or from matter already bound up with God, a view linked to process thought.'},
-          {type:'Explain',topic:'God',question:'Why is anthropomorphic language about God controversial?',keywords:['human characteristics','limits god','physical limitations','wish fulfilment','freud'],mustIncludeAny:[['human characteristics','limits god'],['physical limitations','wish fulfilment','freud']],quote:"Genesis 3:8 'walked'; Genesis 2 'rested'",requiresScripture:false,model:'Anthropomorphic language is controversial because it can make God seem limited or human, and Freud saw it as wish-fulfilment rather than evidence of a real deity.'},
-          {type:'Explain',topic:'God',question:'How might Christians defend calling God Father?',keywords:['metaphor','care','authority','love','lords prayer','historical context'],mustIncludeAny:[['metaphor','love','authority'],['lords prayer','historical context','care']],quote:"Matthew 6 'Our Father'",requiresScripture:false,model:'Some Christians say Father is a metaphor for God’s care, authority and love rather than literal male biology, and point out that Jesus himself used the language.'},
-          {type:'Criticism',topic:'Feminism',question:'Give one feminist criticism of traditional language about God.',keywords:['hampson','male norm','patriarchal','subvert women','male god language'],mustIncludeAny:[['hampson','patriarchal'],['male norm','subvert women','male god language']],quote:"Daphne Hampson criticised male God language.",requiresScripture:false,model:'A feminist criticism is that male God-language makes men the norm and reinforces patriarchy, which disadvantages women in religion and society.'},
-          {type:'Explain',topic:'Process theology',question:'Why do process theologians reject omnipotence?',keywords:['cannot create matter out of nothing','chaotic matter resists god','persuades','not unlimited power','ex deo'],mustIncludeAny:[['chaotic matter','resists god','persuades'],['not omnipotent','ex deo','cannot create matter']],quote:'Process theology says God persuades rather than controls.',requiresScripture:false,model:'Process theologians reject omnipotence because God works with pre-existing matter that can resist divine aims. God persuades creation rather than controlling it absolutely.'},
-          {type:'Explain',topic:'Trinity',question:'What is perichoresis?',keywords:['mutual indwelling','three persons','godhead','one substance','father son spirit'],mustIncludeAny:[['mutual indwelling','three persons'],['godhead','one substance','father son spirit']],quote:'Perichoresis describes mutual indwelling.',requiresScripture:false,model:'Perichoresis is the mutual indwelling of the Father, Son and Spirit within the one divine life.'},
-          {type:'Explain',topic:'Trinity',question:'How does the Trinity help Christians explain both transcendence and immanence?',keywords:['godhead transcendent','persons immanent','son in history','spirit indwells','paradox'],mustIncludeAny:[['transcendent','immanent'],['son in history','spirit indwells','godhead']],quote:'The Godhead may be transcendent while the persons are active in the world.',requiresScripture:false,model:'Christians can say the divine essence is transcendent, while the persons of the Trinity are immanent: the Son enters history and the Spirit dwells in believers.'},
-          {type:'Explain',topic:'Trinity',question:'Give a Trinitarian interpretation of John 10:30.',keywords:['same substance','one with the father','divine unity','word was god','pre existent'],mustIncludeAny:[['same substance','one with the father','divine unity'],['word was god','pre existent']],quote:"John 10:30 'The Father and I are one'",requiresScripture:true,model:'A Trinitarian reading says Jesus is claiming unity of divine being with the Father, not just moral agreement.'},
-          {type:'Criticism',topic:'Trinity',question:'Give one non-Trinitarian reading of John 10:30.',keywords:['harmony of mission','one purpose','hen','doing his fathers work'],mustIncludeAny:[['harmony of mission','one purpose','hen'],['doing his fathers work']],quote:"John 10:36 suggests mission language.",requiresScripture:true,model:'A non-Trinitarian reading says Jesus is one with the Father in purpose or mission rather than literally the same divine substance.'},
-          {type:'Explain',topic:'Purpose of life',question:'Name one main Christian purpose of life and explain it.',keywords:['glorify god','personal relationship','prepare for judgement','bring about the kingdom of god'],mustIncludeAny:[['glorify god','personal relationship','prepare for judgement','kingdom of god']],quote:'Common answers include glorifying God and preparing for judgement.',requiresScripture:false,model:'One major Christian purpose of life is to glorify God through worship, obedience and reflecting divine goodness in the world.'},
-          {type:'Explain',topic:'Purpose of life',question:'How can prayer build a personal relationship with God?',keywords:['communication','closeness','relationship','gods will','regular prayer'],mustIncludeAny:[['communication','relationship'],['closeness','gods will','regular prayer']],quote:'Prayer is treated as communication with God.',requiresScripture:false,model:'Prayer builds a personal relationship with God because it is direct communication that expresses trust, dependence and openness to God’s will.'},
-          {type:'Explain',topic:'Judgement',question:'What does the parable of the sheep and the goats teach about judgement?',keywords:['helping the poor','hungry','treatment of others','moral actions','kingdom'],mustIncludeAny:[['helping the poor','hungry','treatment of others'],['moral actions','judgement']],quote:"Matthew 25 'I was hungry and you gave me something to eat'",requiresScripture:false,model:'The parable teaches that people are judged by how they treat others, especially the vulnerable and needy.'},
-          {type:'Explain',topic:'Kingdom of God',question:'What does it mean to bring about the Kingdom of God on earth?',keywords:['gods will','on earth as it is in heaven','justice','community','repent'],mustIncludeAny:[['gods will','on earth as it is in heaven'],['justice','community','repent']],quote:"Matthew 6 'Thy Kingdom come'",requiresScripture:false,model:'It means helping earthly life reflect God’s will through repentance, justice, love and holy living.'},
-          {type:'Explain',topic:'Resurrection',question:'Why is Jesus’ resurrection important for beliefs about life after death?',keywords:['defeated death','everlasting life','atonement','humans can rise','hope'],mustIncludeAny:[['defeated death','everlasting life'],['atonement','hope','humans can rise']],quote:'The resurrection is the model and guarantee of future life.',requiresScripture:false,model:'Jesus’ resurrection matters because it shows death has been conquered and gives Christians hope of eternal life with God.'},
-          {type:'Explain',topic:'Soul',question:'How did Plato understand the soul?',keywords:['immortal','world of forms','dualism','body','reincarnation','form of good'],mustIncludeAny:[['immortal','dualism','body'],['world of forms','reincarnation','form of good']],quote:'Plato saw the soul as immortal and distinct from the body.',requiresScripture:false,model:'Plato taught that the soul is immortal and distinct from the body, and after death it relates to the world of forms before reincarnation.'},
-          {type:'Explain',topic:'Resurrection',question:'How does Augustine argue for bodily resurrection?',keywords:['bodily resurrection','body and soul','city of god','god can raise the body','purpose for body'],mustIncludeAny:[['bodily resurrection','body and soul'],['city of god','god can raise the body','purpose for body']],quote:'Augustine asks what hinders the earthly body from being raised to a heavenly body.',requiresScripture:false,model:'Augustine argues that because God created body and soul together for a purpose, both should be redeemed, so resurrection is bodily rather than merely spiritual.'},
-          {type:'Compare',topic:'Afterlife',question:'What is the difference between particular judgement and general judgement?',keywords:['particular judgement','immediately after death','individual','general judgement','end of time','all humanity'],mustIncludeAny:[['particular judgement','immediately after death','individual'],['general judgement','end of time','all humanity']],quote:'Catholicism distinguishes immediate personal judgement from final universal judgement.',requiresScripture:false,model:'Particular judgement is the judgement of the individual at death, while general judgement is the final judgement of all humanity at the end of time.'},
-          {type:'Criticism',topic:'Afterlife',question:'Why do some Christians prefer spiritual resurrection to physical resurrection?',keywords:['bodies decay','cremation','spiritual body','counter intuitive','1 corinthians 15'],mustIncludeAny:[['bodies decay','cremation','spiritual body'],['counter intuitive','1 corinthians 15']],quote:"1 Corinthians 15 'raised a spiritual body'",requiresScripture:false,model:'Some Christians prefer spiritual resurrection because physical bodies decay or are cremated, making literal bodily resurrection seem counter-intuitive.'},
-          {type:'Explain',topic:'Justification',question:'What is justification by faith in St Paul?',keywords:['righteousness','grace','faith in jesus','cannot earn salvation','all have sinned'],mustIncludeAny:[['righteousness','grace','faith'],['cannot earn','all have sinned']],quote:"Romans 3 'justified by God's grace'",requiresScripture:false,model:'For Paul, justification means being made righteous before God through grace and faith in Christ rather than by earning salvation through law.'},
-          {type:'Compare',topic:'Justification',question:'How does James challenge justification by faith alone?',keywords:['faith without works is dead','works show faith','demons believe','abraham'],mustIncludeAny:[['faith without works is dead','works show faith'],['demons believe','abraham']],quote:"James 2 'faith by itself is dead'",requiresScripture:false,model:'James argues that faith alone is insufficient because genuine faith must produce works. Works show that faith is alive rather than empty.'},
-          {type:'Explain',topic:'Predestination',question:'What is predestination?',keywords:['god wills fate','heaven','hell','foreknowledge','salvation'],mustIncludeAny:[['god wills','fate','salvation'],['foreknowledge','heaven','hell']],quote:'Predestination says destiny is already known or willed by God.',requiresScripture:false,model:'Predestination is the belief that God already knows or wills the eternal destiny of individuals, especially in relation to salvation.'},
-          {type:'Criticism',topic:'Predestination',question:'Give one problem with predestination.',keywords:['free will','problem of evil','justice','accountability','hell'],mustIncludeAny:[['free will','justice','accountability'],['problem of evil','hell']],quote:'Predestination can seem to undermine moral responsibility.',requiresScripture:false,model:'A major problem is that predestination seems to undermine free will and raises questions about God’s justice if some people are effectively destined for hell.'},
-          {type:'Explain',topic:'Sanctity of life',question:'What is the sanctity of life principle?',keywords:['life is sacred','gift from god','imago dei','breath of life','intrinsic value'],mustIncludeAny:[['life is sacred','gift from god'],['imago dei','breath of life','intrinsic value']],quote:"Genesis 1:27 and Genesis 2:7",requiresScripture:false,model:'The sanctity of life principle says human life is sacred because it is given by God, reflects the image of God and has intrinsic value.'},
-          {type:'Compare',topic:'Sanctity of life',question:'What is the difference between the strong and weak sanctity of life principles?',keywords:['strong','always sacred','never permissible','weak','quality of life','circumstances'],mustIncludeAny:[['strong','always sacred','never permissible'],['weak','quality of life','circumstances']],quote:'The weak form allows quality-of-life reasoning in some cases.',requiresScripture:false,model:'The strong form says life is always sacred and should never be intentionally ended, while the weak form allows quality-of-life and circumstances to be considered.'},
-          {type:'Explain',topic:'Embryo research',question:'Why does the Catholic Church oppose embryo research?',keywords:['life begins at conception','personhood','murder','thou shalt not kill','embryo human already'],mustIncludeAny:[['life begins at conception','personhood'],['murder','thou shalt not kill','human already']],quote:"Luke 1 'you will conceive in your womb'",requiresScripture:false,model:'The Catholic Church opposes embryo research because it teaches that human life and personhood begin at conception, so destroying embryos is the destruction of innocent human life.'},
-          {type:'Compare',topic:'Embryo research',question:'How does Peter Singer’s view of personhood differ from the Catholic view?',keywords:['pleasure or pain','nervous system','14 days','not persons yet','life at conception'],mustIncludeAny:[['pleasure or pain','nervous system','14 days'],['life at conception','not persons yet']],quote:'Singer links personhood to sentience, not conception.',requiresScripture:false,model:'Singer ties personhood to sentience, so very early embryos are not persons. Catholicism says embryos have personhood from conception.'},
-          {type:'Explain',topic:'Just war',question:'Why was Just War Theory developed?',keywords:['turn the other cheek','too idealistic','lesser evil','defend innocent','augustine','natural law'],mustIncludeAny:[['too idealistic','lesser evil','defend innocent'],['augustine','natural law']],quote:"Matthew 5 'turn the other cheek'",requiresScripture:false,model:'Just War Theory was developed because total pacifism seemed too idealistic to some Christians, so war needed moral limits as a lesser evil.'},
-          {type:'Define',topic:'Just war',question:'What is jus ad bellum?',keywords:['starting war','conditions','just cause','last resort','legitimate authority','right intention'],mustIncludeAny:[['just cause','last resort'],['legitimate authority','right intention','starting war']],quote:'Jus ad bellum means conditions for starting war.',requiresScripture:false,model:'Jus ad bellum refers to the conditions that must be met before war may begin, such as just cause, legitimate authority and last resort.'},
-          {type:'Define',topic:'Just war',question:'What is jus in bello?',keywords:['during war','rules of fighting','discrimination','non combatants','proportionality'],mustIncludeAny:[['during war','rules of fighting'],['discrimination','non combatants','proportionality']],quote:'Jus in bello means moral rules during war.',requiresScripture:false,model:'Jus in bello means the moral rules governing conduct during war, such as avoiding direct attacks on non-combatants and using proportionate means.'},
-          {type:'Criticism',topic:'Weapons of mass destruction',question:'Why do many Christians say WMDs fail Just War criteria?',keywords:['indiscriminate','non combatants','radiation','disproportionate','nuclear weapons'],mustIncludeAny:[['indiscriminate','non combatants'],['disproportionate','radiation','nuclear']],quote:'WMDs are criticised as indiscriminate and disproportionate.',requiresScripture:false,model:'Many Christians say WMDs fail Just War Theory because they kill indiscriminately, including civilians, and their destructive effects are disproportionate.'},
-          {type:'Define',topic:'Environment',question:'What is dominion?',keywords:['anthropocentric','power over creation','humans rule','subdue','dominion'],mustIncludeAny:[['anthropocentric','power over creation'],['humans rule','subdue','dominion']],quote:"Genesis 1:28 'subdue it'",requiresScripture:false,model:'Dominion is the belief that humans have power over the rest of creation and may rule it because of their special status.'},
-          {type:'Explain',topic:'Environment',question:'Give one quote that supports dominion and explain it.',keywords:['genesis 1:28','psalm 8','subdue it','dominion over the works of your hands','human authority'],mustIncludeAny:[['genesis 1:28','psalm 8'],['subdue it','dominion over the works of your hands','human authority']],quote:'Use Psalm 8 or Genesis 1:28.',requiresScripture:true,model:'One strong dominion quote is Genesis 1:28, where humans are told to fill the earth and subdue it, suggesting authority to rule over nature.'},
-          {type:'Explain',topic:'Environment',question:'What is stewardship?',keywords:['care for creation','responsibility','earth and animals','not exploit','gods creation is good'],mustIncludeAny:[['care for creation','responsibility'],['earth and animals','not exploit','good']],quote:"Genesis 1:31 'very good'",requiresScripture:false,model:'Stewardship is the belief that humans should care for the earth responsibly as God’s good creation rather than exploit it selfishly.'},
-          {type:'Explain',topic:'Environment',question:'What is eco-theology?',keywords:['caring for environment','religion and nature','environmental crisis','adapt dogma'],mustIncludeAny:[['caring for environment','religion and nature'],['environmental crisis','adapt dogma']],quote:'Eco-theology links religion and environmental responsibility.',requiresScripture:false,model:'Eco-theology is theology focused on environmental care, arguing that religious beliefs should guide how humans treat the planet and other species.'},
-          {type:'Criticism',topic:'Environment',question:'Give one criticism of dominion.',keywords:['environmental destruction','anthropocentric','human arrogance','cruelty to animals','ignores stewardship'],mustIncludeAny:[['environmental destruction','anthropocentric'],['cruelty to animals','human arrogance','ignores stewardship']],quote:'Dominion can justify exploitation.',requiresScripture:false,model:'A criticism of dominion is that it can justify exploitation of the environment and cruelty to animals by putting human interests first.'},
-          {type:'Explain',topic:'Environment',question:'How does Laudato Si support stewardship?',keywords:['gift for everyone','climate change','poorest communities','deforestation','fossil fuels'],mustIncludeAny:[['gift for everyone','climate change'],['poorest communities','deforestation','fossil fuels']],quote:'Laudato Si links stewardship with justice for the poor.',requiresScripture:false,model:'Laudato Si supports stewardship by teaching that the earth is God’s gift for all, criticising pollution and fossil fuels, and stressing that environmental damage hurts the poorest most.'}
+          {topic:'Bible authority',ref:'2 Timothy 3:16',short:"'All Scripture is God-breathed'",full:'All Scripture is God-breathed and is useful for teaching, rebuking, correcting and training in righteousness.',highlight:'God-breathed',interpretation:'Supports verbal plenary inspiration and strong Protestant views of biblical authority.'},
+          {topic:'Bible authority',ref:'John 1:1',short:"'The Word was with God, and the Word was God'",full:'In the beginning was the Word, and the Word was with God, and the Word was God.',highlight:'the Word was God',interpretation:'Useful for Barth’s claim that the Bible contains the Word of God and for wider Christological debates.'},
+          {topic:'Church authority',ref:'Mark 16:15',short:"'Go into the world and preach'",full:'Go into all the world and preach the gospel to all creation.',highlight:'Go into the world and preach',interpretation:'Supports apostolic succession by linking later Church teaching back to Christ’s commission to the apostles.'},
+          {topic:'Church authority',ref:'Leviticus 20',short:"'If a man lies with a male... he shall be put to death'",full:'If a man lies with a male as with a woman, both of them have committed an abomination; they shall surely be put to death; their blood is upon them.',highlight:'he shall be put to death',interpretation:'Often used as a criticism of tradition and Magisterium when discussing outdated or controversial teachings.'},
+          {topic:'Church authority',ref:'1 Peter 2:9',short:"'a chosen race, a royal priesthood'",full:'But you are a chosen race, a royal priesthood, a holy nation, a people for his own possession.',highlight:'a royal priesthood',interpretation:'Supports the Protestant doctrine of the priesthood of all believers.'},
+          {topic:'Jesus authority',ref:'Matthew 28:18',short:"'All authority in heaven and on earth'",full:'All authority in heaven and on earth has been given to me.',highlight:'All authority in heaven and on earth',interpretation:'Key support for the title Son of God and Jesus’ divine authority.'},
+          {topic:'Jesus authority',ref:'Romans 6:9',short:"'death no longer has dominion over him'",full:'We know that Christ, being raised from the dead, will never die again; death no longer has dominion over him.',highlight:'death no longer has dominion over him',interpretation:'Supports Jesus’ divine power and victory over death.'},
+          {topic:'Jesus authority',ref:'Luke 9:58',short:"'The Son of Man has nowhere to lay his head'",full:'Foxes have holes, and birds of the air have nests, but the Son of Man has nowhere to lay his head.',highlight:'The Son of Man has nowhere to lay his head',interpretation:'Useful for Jesus’ humanity, suffering and vulnerability.'},
+          {topic:'Jesus ethics',ref:'Matthew 5:33-48',short:"Sermon on the Mount set text",full:'You have heard that it was said... But I say to you, Do not resist the one who is evil... Love your enemies and pray for those who persecute you.',highlight:'Love your enemies',interpretation:'Central set text for literal and metaphorical readings of Jesus’ ethics on retaliation and enemies.'},
+          {topic:'God',ref:'Genesis 1:1',short:"'In the beginning... created the heavens and the earth'",full:'In the beginning God created the heavens and the earth.',highlight:'created the heavens and the earth',interpretation:'Often used in discussions of creation, monotheism and the Hebrew term Elohim.'},
+          {topic:'God',ref:'Exodus 15:11',short:"'Who is like thee... among the gods?'",full:'Who is like you, O LORD, among the gods? Who is like you, majestic in holiness, awesome in glorious deeds, doing wonders?',highlight:'among the gods',interpretation:'Useful for explaining early Israelite religion and movement from a pantheon to stronger monotheism.'},
+          {topic:'God',ref:'Isaiah 43:10',short:"'Before me no god was formed'",full:'Before me no god was formed, nor shall there be any after me.',highlight:'no god was formed',interpretation:'Strong support for ethical monotheism.'},
+          {topic:'God',ref:'Deuteronomy 6:4',short:"'The Lord... the Lord alone'",full:'Hear, O Israel: The LORD our God, the LORD is one.',highlight:'the LORD is one',interpretation:'The Shema is central for monotheism and moral obedience.'},
+          {topic:'God',ref:'Matthew 19:26',short:"'With God all things are possible'",full:'With man this is impossible, but with God all things are possible.',highlight:'with God all things are possible',interpretation:'Classic support for omnipotence.'},
+          {topic:'God',ref:'1 Timothy 6:15',short:"'King of kings'",full:'He who is the blessed and only Sovereign, the King of kings and Lord of lords.',highlight:'King of kings',interpretation:'Useful for God as king and sovereign ruler.'},
+          {topic:'God',ref:'Psalm 104:5',short:"'set the earth on its foundations'",full:'He set the earth on its foundations, so that it should never be moved.',highlight:'set the earth on its foundations',interpretation:'Supports God as sustainer and king over creation.'},
+          {topic:'God',ref:'Psalm 97:9',short:"'Most High over all the earth'",full:'For you, O LORD, are most high over all the earth; you are exalted far above all gods.',highlight:'Most High over all the earth',interpretation:'Supports transcendence and divine supremacy.'},
+          {topic:'God',ref:'Exodus 3:14',short:"'I am who I am'",full:'God said to Moses, “I am who I am.”',highlight:'I am who I am',interpretation:'Supports God as ineffable or beyond normal human categories.'},
+          {topic:'God',ref:'Genesis 3:8',short:"'God walked in the garden'",full:'And they heard the sound of the LORD God walking in the garden in the cool of the day.',highlight:'walking in the garden',interpretation:'Used in discussions of anthropomorphism.'},
+          {topic:'God',ref:'Genesis 2:2',short:"'God rested'",full:'And on the seventh day God finished his work that he had done, and he rested on the seventh day from all his work that he had done.',highlight:'he rested',interpretation:'Another classic example of anthropomorphic language.'},
+          {topic:'God',ref:'Luke 11:9',short:"'Ask and it will be given to you'",full:'Ask, and it will be given to you; seek, and you will find; knock, and it will be opened to you.',highlight:'Ask, and it will be given to you',interpretation:'Supports the idea of God as personal and responsive to prayer.'},
+          {topic:'God',ref:'Mark 11:24',short:"'Ask and it will be given'",full:'Whatever you ask in prayer, believe that you have received it, and it will be yours.',highlight:'ask in prayer',interpretation:'Another key support for God as personal.'},
+          {topic:'God',ref:'Matthew 6:9',short:"'Our Father'",full:'Our Father in heaven, hallowed be your name.',highlight:'Our Father',interpretation:'Central support for God as Father and personal.'},
+          {topic:'God',ref:'Galatians 4:6',short:"'Abba, Father'",full:'God has sent the Spirit of his Son into our hearts, crying, “Abba! Father!”',highlight:'Abba! Father!',interpretation:'Supports the intimacy and father-language used in Christianity.'},
+          {topic:'God',ref:'Deuteronomy 7:9',short:"'keeps covenant and steadfast love'",full:'Know therefore that the LORD your God is God, the faithful God who keeps covenant and steadfast love.',highlight:'steadfast love',interpretation:'Useful for God as love and covenant faithfulness.'},
+          {topic:'God',ref:'Genesis 1:27',short:"'Let us make man in our image'",full:'So God created man in his own image... male and female he created them.',highlight:'in our image',interpretation:'Supports imago Dei and also appears in discussions of plurality and sexism.'},
+          {topic:'God',ref:'Isaiah 6:3',short:"'Lord of hosts'",full:'Holy, holy, holy is the LORD of hosts; the whole earth is full of his glory!',highlight:'LORD of hosts',interpretation:'Used for God as king commanding heavenly powers.'},
+          {topic:'God',ref:'Proverbs 1:20',short:"'Wisdom calls aloud, she raises her voice'",full:'Wisdom cries aloud in the street, in the markets she raises her voice.',highlight:'she raises her voice',interpretation:'Useful in feminist critiques because feminine imagery is far rarer than male divine titles.'},
+          {topic:'Trinity',ref:'John 10:30',short:"'The Father and I are one'",full:'I and the Father are one.',highlight:'The Father and I are one',interpretation:'Key set text for Trinitarian and non-Trinitarian interpretations of Jesus.'},
+          {topic:'Trinity',ref:'Matthew 1:20',short:"'conceived... of the Holy Spirit'",full:'That which is conceived in her is from the Holy Spirit.',highlight:'from the Holy Spirit',interpretation:'Supports belief that Father, Son and Spirit are all involved in the Christian understanding of God.'},
+          {topic:'Trinity',ref:'John 12:45',short:"'he who sees me sees him who sent me'",full:'Whoever sees me sees him who sent me.',highlight:'sees him who sent me',interpretation:'Useful for atonement and the close relation between Father and Son.'},
+          {topic:'Trinity',ref:'John 8:58',short:"'before Abraham was, I am'",full:'Before Abraham was, I am.',highlight:'I am',interpretation:'Supports claims of Jesus’ pre-existence and divinity.'},
+          {topic:'Trinity',ref:'1 Corinthians 8:6',short:"'one God... one Lord, Jesus Christ'",full:'Yet for us there is one God, the Father, from whom are all things and for whom we exist, and one Lord, Jesus Christ, through whom are all things and through whom we exist.',highlight:'one God... one Lord',interpretation:'Important set text for whether Paul includes Jesus within divine identity or treats him as subordinate.'},
+          {topic:'Purpose of life',ref:'Genesis 1:31',short:"'very good'",full:'God saw everything that he had made, and behold, it was very good.',highlight:'very good',interpretation:'Supports glorifying God as creator and valuing human life within creation.'},
+          {topic:'Purpose of life',ref:'Genesis 1:28',short:"'be fruitful and multiply'",full:'Be fruitful and multiply and fill the earth.',highlight:'be fruitful and multiply',interpretation:'Useful for discussing humanity’s role in God’s purposes.'},
+          {topic:'Purpose of life',ref:'Isaiah 43:7',short:"'created for my glory'",full:'Everyone who is called by my name, whom I created for my glory, whom I formed and made.',highlight:'created for my glory',interpretation:'Supports the view that life’s purpose is to glorify God.'},
+          {topic:'Purpose of life',ref:'John 1:14',short:"'We have beheld his glory'",full:'We have seen his glory, glory as of the only Son from the Father.',highlight:'seen his glory',interpretation:'Useful for glory language moving from Old Testament into Christ.'},
+          {topic:'Purpose of life',ref:'Matthew 5:16',short:"'Let your light shine'",full:'Let your light shine before others, so that they may see your good works and give glory to your Father who is in heaven.',highlight:'give glory to your Father',interpretation:'Supports good conduct and glorifying God through action.'},
+          {topic:'Purpose of life',ref:'Genesis 2:18',short:"'It is not good for the man to be alone'",full:'It is not good that the man should be alone; I will make him a helper fit for him.',highlight:'not good for the man to be alone',interpretation:'Supports the idea of God’s personal involvement in human life.'},
+          {topic:'Purpose of life',ref:'Genesis 2:7',short:"'breathed into his nostrils the breath of life'",full:'Then the LORD God formed the man of dust from the ground and breathed into his nostrils the breath of life.',highlight:'breathed into his nostrils the breath of life',interpretation:'Important for personal relationship, soul and sanctity of life.'},
+          {topic:'Purpose of life',ref:'John 17:21',short:"'that all of them may be one'",full:'That they may all be one, just as you, Father, are in me, and I in you.',highlight:'that all of them may be one',interpretation:'Supports an intimate relationship between God and humanity.'},
+          {topic:'Judgement',ref:'2 Corinthians 5:19',short:"'God was in Christ reconciling the world to himself'",full:'In Christ God was reconciling the world to himself.',highlight:'reconciling the world to himself',interpretation:'Useful for atonement and why judgement is possible after sin.'},
+          {topic:'Judgement',ref:'Genesis 3:5',short:"'you will be like God'",full:'For God knows that when you eat of it your eyes will be opened, and you will be like God, knowing good and evil.',highlight:'you will be like God',interpretation:'Useful for original sin and why humanity now faces judgement.'},
+          {topic:'Judgement',ref:'Matthew 25:31-46',short:"'Inherit the kingdom prepared for you'",full:'Come, you who are blessed by my Father, inherit the kingdom prepared for you... for I was hungry and you gave me food.',highlight:'inherit the kingdom prepared for you',interpretation:'Central parable for judgement by works of compassion.'},
+          {topic:'Kingdom of God',ref:'Matthew 6:10',short:"'Thy Kingdom come'",full:'Your kingdom come, your will be done, on earth as it is in heaven.',highlight:'Your kingdom come',interpretation:'Key support for bringing about the Kingdom of God on earth.'},
+          {topic:'Kingdom of God',ref:'1 Corinthians 15:52',short:"'we shall all be changed'",full:'In a moment, in the twinkling of an eye, at the last trumpet... we shall all be changed.',highlight:'we shall all be changed',interpretation:'Used for eschatological hope and final transformation.'},
+          {topic:'Kingdom of God',ref:'Mark 1:15',short:"'the kingdom of God is at hand'",full:'The time is fulfilled, and the kingdom of God is at hand; repent and believe in the gospel.',highlight:'the kingdom of God is at hand',interpretation:'Shows Jesus inaugurating the Kingdom and calling for repentance.'},
+          {topic:'Resurrection',ref:'Daniel 12:2',short:"'some to everlasting life'",full:'Many of those who sleep in the dust of the earth shall awake, some to everlasting life, and some to shame and everlasting contempt.',highlight:'everlasting life',interpretation:'Important Jewish background for resurrection and afterlife.'},
+          {topic:'Resurrection',ref:'Luke 1:46',short:"'My soul magnifies the Lord'",full:'My soul magnifies the Lord, and my spirit rejoices in God my Saviour.',highlight:'My soul magnifies the Lord',interpretation:'Useful for early Christian ideas of soul and spiritual life.'},
+          {topic:'Resurrection',ref:'John 20:27',short:"'Put your finger here'",full:'Put your finger here, and see my hands; and put out your hand, and place it in my side.',highlight:'see my hands',interpretation:'Supports Augustine’s view of bodily resurrection by stressing Jesus’ physical risen body.'},
+          {topic:'Resurrection',ref:'1 Corinthians 15:44',short:"'raised a spiritual body'",full:'It is sown a physical body; it is raised a spiritual body.',highlight:'raised a spiritual body',interpretation:'Key set text for spiritual resurrection arguments.'},
+          {topic:'Resurrection',ref:'1 Corinthians 15:12',short:"'how can some of you say there is no resurrection?'",full:'Now if Christ is proclaimed as raised from the dead, how can some of you say that there is no resurrection of the dead?',highlight:'there is no resurrection of the dead',interpretation:'Supports Paul’s insistence that Christian faith requires belief in resurrection.'},
+          {topic:'Resurrection',ref:'Acts 7:56',short:"'I see the heavens opened'",full:'Behold, I see the heavens opened, and the Son of Man standing at the right hand of God.',highlight:'I see the heavens opened',interpretation:'Useful for martyrdom and confidence in life after death.'},
+          {topic:'Afterlife',ref:'Matthew 25:41',short:"'Depart from me... into the eternal fire'",full:'Then he will say to those on his left, “Depart from me, you cursed, into the eternal fire prepared for the devil and his angels.”',highlight:'Depart from me',interpretation:'Support for hell in physical afterlife views.'},
+          {topic:'Afterlife',ref:'Luke 14:15',short:"'Blessed is the one who will eat at the feast'",full:'Blessed is everyone who will eat bread in the kingdom of God!',highlight:'eat bread in the kingdom of God',interpretation:'Useful for physical pictures of heaven and heavenly banquet imagery.'},
+          {topic:'Afterlife',ref:'Revelation 21:2',short:"'the Holy City, the new Jerusalem'",full:'I saw the holy city, new Jerusalem, coming down out of heaven from God.',highlight:'the holy city, new Jerusalem',interpretation:'Useful for physical or symbolic depictions of heaven.'},
+          {topic:'Good conduct',ref:'Ephesians 4:17-18',short:"'no longer live as the Gentiles do'",full:'You must no longer walk as the Gentiles do... They are darkened in their understanding, alienated from the life of God.',highlight:'alienated from the life of God',interpretation:'Supports the need for holy conduct to remain close to God.'},
+          {topic:'Good conduct',ref:'Matthew 22:39',short:"'Love your neighbour'",full:'You shall love your neighbor as yourself.',highlight:'Love your neighbor',interpretation:'Central for good conduct and justification by works.'},
+          {topic:'Good conduct',ref:'Titus 2:9',short:"'slaves should be submissive'",full:'Bondservants are to be submissive to their own masters in everything.',highlight:'submissive to their own masters',interpretation:'Useful as a criticism that not every biblical moral teaching seems timeless or acceptable.'},
+          {topic:'Justification',ref:'Romans 3:21-24',short:"'all have sinned... justified by grace'",full:'All have sinned and fall short of the glory of God, and are justified by his grace as a gift.',highlight:'justified by his grace',interpretation:'Core Pauline support for justification by faith and grace.'},
+          {topic:'Justification',ref:'Romans 4:3',short:"'Abraham believed God'",full:'Abraham believed God, and it was counted to him as righteousness.',highlight:'counted to him as righteousness',interpretation:'Used by Paul to show faith can justify even before Christ’s atonement in time.'},
+          {topic:'Justification',ref:'Genesis 22:10',short:"'he reached out his hand'",full:'Then Abraham reached out his hand and took the knife to slaughter his son.',highlight:'reached out his hand',interpretation:'Useful for James because Abraham’s work shows his faith.'},
+          {topic:'Justification',ref:'Romans 1:16',short:"'the gospel is the power of God for everyone who has faith'",full:'For it is the power of God for salvation to everyone who believes.',highlight:'everyone who believes',interpretation:'Support for Luther’s sola fide emphasis.'},
+          {topic:'Justification',ref:'James 2:17',short:"'Faith by itself... is dead'",full:'Faith by itself, if it does not have works, is dead.',highlight:'Faith by itself... is dead',interpretation:'Main support for justification by works in James.'},
+          {topic:'Justification',ref:'James 2:19',short:"'Even demons believe and shudder'",full:'You believe that God is one; you do well. Even the demons believe—and shudder!',highlight:'Even demons believe',interpretation:'Shows that bare belief is not enough for saving faith.'},
+          {topic:'Justification',ref:'James 2:21',short:"'Was Abraham not justified by works?'",full:'Was not Abraham our father justified by works when he offered up his son Isaac on the altar?',highlight:'justified by works',interpretation:'Important for the case that works complete and display faith.'},
+          {topic:'Predestination',ref:'Job 37:16',short:"'perfect in knowledge'",full:'Do you know the balancings of the clouds, the wondrous works of him who is perfect in knowledge?',highlight:'perfect in knowledge',interpretation:'Used to support omniscience in predestination debates.'},
+          {topic:'Predestination',ref:'Genesis 1:27',short:"'God created mankind in his image'",full:'So God created mankind in his own image.',highlight:'in his own image',interpretation:'Used against predestination to defend human free will and dignity.'},
+          {topic:'Predestination',ref:'Calvin quote',short:"'Some are eternally ordained to glory...'",full:'Some are eternally ordained to glory, while others are ordained to torment.',highlight:'ordained to glory',interpretation:'A stark expression of Calvinist predestination.'},
+          {topic:'Sanctity of life',ref:'Genesis 1:27',short:"'humankind made in his image'",full:'So God created mankind in his own image.',highlight:'in his own image',interpretation:'Key support for sanctity of life and intrinsic dignity.'},
+          {topic:'Sanctity of life',ref:'Genesis 2:7',short:"'breath of life'",full:'God breathed into his nostrils the breath of life, and the man became a living being.',highlight:'breath of life',interpretation:'Supports the idea that life is a divine gift.'},
+          {topic:'Sanctity of life',ref:'Luke 1:31',short:"'you will conceive in your womb'",full:'You will conceive in your womb and bear a son.',highlight:'conceive in your womb',interpretation:'Often used by Catholics to support personhood beginning before birth.'},
+          {topic:'Sanctity of life',ref:'Declaration on Procured Abortion',short:"'It would never be made human...'",full:'It would never be made human if it were not human already.',highlight:'not human already',interpretation:'Catholic support for embryo personhood.'},
+          {topic:'Just war',ref:'Matthew 5:39',short:"'turn the other cheek'",full:'If anyone slaps you on the right cheek, turn to him the other also.',highlight:'turn the other cheek',interpretation:'Background challenge that Just War Theory tries to balance with practical defence.'},
+          {topic:'Just war',ref:'City of God',short:"'by no means violated thou shalt not kill'",full:'Wars fought under these conditions by no means violated the commandment, “Thou shalt not kill.”',highlight:'by no means violated',interpretation:'Augustinian support for just war.'},
+          {topic:'WMD',ref:'Pope Francis 2013',short:"'false sense of security'",full:'Nuclear weapons create nothing but a false sense of security.',highlight:'false sense of security',interpretation:'Direct Catholic criticism of nuclear weapons.'},
+          {topic:'Dominion',ref:'Psalm 8:5',short:"'a little less than God'",full:'You have made him a little lower than the heavenly beings and crowned him with glory and honor.',highlight:'a little lower than the heavenly beings',interpretation:'Used to argue that humans occupy a uniquely elevated place in creation.'},
+          {topic:'Dominion',ref:'Psalm 8:6',short:"'dominion over the work of thy hands'",full:'You have given him dominion over the works of your hands; you have put all things under his feet.',highlight:'dominion over the works of your hands',interpretation:'One of the clearest dominion texts.'},
+          {topic:'Dominion',ref:'Genesis 1:28',short:"'fill the earth and subdue it'",full:'Fill the earth and subdue it, and have dominion over the fish of the sea and over the birds of the heavens and over every living thing that moves on the earth.',highlight:'subdue it',interpretation:'Used to support dominion and authority over nature.'},
+          {topic:'Stewardship',ref:'Genesis 2:15',short:"'till it and keep it'",full:'The LORD God took the man and put him in the garden of Eden to work it and keep it.',highlight:'keep it',interpretation:'Often used to argue for stewardship rather than exploitation.'},
+          {topic:'Stewardship',ref:'Genesis 1:31',short:"'very good'",full:'God saw everything that he had made, and behold, it was very good.',highlight:'very good',interpretation:'Supports intrinsic value in all creation and therefore stewardship.'},
+          {topic:'Stewardship',ref:'Psalms 96:11',short:"'Let the earth rejoice, and the seas roar'",full:'Let the heavens be glad, and let the earth rejoice; let the sea roar, and all that fills it.',highlight:'Let the earth rejoice',interpretation:'Supports the value of non-human creation itself.'},
+          {topic:'Stewardship',ref:'Psalms 65:9',short:"'You care for the land and water it'",full:'You visit the earth and water it; you greatly enrich it.',highlight:'water it',interpretation:'Useful for stewardship and God’s care for the earth.'},
+          {topic:'Stewardship',ref:'Isaiah 55:12',short:"'mountains and hills will burst into song'",full:'The mountains and the hills before you shall break forth into singing, and all the trees of the field shall clap their hands.',highlight:'burst into song',interpretation:'Useful for eco-theology because creation is given its own dignity and voice.'},
+          {topic:'Stewardship',ref:'Numbers 35:33',short:"'Do not pollute the land where you are'",full:'You shall not pollute the land in which you live.',highlight:'Do not pollute the land',interpretation:'Often adapted as a simple stewardship quote against environmental damage.'},
+          {topic:'Stewardship',ref:'Laudato Si',short:"'the fruits of the earth belong to everyone'",full:'The earth is essentially a shared inheritance, whose fruits are meant to benefit everyone.',highlight:'benefit everyone',interpretation:'Supports Pope Francis’s argument that the earth is a shared gift and stewardship is a matter of justice.'},
+          {topic:'Scholars',ref:'Victoria Harrison',short:"'develop a theology to respond to the environmental crisis'",full:'By the end of the 20th century, Abrahamic faiths need to develop a theology to respond to the environmental crisis.',highlight:'respond to the environmental crisis',interpretation:'Useful for explaining eco-theology as a modern development.'},
+          {topic:'Scholars',ref:'Daphne Hampson',short:"'Abrahamic religions... are a form of fascism'",full:'Abrahamic religions... are a form of fascism.',highlight:'form of fascism',interpretation:'A provocative feminist criticism of male God-language and patriarchal religion.'},
+          {topic:'Scholars',ref:'Heaven and Hell saying',short:"'heaven is the endless moment of love'",full:'Heaven is the endless moment of love.',highlight:'endless moment of love',interpretation:'Useful for spiritual interpretations of heaven rather than physical imagery.'},
+          {topic:'Scholars',ref:'Hell saying',short:"'Hell is the condition of everlasting separation of God'",full:'Hell is the condition of everlasting separation of God.',highlight:'everlasting separation of God',interpretation:'Useful for spiritual rather than physical understandings of hell.'}
         ],
-
-        // PASTE YOUR FULL THEOLOGY QUOTE BANK HERE
         quoteBank: [
           {topic:'Bible authority',ref:'2 Timothy 3:16',short:"'All Scripture is God-breathed'",full:'All Scripture is God-breathed and is useful for teaching, rebuking, correcting and training in righteousness.',highlight:'God-breathed',interpretation:'Supports verbal plenary inspiration and strong Protestant views of biblical authority.'},
           {topic:'Bible authority',ref:'John 1:1',short:"'The Word was with God, and the Word was God'",full:'In the beginning was the Word, and the Word was with God, and the Word was God.',highlight:'the Word was God',interpretation:'Useful for Barth’s claim that the Bible contains the Word of God and for wider Christological debates.'},
@@ -1243,8 +1281,7 @@
         icon: '⚖️',
         subtitle: 'Free will, conscience, arguments for God, soul, mind, and evil.',
         bookCoverSub: 'Best philosophy & ethics revision quotes booklet',
-
-        // PASTE YOUR FULL PHILOSOPHY & ETHICS QUESTION BANK HERE
+        hasQuotes: true,
         questionBank: [
           {type:'Define',topic:'Free Will & Determinism',question:'What is determinism?',keywords:['all events','necessary consequences','preceding events','cause and effect'],mustIncludeAny:[['all events','necessary consequences'],['preceding events','cause and effect']],quote:'Determinism means events follow necessarily from previous causes.',requiresScripture:false,model:'Determinism is the view that all events, including human actions, are the necessary consequences of previous events and causes.'},
           {type:'Explain',topic:'Free Will & Determinism',question:'Why does moral responsibility require a conscious and morally capable human agent?',keywords:['conscious','morally capable','right and wrong','reason','choose','responsible'],mustIncludeAny:[['conscious','morally capable'],['right and wrong','reason','choose']],quote:'A person must understand what they are doing and that it is wrong.',requiresScripture:false,model:'Moral responsibility requires a conscious and morally capable human agent because a person must understand right and wrong and freely choose an action for praise or blame to make sense.'},
@@ -1425,8 +1462,6 @@
           {type:'Explain',topic:'Process Theodicy',question:'How does process thought solve natural evil?',keywords:['aggregates','tsunami not conscious','cannot control inner workings'],mustIncludeAny:[['aggregates','tsunami not conscious'],['cannot control inner workings']],quote:'God cannot coerce low-level natural processes that have no consciousness.',requiresScripture:false,model:'Process thought says natural evils arise from low-level physical processes or aggregates that God cannot fully control, so disasters occur without divine willing.'},
           {type:'Criticism',topic:'Process Theodicy',question:'Give one weakness of process thought.',keywords:['not classical theism','mainstream christians reject','god too weak','risk'],mustIncludeAny:[['not classical theism','mainstream christians reject'],['god too weak','risk']],quote:'The solution may work only by giving up the God most believers want to defend.',requiresScripture:false,model:'A weakness is that process thought changes God so radically by denying omnipotence and transcendence that many mainstream Christians do not accept it as a true solution.'}
         ],
-
-        // PASTE YOUR FULL PHILOSOPHY & ETHICS QUOTE BANK HERE
         quoteBank: [
           {topic:'Free Will & Determinism',ref:'Baruch Spinoza',short:"'In the mind there is no free will...'",full:'In the mind there is no free will, but the mind is determined to wish this or that by a cause, and this cause is determined by another cause, and so on to infinity.',highlight:'there is no free will',interpretation:'Classic reductionist support for hard determinism. Spinoza argues every mental event is caused, so freedom is only apparent.'},
           {topic:'Free Will & Determinism',ref:'Baruch Spinoza',short:"'The feeling of freedom is merely ignorance'",full:'The feeling of freedom is merely ignorance of the causes that determine us.',highlight:'feeling of freedom',interpretation:'Useful for the claim that we only feel free because we do not see the hidden causes influencing our choices.'},
@@ -1530,7 +1565,193 @@
           {topic:'Process Theodicy',ref:'David Griffin',short:"'Humanity can destroy the world...'",full:'They can use this knowledge to destroy the world even more quickly.',highlight:'destroy the world',interpretation:'Useful criticism of process thought: if God cannot control evil, human freedom becomes terrifyingly risky.'},
           {topic:'Process Theodicy',ref:'Genesis 1 translation debate',short:"'The earth being without form and void'",full:'The earth being without form and void suggests pre-existing chaotic matter rather than creation from nothing.',highlight:'without form and void',interpretation:'Useful biblical support for process thought’s rejection of ex nihilo.'}
         ]
-      }
+      },
+
+      politics: {
+        title: 'Politics',
+        icon: '🏛️',
+        subtitle: 'Edexcel A-level Politics: institutions, ideologies and evaluation.',
+        bookCoverSub: '',
+        hasQuotes: false,
+        questionBank: [
+          {
+            type:'Define',
+            topic:'Participation',
+            question:'What is a participation crisis in politics?',
+            keywords:['lack of engagement','significant number of citizens','political process','not vote','not join political parties','not offer themselves for public office','formal institutions decline'],
+            mustIncludeAny:[
+              ['lack of engagement','significant number of citizens'],
+              ['political process','not vote','not join political parties','public office'],
+              ['formal institutions','decline']
+            ],
+            quote:'Definition: a lack of engagement by a significant number of citizens in the political process.',
+            requiresScripture:false,
+            model:'A participation crisis is a lack of engagement by a significant number of citizens in the political process, for example by not voting, not joining parties or not standing for public office, especially when engagement with formal democratic institutions declines.'
+          },
+          {
+            type:'Explain',
+            topic:'Participation',
+            question:'What forms of behaviour are used to identify a participation crisis?',
+            keywords:['choosing not to vote','not join political parties','not become members','not offer themselves for public office','formal participation'],
+            mustIncludeAny:[
+              ['not vote'],
+              ['not join political parties','not become members'],
+              ['not offer themselves for public office']
+            ],
+            quote:'A participation crisis is seen in declining engagement with formal democratic activity.',
+            requiresScripture:false,
+            model:'It is identified through declining formal participation, such as not voting, not joining political parties and not standing for public office.'
+          },
+          {
+            type:'Explain',
+            topic:'Participation',
+            question:'Why is participation considered crucial in a democracy?',
+            keywords:['democracy to function','representative','citizens have a voice','held accountable','decisions that affect their lives'],
+            mustIncludeAny:[
+              ['democracy to function','representative'],
+              ['citizens have a voice','held accountable']
+            ],
+            quote:'Participation is crucial for democracy to function and for representatives to be accountable.',
+            requiresScripture:false,
+            model:'Participation is crucial because democracy depends on citizens having a voice in the decisions that affect them and on representatives being held accountable.'
+          },
+        
+          {
+            type:'Define',
+            topic:'Pressure groups and corporations',
+            question:'What does “influence” mean in the context of influencing government policy?',
+            keywords:['actual change','policies','serve the interest','company','government policy'],
+            mustIncludeAny:[
+              ['actual change','policies'],
+              ['serve the interest','company','government policy']
+            ],
+            quote:'“Influence” refers to actual change to policies to serve the interest of a company.',
+            requiresScripture:false,
+            model:'Influence means producing an actual change in government policy so that it serves the interests of a company or organisation.'
+          },
+        
+          {
+            type:'Define',
+            topic:'Democracy',
+            question:'What is a democratic deficit?',
+            keywords:['flaw in the democratic process','decisions taken by people who lack legitimacy','insufficient democratic input','not sufficiently subject to democratic accountability','institutions fall short of democracy','public discredited'],
+            mustIncludeAny:[
+              ['flaw in the democratic process','lack legitimacy'],
+              ['insufficient democratic input','democratic accountability'],
+              ['institutions fall short','democracy']
+            ],
+            quote:'A democratic deficit is a flaw in the democratic process where decisions are taken by people who lack legitimacy.',
+            requiresScripture:false,
+            model:'A democratic deficit is a flaw in the democratic process in which decisions are taken by people or institutions that lack legitimacy, democratic input or sufficient accountability.'
+          },
+          {
+            type:'Explain',
+            topic:'Democracy',
+            question:'Why does a democratic deficit undermine democracy?',
+            keywords:['institutions fall short','democratic accountability','public become discredited','less democratic'],
+            mustIncludeAny:[
+              ['institutions fall short','democratic accountability'],
+              ['public become discredited','less democratic']
+            ],
+            quote:'Democratic deficits arise when institutions fall short of democratic accountability.',
+            requiresScripture:false,
+            model:'A democratic deficit undermines democracy because institutions fall short of proper democratic accountability, which can make the public lose trust in the system.'
+          },
+          {
+            type:'Define',
+            topic:'Democracy',
+            question:'What is direct democracy?',
+            keywords:['citizens make decisions on policy','without the use of representatives','referendums','citizens juries','initiatives','e-petitions'],
+            mustIncludeAny:[
+              ['citizens make decisions on policy'],
+              ['without the use of representatives'],
+              ['referendums','citizens juries','initiatives','e-petitions']
+            ],
+            quote:'Direct democracy allows citizens to make decisions on policy without representatives.',
+            requiresScripture:false,
+            model:'Direct democracy is a system where citizens make decisions on policy themselves without relying on representatives, for example through referendums or initiatives.'
+          },
+          {
+            type:'Define',
+            topic:'Democracy',
+            question:'What is representative democracy?',
+            keywords:['major political decisions','elected politicians','not directly through the public','representatives'],
+            mustIncludeAny:[
+              ['major political decisions','elected politicians'],
+              ['not directly through the public','representatives']
+            ],
+            quote:'The UK is a representative democracy, where major political decisions are made by elected politicians.',
+            requiresScripture:false,
+            model:'Representative democracy is a system in which major political decisions are made by elected representatives rather than directly by the public.'
+          },
+          {
+            type:'Compare',
+            topic:'Democracy',
+            question:'What is the difference between direct democracy and representative democracy?',
+            keywords:['direct democracy','citizens make decisions','without representatives','representative democracy','elected politicians','make major decisions'],
+            mustIncludeAny:[
+              ['direct democracy','citizens make decisions','without representatives'],
+              ['representative democracy','elected politicians','make major decisions']
+            ],
+            quote:'Direct democracy involves citizens deciding directly; representative democracy uses elected politicians.',
+            requiresScripture:false,
+            model:'Direct democracy means citizens decide policy directly themselves, whereas representative democracy means elected politicians make most major decisions on behalf of the public.'
+          },
+        
+          {
+            type:'Define',
+            topic:'Constitution',
+            question:'What is an uncodified constitution?',
+            keywords:['uncodified constitution','ultimate sovereignty lies in parliament','can override any decisions','not in one single written document','flexibility'],
+            mustIncludeAny:[
+              ['uncodified constitution'],
+              ['ultimate sovereignty lies in parliament','override any decisions'],
+              ['flexibility']
+            ],
+            quote:'In the UK we have an uncodified constitution, meaning ultimate sovereignty lies in parliament.',
+            requiresScripture:false,
+            model:'An uncodified constitution is a constitution not contained in one single written document, where parliament remains sovereign and can change constitutional rules through ordinary law.'
+          },
+          {
+            type:'Explain',
+            topic:'Constitution',
+            question:'What does constitutional flexibility mean in the UK system?',
+            keywords:['flexibility','respond to current issues easily','sovereignty remains in Westminster','adapt quickly','not entrenched'],
+            mustIncludeAny:[
+              ['flexibility'],
+              ['respond to current issues easily'],
+              ['sovereignty remains in Westminster','adapt quickly']
+            ],
+            quote:'An uncodified constitution gives the government flexibility to respond to current issues easily.',
+            requiresScripture:false,
+            model:'Constitutional flexibility means the government can respond and adapt to current issues more easily because the constitution is not rigidly entrenched and sovereignty remains in Westminster.'
+          },
+          {
+            type:'Compare',
+            topic:'Constitution',
+            question:'What is the difference between a codified and an uncodified constitution?',
+            keywords:['codified','entrenched','higher law','written document','uncodified','flexible','parliamentary sovereignty'],
+            mustIncludeAny:[
+              ['codified','entrenched','higher law'],
+              ['uncodified','flexible','parliamentary sovereignty']
+            ],
+            quote:'A codified constitution entrenches rules as higher law, whereas an uncodified constitution is more flexible.',
+            requiresScripture:false,
+            model:'A codified constitution is written in a single authoritative document and entrenches key rules as higher law, whereas an uncodified constitution is more flexible and can be changed more easily by parliament.'
+          },
+          {
+            type:'Define',
+            topic:'Parliament',
+            question:'What does “the Opposition” mean in the House of Commons?',
+            keywords:['all political parties not in government','official opposition','second largest party','house of commons','parliamentary opposition'],
+            mustIncludeAny:[
+              ['all political parties not in government','parliamentary opposition'],
+              ['official opposition','second largest party','house of commons']
+            ],
+            quote:'The Opposition refers both to all parties not in government and specifically to the official opposition.',
+            requiresScripture:false,
+            model:'The Opposition refers to all parties in parliament that are not in government and, more specifically, to the official opposition, which is the second largest party in the House of Commons.'
+          }
     };
 
     const questionsWrap = document.getElementById('questions');
@@ -1549,6 +1770,7 @@
     const examTab = document.getElementById('examTab');
     const quizControls = document.getElementById('quizControls');
     const tabButtons = document.querySelectorAll('.tab-btn');
+    const quotesTabBtn = document.querySelector('.tab-btn[data-tab="quotes"]');
     const warningModal = document.getElementById('warningModal');
     const cancelMarkBtn = document.getElementById('cancelMarkBtn');
     const acceptMarkBtn = document.getElementById('acceptMarkBtn');
@@ -1570,6 +1792,7 @@
     const loginStatus = document.getElementById('loginStatus');
     const appWrap = document.getElementById('appWrap');
     const bookCoverSub = document.getElementById('bookCoverSub');
+    const essayModeNote = document.getElementById('essayModeNote');
 
     const essayQuestion = document.getElementById('essayQuestion');
     const essayType = document.getElementById('essayType');
@@ -1753,6 +1976,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             password,
+            subject: currentSubject,
             question: question.question,
             topic: question.topic,
             requiresScripture: question.requiresScripture,
@@ -1802,6 +2026,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             password,
+            subject: currentSubject,
             question: question.question,
             topic: question.topic,
             requiresScripture: question.requiresScripture,
@@ -1832,7 +2057,13 @@
         const res = await fetch(`${WORKER_BASE_URL}/api/essay-mark`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password, question, questionType, answer })
+          body: JSON.stringify({
+            password,
+            subject: currentSubject,
+            question,
+            questionType,
+            answer
+          })
         });
 
         if (!res.ok) {
@@ -1856,7 +2087,15 @@
         const res = await fetch(`${WORKER_BASE_URL}/api/essay-improve`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password, question, questionType, answer, limitations, targets })
+          body: JSON.stringify({
+            password,
+            subject: currentSubject,
+            question,
+            questionType,
+            answer,
+            limitations,
+            targets
+          })
         });
 
         if (!res.ok) {
@@ -1877,7 +2116,7 @@
         questionsWrap.innerHTML = `
           <div class="footer-note">
             No questions loaded for <strong>${getCurrentBank().title}</strong> yet.<br><br>
-            Paste your ${currentSubject === 'theology' ? 'theology' : 'philosophy & ethics'} <strong>questionBank</strong> into the script first.
+            Paste your <strong>questionBank</strong> into the script first.
           </div>
         `;
       }
@@ -1919,7 +2158,7 @@
           <div class="textarea-anim-wrap">
             <textarea id="answer-${i}" placeholder="Type your answer here..."></textarea>
           </div>
-          <div class="helper">Tip: short but accurate answers can still be correct. Only use scripture if the question specifically asks for it.</div>
+          <div class="helper">Tip: short but accurate answers can still be correct.</div>
         </article>
       `).join('');
 
@@ -1948,35 +2187,25 @@
         };
       }
 
-      const scripturePattern = /(john|matthew|mark|luke|genesis|psalm|psalms|romans|corinthians|timothy|isaiah|deuteronomy|exodus|leviticus|numbers|job|galatians|proverbs|acts|james|revelation)/;
       const matchedKeywords = (question.keywords || []).filter(k => includesKeyword(text, k));
-      const contentKeywords = (question.keywords || []).filter(k => !scripturePattern.test(normalize(k)));
-      const scoredHits = question.requiresScripture ? matchedKeywords : matchedKeywords.filter(k => !scripturePattern.test(normalize(k)));
-      const keywordPool = question.requiresScripture ? (question.keywords || []) : (contentKeywords.length ? contentKeywords : (question.keywords || []));
-      const keywordRatio = scoredHits.length / Math.max(1, keywordPool.length);
+      const keywordPool = question.keywords || [];
+      const keywordRatio = matchedKeywords.length / Math.max(1, keywordPool.length);
 
       let mustScore = 0;
       if (question.mustIncludeAny && question.mustIncludeAny.length) {
         question.mustIncludeAny.forEach(group => {
-          const groupToCheck = question.requiresScripture
-            ? group
-            : ((group.filter(term => !scripturePattern.test(normalize(term))).length) ? group.filter(term => !scripturePattern.test(normalize(term))) : group);
-
-          if (groupToCheck.some(term => includesKeyword(text, term))) mustScore++;
+          if (group.some(term => includesKeyword(text, term))) mustScore++;
         });
       }
 
       const mustRatio = question.mustIncludeAny?.length ? mustScore / question.mustIncludeAny.length : 1;
       const wordCount = text.split(' ').filter(Boolean).length;
       const lengthBonus = Math.min(wordCount / 45, 1) * 0.08;
-      const hasScriptureRef = scripturePattern.test(text);
-      const scriptureBonus = question.requiresScripture && hasScriptureRef ? 0.08 : 0;
-      const scripturePenalty = question.requiresScripture && !hasScriptureRef ? 0.08 : 0;
 
-      let score = (keywordRatio * 0.62) + (mustRatio * 0.28) + lengthBonus + scriptureBonus - scripturePenalty;
-      if (mustRatio >= 0.5 && scoredHits.length >= 2) score = Math.max(score, 0.76);
-      if (mustRatio >= 0.5 && scoredHits.length >= 3) score = Math.max(score, 0.86);
-      if (scoredHits.length >= 1 && mustRatio >= 0.5 && wordCount <= 12) score = Math.max(score, 0.68);
+      let score = (keywordRatio * 0.62) + (mustRatio * 0.28) + lengthBonus;
+      if (mustRatio >= 0.5 && matchedKeywords.length >= 2) score = Math.max(score, 0.76);
+      if (mustRatio >= 0.5 && matchedKeywords.length >= 3) score = Math.max(score, 0.86);
+      if (matchedKeywords.length >= 1 && mustRatio >= 0.5 && wordCount <= 12) score = Math.max(score, 0.68);
       score = Math.max(0, Math.min(1, score));
 
       const percentage = Math.round(score * 100);
@@ -1992,12 +2221,12 @@
 
       let feedback = '';
       if (percentage >= 66) {
-        feedback = `That is accurate enough to count as correct. Use the model answer below to make it fuller next time.${question.requiresScripture ? ' Add a scripture reference because this question asks for one.' : ''}`;
+        feedback = `That is accurate enough to count as correct. Use the model answer below to make it fuller next time.`;
       } else if (percentage >= 36) {
-        const missing = keywordPool.filter(k => !scoredHits.includes(k)).slice(0, 4);
-        feedback = `You are close. A small extra point would probably make this fully correct. Try adding: ${missing.join(', ')}.${question.requiresScripture ? ' This question also wants a scripture reference.' : ''}`;
+        const missing = keywordPool.filter(k => !matchedKeywords.includes(k)).slice(0, 4);
+        feedback = `You are close. A small extra point would probably make this fully correct. Try adding: ${missing.join(', ')}.`;
       } else {
-        feedback = `Not enough there yet. Try mentioning: ${keywordPool.slice(0, 4).join(', ')}.${question.requiresScripture ? ' Include a scripture reference too.' : ''}`;
+        feedback = `Not enough there yet. Try mentioning: ${keywordPool.slice(0, 4).join(', ')}.`;
       }
 
       return { percentage, label, cls, feedback, hits: matchedKeywords, aiModelAnswer: question.model };
@@ -2040,8 +2269,8 @@
             <span class="pill ${item.result.cls}">${item.result.label} · ${item.result.percentage}%</span>
           </div>
           <div class="small"><strong>Feedback:</strong> ${item.result.feedback}</div>
-          <div class="small" style="margin-top:8px;"><strong>Model answer idea:</strong> ${item.result.aiModelAnswer || item.question.model}</div>
-          <div class="small" style="margin-top:8px;"><strong>${item.question.requiresScripture ? 'Scripture hint' : 'Extra support hint'}:</strong> ${item.question.quote || 'No quote/hint added yet.'}</div>
+          <div class="small" style="margin-top:8px;"><strong>Model answer idea:</strong> ${item.result.aiModelAnswer || item.question.model || 'No model answer added yet.'}</div>
+          <div class="small" style="margin-top:8px;"><strong>Extra support hint:</strong> ${item.question.quote || 'No quote/hint added yet.'}</div>
           <button class="primary rewrite-btn" data-rewrite-index="${i}">Generate me a model answer</button>
           <div class="topic-list">
             ${item.result.hits.length ? item.result.hits.slice(0, 8).map(hit => `<span class="topic">✓ ${hit}</span>`).join('') : '<span class="topic">No strong key points spotted yet</span>'}
@@ -2166,10 +2395,42 @@
       nextPageBtn.disabled = currentPageIndex === totalPages - 1;
     }
 
+    function updateEssayTypeOptions() {
+      if (currentSubject === 'politics') {
+        essayType.innerHTML = `
+          <option value="30">30 marker – Evaluate (AO1/AO2/AO3)</option>
+        `;
+        essayModeNote.innerHTML = `
+          30 marker = balanced Edexcel Politics evaluation.<br>
+          AO1 knowledge, AO2 analysis, AO3 judgement.
+        `;
+      } else {
+        essayType.innerHTML = `
+          <option value="10">10 marker – Examine (AO1)</option>
+          <option value="15">15 marker – Evaluate (AO2)</option>
+        `;
+        essayModeNote.innerHTML = `
+          10 marker = examine knowledge and understanding.<br>
+          15 marker = evaluate and argue.
+        `;
+      }
+    }
+
     function updateEssayWordUi() {
       const words = essayAnswer.value.trim() ? essayAnswer.value.trim().split(/\s+/).length : 0;
       essayWordCount.textContent = `${words} words`;
-      essayTargetHint.textContent = Number(essayType.value) === 10 ? 'Target: about 420 words' : 'Target: about 650 words';
+
+      const type = Number(essayType.value);
+
+      if (type === 10) {
+        essayTargetHint.textContent = 'Target: about 420 words';
+      } else if (type === 15) {
+        essayTargetHint.textContent = 'Target: about 650 words';
+      } else if (type === 30) {
+        essayTargetHint.textContent = 'Target: about 1000–1200 words';
+      } else {
+        essayTargetHint.textContent = 'Target: exam-length answer';
+      }
     }
 
     function renderEssayResult(result) {
@@ -2215,35 +2476,60 @@
     }
 
     function setTab(tab) {
-      tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      const bank = getCurrentBank();
+      const quotesAllowed = bank.hasQuotes !== false;
+
+      if (!quotesAllowed && tab === 'quotes') {
+        tab = 'quiz';
+      }
+
+      tabButtons.forEach(btn => {
+        if (btn.dataset.tab === 'quotes') {
+          btn.classList.toggle('hidden', !quotesAllowed);
+        }
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+      });
+
       quizTab.classList.toggle('hidden', tab !== 'quiz');
       quotesTab.classList.toggle('hidden', tab !== 'quotes');
       examTab.classList.toggle('hidden', tab !== 'exam');
       quizControls.classList.toggle('hidden', tab !== 'quiz');
 
       if (tab === 'quotes') {
-        heroTitle.textContent = `${getCurrentBank().title} Quote Book`;
+        heroTitle.textContent = `${bank.title} Quote Book`;
         heroSubtitle.textContent = 'A flick-through booklet with full quotes, highlighted key phrases, and interpretations.';
         heroBadges.classList.add('hidden');
       } else if (tab === 'exam') {
         heroTitle.textContent = 'Exam Marker';
-        heroSubtitle.textContent = `Mark full essays in two different modes for ${getCurrentBank().title}.`;
+        heroSubtitle.textContent = currentSubject === 'politics'
+          ? 'Mark 30-mark Edexcel Politics evaluation essays.'
+          : `Mark full essays in different modes for ${bank.title}.`;
         heroBadges.classList.add('hidden');
       } else {
         heroTitle.textContent = 'Daily 5 Questions';
-        heroSubtitle.textContent = `A full revision site for ${getCurrentBank().title} with a daily question bank, quote book, and exam essay marker.`;
+        heroSubtitle.textContent = `A full revision site for ${bank.title}${quotesAllowed ? ' with a daily question bank, quote book, and exam essay marker.' : ' with a daily question bank and exam essay marker.'}`;
         heroBadges.classList.remove('hidden');
       }
     }
 
     function updateSubjectUi() {
       const bank = getCurrentBank();
+      const quotesAllowed = bank.hasQuotes !== false;
+
       subjectBadge.textContent = `Subject: ${bank.title}`;
-      bookCoverSub.textContent = bank.bookCoverSub;
+      bookCoverSub.textContent = bank.bookCoverSub || '';
 
       subjectButtons.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.subject === currentSubject);
       });
+
+      if (quotesTabBtn) {
+        quotesTabBtn.classList.toggle('hidden', !quotesAllowed);
+      }
+
+      if (!quotesAllowed && !quotesTab.classList.contains('hidden')) {
+        setTab('quiz');
+      }
 
       if (!quotesTab.classList.contains('hidden')) {
         heroTitle.textContent = `${bank.title} Quote Book`;
@@ -2254,14 +2540,49 @@
       }
 
       if (!quizTab.classList.contains('hidden')) {
-        heroSubtitle.textContent = `A full revision site for ${bank.title} with a daily question bank, quote book, and exam essay marker.`;
+        heroSubtitle.textContent = `A full revision site for ${bank.title}${quotesAllowed ? ' with a daily question bank, quote book, and exam essay marker.' : ' with a daily question bank and exam essay marker.'}`;
       }
 
       poolBadge.textContent = `${getCurrentQuestionBank().length} questions in the pool`;
       updateStreakBadge();
       currentPageIndex = 0;
-      renderQuotePage();
-      if (getCurrentQuoteBank().length) showQuote(0);
+
+      if (quotesAllowed) {
+        renderQuotePage();
+        if (getCurrentQuoteBank().length) showQuote(0);
+      } else {
+        quoteRef.textContent = 'No quote book for Politics';
+        fullVerse.textContent = 'Politics uses Daily 5 Questions and Exam Marker only.';
+        quoteInterpretation.textContent = 'There is no quote book for this subject.';
+      }
+
+      updateEssayTypeOptions();
+
+      if (currentSubject === 'politics') {
+        essayResultsWrap.innerHTML = `
+          <div class="footer-note">
+            <strong>30 marker – Evaluate (Edexcel Politics)</strong>
+            <br><br>
+            <strong>AO1 (10):</strong> knowledge and understanding
+            <br>
+            <strong>AO2 (10):</strong> analysis of both sides
+            <br>
+            <strong>AO3 (10):</strong> evaluation, judgement and balanced conclusion
+          </div>
+        `;
+      } else {
+        essayResultsWrap.innerHTML = `
+          <div class="footer-note">
+            The essay marker uses two different modes:
+            <br><br>
+            <strong>10 marker:</strong> Examine / AO1
+            <br>
+            <strong>15 marker:</strong> Evaluate / AO2
+          </div>
+        `;
+      }
+
+      updateEssayWordUi();
     }
 
     function switchSubject(subject) {
@@ -2269,6 +2590,7 @@
       currentSet = [];
       currentMode = 'daily';
       currentPageIndex = 0;
+      latestEssayMarking = null;
       updateSubjectUi();
       loadDailySet();
     }
