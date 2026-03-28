@@ -160,9 +160,7 @@
       color: #fff;
       border: 1px solid rgba(255,255,255,.1);
     }
-    .book-nav button:hover {
-      background: #000;
-    }
+    .book-nav button:hover { background: #000; }
     .book-nav button:disabled {
       background: #333;
       color: rgba(255,255,255,.6);
@@ -192,6 +190,27 @@
     .modal h3 { margin: 0 0 10px; font-size: 1.2rem; }
     .modal p { margin: 0; color: var(--muted); line-height: 1.7; }
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+    .input {
+      width: 100%;
+      margin-top: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 13px 14px;
+      font: inherit;
+      outline: none;
+    }
+    .input:focus {
+      border-color: rgba(124,156,255,.5);
+      box-shadow: 0 0 0 4px rgba(124,156,255,.12);
+    }
+    .login-status {
+      margin-top: 12px;
+      font-size: .92rem;
+      color: var(--muted);
+      min-height: 1.3em;
+    }
 
     @media (max-width: 1020px) {
       .grid, .quote-layout { grid-template-columns: 1fr; }
@@ -202,7 +221,19 @@
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="modal-backdrop" id="loginModal">
+    <div class="modal">
+      <h3>Enter password to access the website</h3>
+      <p>This checks the password with your Cloudflare Worker before unlocking the site and enabling AI answer marking.</p>
+      <input class="input" id="passwordInput" type="password" placeholder="Enter password" />
+      <div class="login-status" id="loginStatus"></div>
+      <div class="modal-actions">
+        <button class="primary" id="loginBtn">Enter Website</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap hidden" id="appWrap">
     <div class="top-tabs-shell">
       <div class="top-tabs">
         <div class="tab-btn active" data-tab="quiz">✍️ Daily 5 Questions</div>
@@ -240,7 +271,7 @@
             <div class="progress"><div id="scoreBar"></div></div>
           </div>
           <div id="results"></div>
-          <div class="footer-note">This version uses a generous in-browser marker. It still shows the full model answer afterwards so you can improve even when your answer was already accurate enough.</div>
+          <div class="footer-note">This version uses AI marking through your Cloudflare Worker when available, and falls back to the local flexible marker if the AI request fails.</div>
         </aside>
       </section>
     </section>
@@ -295,6 +326,10 @@
   </div>
 
   <script>
+    const WORKER_BASE_URL = 'https://hidden-smoke-8e93.clockworksilas.workers.dev';
+    const MIN_MEANINGFUL_CHARS = 4;
+    const SHORT_ANSWER_CAP_CHARS = 8;
+
     const questionBank = [
       {type:'Explain',topic:'Bible authority',question:'Explain verbal plenary inspiration.',keywords:['verbal plenary inspiration','dictated','all scripture inspired','word of god','inerrant'],mustIncludeAny:[['verbal plenary inspiration','dictated'],['word of god','inerrant']],quote:"2 Timothy 3:16 'God-breathed'",requiresScripture:false,model:'Verbal plenary inspiration is the Evangelical Protestant idea that every part of the Bible is inspired or dictated by God, so scripture is fully authoritative and inerrant.'},
       {type:'Criticism',topic:'Bible authority',question:'Give one criticism of biblical inerrancy.',keywords:['scientific errors','historical errors','genesis','contradictions','literalism'],mustIncludeAny:[['scientific errors','historical errors','contradictions']],quote:'Creation narratives may conflict with science.',requiresScripture:false,model:'A criticism is that the Bible appears to contain historical or scientific problems, so absolute inerrancy can be difficult to defend.'},
@@ -474,12 +509,20 @@
     const heroTitle = document.getElementById('heroTitle');
     const heroSubtitle = document.getElementById('heroSubtitle');
     const heroBadges = document.getElementById('heroBadges');
+    const loginModal = document.getElementById('loginModal');
+    const passwordInput = document.getElementById('passwordInput');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginStatus = document.getElementById('loginStatus');
+    const appWrap = document.getElementById('appWrap');
 
     let currentSet = [];
     let currentMode = 'daily';
     let currentPageIndex = 0;
     const pageSize = 4;
-    const STORAGE_KEYS = { streak: 'daily5_streak_data_v2' };
+    const STORAGE_KEYS = {
+      streak: 'daily5_streak_data_v2',
+      sitePassword: 'daily5_site_password_v1'
+    };
 
     function normalize(text) { return (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
     function hashString(str) { let hash = 2166136261; for (let i = 0; i < str.length; i++) { hash ^= str.charCodeAt(i); hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24); } return Math.abs(hash >>> 0); }
@@ -487,12 +530,140 @@
     function shuffledIndices(length, seed) { const rand = mulberry32(seed); const arr = Array.from({ length }, (_, i) => i); for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
     function getTodayKey() { return new Date().toISOString().slice(0, 10); }
     function daysBetween(a, b) { return Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 86400000); }
-    function getStreakData() { try { const raw = localStorage.getItem(STORAGE_KEYS.streak); if (!raw) return { streak: 0, lastCompletedDate: null, completedDates: [] }; const parsed = JSON.parse(raw); return { streak: Number(parsed.streak) || 0, lastCompletedDate: parsed.lastCompletedDate || null, completedDates: Array.isArray(parsed.completedDates) ? parsed.completedDates : [] }; } catch { return { streak: 0, lastCompletedDate: null, completedDates: [] }; } }
-    function saveStreakData(data) { localStorage.setItem(STORAGE_KEYS.streak, JSON.stringify(data)); }
-    function markDailyCompletion() { const today = getTodayKey(); const data = getStreakData(); if (data.completedDates.includes(today)) return data; let newStreak = 1; if (data.lastCompletedDate) { const gap = daysBetween(data.lastCompletedDate, today); if (gap === 1) newStreak = data.streak + 1; else if (gap === 0) newStreak = data.streak; } const updated = { streak: newStreak, lastCompletedDate: today, completedDates: [...data.completedDates, today] }; saveStreakData(updated); return updated; }
-    function updateStreakBadge() { const data = getStreakData(); document.getElementById('streakBadge').textContent = `🔥 ${data.streak} day streak`; }
-    function getDailySet() { const key = getTodayKey(); const seed = hashString(key); const order = shuffledIndices(questionBank.length, seed); return { key, questions: order.slice(0, Math.min(5, questionBank.length)).map(i => questionBank[i]) }; }
-    function getPracticeSet() { const seed = Date.now() + Math.floor(Math.random() * 999999); const order = shuffledIndices(questionBank.length, seed); return order.slice(0, Math.min(5, questionBank.length)).map(i => questionBank[i]); }
+
+    function getSavedPassword() {
+      return localStorage.getItem(STORAGE_KEYS.sitePassword) || '';
+    }
+
+    function savePassword(password) {
+      localStorage.setItem(STORAGE_KEYS.sitePassword, password);
+    }
+
+    function clearSavedPassword() {
+      localStorage.removeItem(STORAGE_KEYS.sitePassword);
+    }
+
+    function getStreakData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.streak);
+        if (!raw) return { streak: 0, lastCompletedDate: null, completedDates: [] };
+        const parsed = JSON.parse(raw);
+        return {
+          streak: Number(parsed.streak) || 0,
+          lastCompletedDate: parsed.lastCompletedDate || null,
+          completedDates: Array.isArray(parsed.completedDates) ? parsed.completedDates : []
+        };
+      } catch {
+        return { streak: 0, lastCompletedDate: null, completedDates: [] };
+      }
+    }
+
+    function saveStreakData(data) {
+      localStorage.setItem(STORAGE_KEYS.streak, JSON.stringify(data));
+    }
+
+    function markDailyCompletion() {
+      const today = getTodayKey();
+      const data = getStreakData();
+      if (data.completedDates.includes(today)) return data;
+      let newStreak = 1;
+      if (data.lastCompletedDate) {
+        const gap = daysBetween(data.lastCompletedDate, today);
+        if (gap === 1) newStreak = data.streak + 1;
+        else if (gap === 0) newStreak = data.streak;
+      }
+      const updated = {
+        streak: newStreak,
+        lastCompletedDate: today,
+        completedDates: [...data.completedDates, today]
+      };
+      saveStreakData(updated);
+      return updated;
+    }
+
+    function updateStreakBadge() {
+      const data = getStreakData();
+      document.getElementById('streakBadge').textContent = `🔥 ${data.streak} day streak`;
+    }
+
+    function getDailySet() {
+      const key = getTodayKey();
+      const seed = hashString(key);
+      const order = shuffledIndices(questionBank.length, seed);
+      return { key, questions: order.slice(0, Math.min(5, questionBank.length)).map(i => questionBank[i]) };
+    }
+
+    function getPracticeSet() {
+      const seed = Date.now() + Math.floor(Math.random() * 999999);
+      const order = shuffledIndices(questionBank.length, seed);
+      return order.slice(0, Math.min(5, questionBank.length)).map(i => questionBank[i]);
+    }
+
+    async function verifyPassword(password) {
+      const res = await fetch(`${WORKER_BASE_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+
+      if (!res.ok) return false;
+      const data = await res.json().catch(() => ({}));
+      return Boolean(data.ok);
+    }
+
+    async function gradeWithAI(question, answer) {
+      const password = getSavedPassword();
+      if (!password) return null;
+
+      const trimmed = (answer || '').trim();
+      if (trimmed.length < MIN_MEANINGFUL_CHARS) return null;
+
+      try {
+        const res = await fetch(`${WORKER_BASE_URL}/api/mark`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            password,
+            question: question.question,
+            topic: question.topic,
+            requiresScripture: question.requiresScripture,
+            keywords: question.keywords,
+            model: question.model,
+            answer
+          })
+        });
+
+        if (!res.ok) {
+          if (res.status === 401) clearSavedPassword();
+          return null;
+        }
+
+        const data = await res.json().catch(() => null);
+        if (!data || !data.ok || !data.result) return null;
+
+        const percentage = Math.max(0, Math.min(100, Number(data.result.percentage) || 0));
+        const label = ['Correct', 'Partly correct', 'Not enough yet'].includes(data.result.label)
+          ? data.result.label
+          : (percentage >= 66 ? 'Correct' : percentage >= 36 ? 'Partly correct' : 'Not enough yet');
+
+        const cls = label === 'Correct'
+          ? 'correct'
+          : label === 'Partly correct'
+            ? 'partial'
+            : 'incorrect';
+
+        return {
+          percentage,
+          label,
+          cls,
+          feedback: data.result.feedback || 'AI marking completed.',
+          hits: Array.isArray(data.result.acceptedPoints) ? data.result.acceptedPoints : [],
+          aiModelAnswer: data.result.modelAnswer || question.model
+        };
+      } catch {
+        return null;
+      }
+    }
 
     function renderQuestions() {
       questionsWrap.innerHTML = currentSet.map((q, i) => `
@@ -515,60 +686,153 @@
       updateStreakBadge();
     }
 
-    function includesKeyword(answer, keyword) { return normalize(answer).includes(normalize(keyword)); }
+    function includesKeyword(answer, keyword) {
+      return normalize(answer).includes(normalize(keyword));
+    }
 
     function evaluateQuestion(question, answer) {
       const text = normalize(answer);
-      if (!text || text.length < 3) return { percentage: 0, label: 'Not enough yet', cls: 'incorrect', feedback: 'Type at least one small accurate point so the marker can judge it.', hits: [] };
+      if (!text || text.length < 3) {
+        return {
+          percentage: 0,
+          label: 'Not enough yet',
+          cls: 'incorrect',
+          feedback: 'Type at least one small accurate point so the marker can judge it.',
+          hits: []
+        };
+      }
+
       const scripturePattern = /(john|matthew|mark|luke|genesis|psalm|psalms|romans|corinthians|timothy|isaiah|deuteronomy|exodus|leviticus|numbers|job|galatians|proverbs|acts|james|revelation)/;
       const matchedKeywords = question.keywords.filter(k => includesKeyword(text, k));
       const contentKeywords = question.keywords.filter(k => !scripturePattern.test(normalize(k)));
       const scoredHits = question.requiresScripture ? matchedKeywords : matchedKeywords.filter(k => !scripturePattern.test(normalize(k)));
       const keywordPool = question.requiresScripture ? question.keywords : (contentKeywords.length ? contentKeywords : question.keywords);
       const keywordRatio = scoredHits.length / Math.max(1, keywordPool.length);
+
       let mustScore = 0;
-      if (question.mustIncludeAny && question.mustIncludeAny.length) question.mustIncludeAny.forEach(group => { const groupToCheck = question.requiresScripture ? group : (group.filter(term => !scripturePattern.test(normalize(term))).length ? group.filter(term => !scripturePattern.test(normalize(term))) : group); if (groupToCheck.some(term => includesKeyword(text, term))) mustScore++; });
+      if (question.mustIncludeAny && question.mustIncludeAny.length) {
+        question.mustIncludeAny.forEach(group => {
+          const groupToCheck = question.requiresScripture
+            ? group
+            : (group.filter(term => !scripturePattern.test(normalize(term))).length
+              ? group.filter(term => !scripturePattern.test(normalize(term)))
+              : group);
+          if (groupToCheck.some(term => includesKeyword(text, term))) mustScore++;
+        });
+      }
+
       const mustRatio = question.mustIncludeAny?.length ? mustScore / question.mustIncludeAny.length : 1;
       const wordCount = text.split(' ').filter(Boolean).length;
       const lengthBonus = Math.min(wordCount / 45, 1) * 0.08;
       const hasScriptureRef = scripturePattern.test(text);
       const scriptureBonus = question.requiresScripture && hasScriptureRef ? 0.08 : 0;
       const scripturePenalty = question.requiresScripture && !hasScriptureRef ? 0.08 : 0;
+
       let score = (keywordRatio * 0.62) + (mustRatio * 0.28) + lengthBonus + scriptureBonus - scripturePenalty;
       if (mustRatio >= 0.5 && scoredHits.length >= 2) score = Math.max(score, 0.76);
       if (mustRatio >= 0.5 && scoredHits.length >= 3) score = Math.max(score, 0.86);
       if (scoredHits.length >= 1 && mustRatio >= 0.5 && wordCount <= 12) score = Math.max(score, 0.68);
       score = Math.max(0, Math.min(1, score));
+
       const percentage = Math.round(score * 100);
       let label = 'Not enough yet', cls = 'incorrect';
-      if (percentage >= 66) { label = 'Correct'; cls = 'correct'; }
-      else if (percentage >= 36) { label = 'Partly correct'; cls = 'partial'; }
+
+      if (percentage >= 66) {
+        label = 'Correct';
+        cls = 'correct';
+      } else if (percentage >= 36) {
+        label = 'Partly correct';
+        cls = 'partial';
+      }
+
       let feedback = '';
-      if (percentage >= 66) feedback = `That is accurate enough to count as correct. Use the model answer below to make it fuller next time.${question.requiresScripture ? ' Add a scripture reference because this question asks for one.' : ''}`;
-      else if (percentage >= 36) { const missing = keywordPool.filter(k => !scoredHits.includes(k)).slice(0, 4); feedback = `You are close. A small extra point would probably make this fully correct. Try adding: ${missing.join(', ')}.${question.requiresScripture ? ' This question also wants a scripture reference.' : ''}`; }
-      else feedback = `Not enough there yet. Even a short but accurate answer can score well here. Try mentioning: ${keywordPool.slice(0, 4).join(', ')}.${question.requiresScripture ? ' Include a scripture reference too.' : ''}`;
-      return { percentage, label, cls, feedback, hits: matchedKeywords };
+      if (percentage >= 66) {
+        feedback = `That is accurate enough to count as correct. Use the model answer below to make it fuller next time.${question.requiresScripture ? ' Add a scripture reference because this question asks for one.' : ''}`;
+      } else if (percentage >= 36) {
+        const missing = keywordPool.filter(k => !scoredHits.includes(k)).slice(0, 4);
+        feedback = `You are close. A small extra point would probably make this fully correct. Try adding: ${missing.join(', ')}.${question.requiresScripture ? ' This question also wants a scripture reference.' : ''}`;
+      } else {
+        feedback = `Not enough there yet. Even a short but accurate answer can score well here. Try mentioning: ${keywordPool.slice(0, 4).join(', ')}.${question.requiresScripture ? ' Include a scripture reference too.' : ''}`;
+      }
+
+      return { percentage, label, cls, feedback, hits: matchedKeywords, aiModelAnswer: question.model };
     }
 
-    function markAnswers() {
-      const evaluations = currentSet.map((q, i) => ({ question: q, answer: document.getElementById(`answer-${i}`).value, result: evaluateQuestion(q, document.getElementById(`answer-${i}`).value) }));
+    function renderMarkedResults(evaluations) {
       const avg = Math.round(evaluations.reduce((sum, item) => sum + item.result.percentage, 0) / evaluations.length);
       overallScore.textContent = `${avg}%`;
       scoreBar.style.width = `${avg}%`;
+
       const correctCount = evaluations.filter(x => x.result.label === 'Correct').length;
       const partialCount = evaluations.filter(x => x.result.label === 'Partly correct').length;
+
       let streakMessage = '';
-      if (currentMode === 'daily') { const streakData = markDailyCompletion(); updateStreakBadge(); streakMessage = ` Daily streak: 🔥 ${streakData.streak}.`; }
-      overallSummary.textContent = `${correctCount}/5 fully correct, ${partialCount}/5 partly correct. The marking checks whether your answer is accurate enough, not whether it is long.${streakMessage}`;
+      if (currentMode === 'daily') {
+        const streakData = markDailyCompletion();
+        updateStreakBadge();
+        streakMessage = ` Daily streak: 🔥 ${streakData.streak}.`;
+      }
+
+      overallSummary.textContent = `${correctCount}/5 fully correct, ${partialCount}/5 partly correct. AI checks subjective answers first and falls back to local marking if needed.${streakMessage}`;
+
       resultsWrap.innerHTML = evaluations.map((item, i) => `
         <div class="result-card">
-          <div class="result-top"><strong>Q${i + 1}: ${item.question.topic}</strong><span class="pill ${item.result.cls}">${item.result.label} · ${item.result.percentage}%</span></div>
+          <div class="result-top">
+            <strong>Q${i + 1}: ${item.question.topic}</strong>
+            <span class="pill ${item.result.cls}">${item.result.label} · ${item.result.percentage}%</span>
+          </div>
           <div class="small"><strong>Feedback:</strong> ${item.result.feedback}</div>
-          <div class="small" style="margin-top:8px;"><strong>Model answer idea:</strong> ${item.question.model}</div>
+          <div class="small" style="margin-top:8px;"><strong>Model answer idea:</strong> ${item.result.aiModelAnswer || item.question.model}</div>
           <div class="small" style="margin-top:8px;"><strong>${item.question.requiresScripture ? 'Scripture hint' : 'Extra support hint'}:</strong> ${item.question.quote}</div>
-          <div class="topic-list">${item.result.hits.length ? item.result.hits.slice(0, 8).map(hit => `<span class="topic">✓ ${hit}</span>`).join('') : '<span class="topic">No strong key points spotted yet</span>'}</div>
+          <div class="topic-list">
+            ${item.result.hits.length
+              ? item.result.hits.slice(0, 8).map(hit => `<span class="topic">✓ ${hit}</span>`).join('')
+              : '<span class="topic">No strong key points spotted yet</span>'}
+          </div>
         </div>
       `).join('');
+    }
+
+    async function markAnswers() {
+      const evaluations = [];
+
+      for (let i = 0; i < currentSet.length; i++) {
+        const q = currentSet[i];
+        const answer = document.getElementById(`answer-${i}`).value || '';
+        const trimmed = answer.trim();
+
+        let result;
+
+        if (trimmed.length < MIN_MEANINGFUL_CHARS) {
+          result = {
+            percentage: 0,
+            label: 'Not enough yet',
+            cls: 'incorrect',
+            feedback: 'You need to type at least a small accurate point before it can be marked.',
+            hits: [],
+            aiModelAnswer: q.model
+          };
+        } else {
+          result = await gradeWithAI(q, answer);
+          if (!result) result = evaluateQuestion(q, answer);
+
+          if (trimmed.length < SHORT_ANSWER_CAP_CHARS && result.percentage > 45) {
+            result.percentage = 35;
+            result.label = 'Partly correct';
+            result.cls = 'partial';
+            result.feedback = 'This answer is very short, so the mark has been capped. Add one more accurate point to make it stronger.';
+            result.aiModelAnswer = result.aiModelAnswer || q.model;
+          }
+        }
+
+        evaluations.push({
+          question: q,
+          answer,
+          result
+        });
+      }
+
+      renderMarkedResults(evaluations);
     }
 
     function highlightPhrase(full, phrase) {
@@ -638,20 +902,86 @@
       }
     }
 
+    function unlockApp() {
+      loginModal.classList.add('hidden');
+      appWrap.classList.remove('hidden');
+      loadDailySet();
+      updateStreakBadge();
+      renderQuotePage();
+      showQuote(0);
+    }
+
+    async function tryLogin(password) {
+      loginStatus.textContent = 'Checking password...';
+      loginBtn.disabled = true;
+
+      try {
+        const ok = await verifyPassword(password);
+        if (ok) {
+          savePassword(password);
+          loginStatus.textContent = '';
+          unlockApp();
+        } else {
+          clearSavedPassword();
+          loginStatus.textContent = 'Wrong password. Try again.';
+        }
+      } catch {
+        loginStatus.textContent = 'Could not reach the Worker. Check the Worker URL or CORS settings.';
+      } finally {
+        loginBtn.disabled = false;
+      }
+    }
+
+    async function boot() {
+      const saved = getSavedPassword();
+      if (saved) {
+        loginStatus.textContent = 'Checking saved access...';
+        const ok = await verifyPassword(saved).catch(() => false);
+        if (ok) {
+          unlockApp();
+          return;
+        }
+        clearSavedPassword();
+        loginStatus.textContent = 'Saved password expired or failed. Enter it again.';
+      }
+    }
+
     tabButtons.forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
     newSetBtn.addEventListener('click', loadPracticeSet);
     markBtn.addEventListener('click', () => warningModal.classList.remove('hidden'));
     cancelMarkBtn.addEventListener('click', () => warningModal.classList.add('hidden'));
-    acceptMarkBtn.addEventListener('click', () => { warningModal.classList.add('hidden'); markAnswers(); });
-    warningModal.addEventListener('click', e => { if (e.target === warningModal) warningModal.classList.add('hidden'); });
-    bookCover.addEventListener('click', () => book.classList.toggle('open'));
-    prevPageBtn.addEventListener('click', () => { currentPageIndex--; renderQuotePage(); });
-    nextPageBtn.addEventListener('click', () => { currentPageIndex++; renderQuotePage(); });
+    acceptMarkBtn.addEventListener('click', async () => {
+      warningModal.classList.add('hidden');
+      await markAnswers();
+    });
+    warningModal.addEventListener('click', e => {
+      if (e.target === warningModal) warningModal.classList.add('hidden');
+    });
 
-    loadDailySet();
-    updateStreakBadge();
-    renderQuotePage();
-    showQuote(0);
+    bookCover.addEventListener('click', () => book.classList.toggle('open'));
+    prevPageBtn.addEventListener('click', () => {
+      currentPageIndex--;
+      renderQuotePage();
+    });
+    nextPageBtn.addEventListener('click', () => {
+      currentPageIndex++;
+      renderQuotePage();
+    });
+
+    loginBtn.addEventListener('click', () => {
+      const password = passwordInput.value.trim();
+      if (!password) {
+        loginStatus.textContent = 'Enter a password first.';
+        return;
+      }
+      tryLogin(password);
+    });
+
+    passwordInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') loginBtn.click();
+    });
+
+    boot();
   </script>
 </body>
 </html>
