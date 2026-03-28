@@ -213,9 +213,9 @@
     <section class="hero">
       <div class="hero-top">
         <div>
-          <h1>Daily 5 Questions</h1>
-          <p class="sub">A full revision site with a large daily question bank and a quote book covering the scripture and named quotations from your notes. The quote book now works like a normal page-sized book with page flipping rather than one stretched-down panel.</p>
-          <div class="badge-row">
+          <h1 id="heroTitle">Daily 5 Questions</h1>
+          <p class="sub" id="heroSubtitle">A full revision site with a large daily question bank and a quote book covering the scripture and named quotations from your notes. The quote book now works like a normal page-sized book with page flipping rather than one stretched-down panel.</p>
+          <div class="badge-row" id="heroBadges">
             <div class="badge" id="dayBadge">Day set loading...</div>
             <div class="badge" id="poolBadge">Question pool loading...</div>
             <div class="badge" id="streakBadge">🔥 0 day streak</div>
@@ -471,6 +471,9 @@
     const quoteRef = document.getElementById('quoteRef');
     const fullVerse = document.getElementById('fullVerse');
     const quoteInterpretation = document.getElementById('quoteInterpretation');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroSubtitle = document.getElementById('heroSubtitle');
+    const heroBadges = document.getElementById('heroBadges');
 
     let currentSet = [];
     let currentMode = 'daily';
@@ -601,9 +604,39 @@
       nextPageBtn.disabled = currentPageIndex === totalPages - 1;
     }
 
-    function loadDailySet() { currentMode = 'daily'; const daily = getDailySet(); currentSet = daily.questions; dayBadge.textContent = `Daily set for ${daily.key}`; poolBadge.textContent = `${questionBank.length} questions in the pool`; renderQuestions(); }
-    function loadPracticeSet() { currentMode = 'practice'; currentSet = getPracticeSet(); dayBadge.textContent = 'Practice set (random)'; poolBadge.textContent = `${questionBank.length} questions in the pool`; renderQuestions(); }
-    function setTab(tab) { tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab)); quizTab.classList.toggle('hidden', tab !== 'quiz'); quotesTab.classList.toggle('hidden', tab !== 'quotes'); quizControls.classList.toggle('hidden', tab !== 'quiz'); }
+    function loadDailySet() {
+      currentMode = 'daily';
+      const daily = getDailySet();
+      currentSet = daily.questions;
+      dayBadge.textContent = `Daily set for ${daily.key}`;
+      poolBadge.textContent = `${questionBank.length} questions in the pool`;
+      renderQuestions();
+    }
+
+    function loadPracticeSet() {
+      currentMode = 'practice';
+      currentSet = getPracticeSet();
+      dayBadge.textContent = 'Practice set (random)';
+      poolBadge.textContent = `${questionBank.length} questions in the pool`;
+      renderQuestions();
+    }
+
+    function setTab(tab) {
+      tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      quizTab.classList.toggle('hidden', tab !== 'quiz');
+      quotesTab.classList.toggle('hidden', tab !== 'quotes');
+      quizControls.classList.toggle('hidden', tab !== 'quiz');
+
+      if (tab === 'quotes') {
+        heroTitle.textContent = 'Best Revision Quotes Booklet';
+        heroSubtitle.textContent = 'The top only bible quotes you’ll need, organised into a flick-through booklet with full quotes, highlighted key phrases, and interpretations.';
+        heroBadges.classList.add('hidden');
+      } else {
+        heroTitle.textContent = 'Daily 5 Questions';
+        heroSubtitle.textContent = 'A full revision site with a large daily question bank and a quote book covering the scripture and named quotations from your notes. The quote book now works like a normal page-sized book with page flipping rather than one stretched-down panel.';
+        heroBadges.classList.remove('hidden');
+      }
+    }
 
     tabButtons.forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
     newSetBtn.addEventListener('click', loadPracticeSet);
