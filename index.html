@@ -18,6 +18,10 @@
       --border: rgba(255,255,255,0.08);
       --shadow: 0 18px 45px rgba(0,0,0,0.35);
       --radius: 22px;
+      --paper: #f7f0dc;
+      --ink: #34251a;
+      --ink-soft: #5f4b3d;
+      --highlight: #fff2a8;
     }
 
     * { box-sizing: border-box; }
@@ -33,7 +37,7 @@
     }
 
     .wrap {
-      width: min(1180px, calc(100% - 28px));
+      width: min(1220px, calc(100% - 28px));
       margin: 28px auto 60px;
     }
 
@@ -70,20 +74,83 @@
       margin: 0;
     }
 
-    .badge-row {
+    .badge-row, .tab-row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       margin-top: 16px;
     }
 
-    .badge {
+    .top-tabs-shell {
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .top-tabs {
+      display: inline-flex;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+    }
+
+    .badge, .tab-btn {
       background: rgba(124,156,255,0.12);
       color: var(--text);
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid rgba(124,156,255,0.25);
       font-size: 0.92rem;
+    }
+
+    .tab-btn {
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      user-select: none;
+      padding: 14px 20px;
+      min-width: 190px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(124,156,255,0.12), rgba(145,242,195,0.06));
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .tab-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .tab-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--accent), #b6c8ff);
+      color: #11172c;
+      border-color: transparent;
+      box-shadow: 0 14px 30px rgba(124,156,255,0.28);
+    }
+
+    .tab-btn.active::before {
+      background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
     }
 
     .btns {
@@ -105,17 +172,51 @@
     }
 
     button:hover { transform: translateY(-1px); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
     .primary {
       background: linear-gradient(135deg, var(--accent), #b6c8ff);
       color: #11172c;
     }
-
     .secondary {
       background: rgba(255,255,255,0.08);
       color: var(--text);
       border: 1px solid var(--border);
+    }
+
+    .hidden { display: none !important; }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 10, 20, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      backdrop-filter: blur(6px);
+    }
+    .modal {
+      width: min(560px, 100%);
+      background: linear-gradient(180deg, rgba(24,31,58,0.98), rgba(15,20,38,0.98));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .modal h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+    .modal p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 18px;
+      flex-wrap: wrap;
     }
 
     .grid {
@@ -289,597 +390,268 @@
       font-size: 0.82rem;
     }
 
+    .quote-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.3fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .book-shell { perspective: 1800px; }
+    .book-card {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      min-height: 520px;
+      box-shadow: var(--shadow);
+      background: linear-gradient(135deg, #5f3b22, #9a6a3e 50%, #4e301d);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .book-cover {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.16)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 12px),
+        linear-gradient(135deg, #6f4829, #8d5d37 52%, #52311d);
+      transition: transform 0.6s ease;
+      transform-origin: left center;
+      z-index: 2;
+      cursor: pointer;
+    }
+    .book-card.open .book-cover { transform: rotateY(-135deg); }
+    .book-title {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      text-align: center;
+      max-width: 240px;
+    }
+    .book-emoji { font-size: 4rem; }
+    .book-sub {
+      color: rgba(255,255,255,0.88);
+      text-align: center;
+      max-width: 260px;
+      line-height: 1.6;
+    }
+    .page-stack {
+      min-height: 520px;
+      padding: 18px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.06));
+    }
+    .page {
+      min-height: 484px;
+      border-radius: 22px;
+      padding: 24px;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.05) 0 2.3%, transparent 2.3%),
+        linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.22)),
+        var(--paper);
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px rgba(80,50,20,0.1), 0 16px 30px rgba(0,0,0,0.18);
+      overflow: auto;
+    }
+    .quill-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-size: 1.9rem;
+      margin: 0 0 8px;
+      color: #402819;
+    }
+    .quill-note { color: var(--ink-soft); line-height: 1.6; margin-bottom: 18px; }
+    .topic-entry {
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,0.42);
+      border: 1px solid rgba(80,50,20,0.12);
+      margin-bottom: 12px;
+    }
+    .topic-entry h3 { margin: 0 0 8px; font-size: 1rem; color: #4a2e1c; }
+    .quote-chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+    .quote-chip {
+      border: 1px solid rgba(80,50,20,0.18);
+      background: rgba(255,248,233,0.95);
+      color: #462d1c;
+      border-radius: 999px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: none;
+    }
+    .quote-chip:hover, .quote-chip.active { background: #fff6d1; transform: translateY(-1px); }
+    .quote-view {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 22px;
+      min-height: 520px;
+      box-shadow: var(--shadow);
+    }
+    .quote-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .quote-ref {
+      color: var(--accent-2);
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .full-verse {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.15rem;
+      line-height: 1.9;
+      color: #f7f7ff;
+      margin: 0;
+    }
+    mark.note-highlight {
+      background: var(--highlight);
+      color: #2a2110;
+      padding: 0.08em 0.2em;
+      border-radius: 6px;
+    }
+    .interp { color: var(--muted); line-height: 1.75; font-size: 0.98rem; }
+    .interp strong { color: var(--text); }
+
     @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr; }
+      .grid, .quote-layout { grid-template-columns: 1fr; }
+      .book-card, .quote-view, .page-stack, .page { min-height: auto; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
+    <div class="top-tabs-shell">
+      <div class="top-tabs">
+        <div class="tab-btn active" data-tab="quiz"><span>✍️ Daily 5 Questions</span></div>
+        <div class="tab-btn" data-tab="quotes"><span>📖 Quote Bank</span></div>
+      </div>
+    </div>
+
     <section class="hero">
       <div class="hero-top">
         <div>
           <h1>Daily 5 Questions</h1>
-          <p class="sub">A revision website that gives you five written questions each day from your Christianity notes. Type full answers, then press <strong>Mark My Answers</strong> and the app will judge whether your response is accurate enough based on key ideas, quotes, and topic points.</p>
+          <p class="sub">A revision website with a daily written-answer quiz and a quote bank by topic. Type short but accurate answers for the quiz, then use the model answers and scripture bank to improve.</p>
           <div class="badge-row">
             <div class="badge" id="dayBadge">Day set loading...</div>
             <div class="badge" id="poolBadge">Question pool loading...</div>
             <div class="badge" id="streakBadge">🔥 0 day streak</div>
-            <div class="badge">Written-answer only</div>
           </div>
         </div>
-        <div class="btns">
+        <div class="btns" id="quizControls">
           <button class="secondary" id="newSetBtn">New practice set</button>
           <button class="primary" id="markBtn">Mark My Answers</button>
         </div>
       </div>
     </section>
 
-    <section class="grid">
-      <div class="panel">
-        <div id="questions"></div>
-      </div>
-
-      <aside class="panel">
-        <h2 class="side-title">Results</h2>
-        <div class="score-box">
-          <div class="small">Overall mark</div>
-          <div class="big-score" id="overallScore">--</div>
-          <div class="small" id="overallSummary">Answer all five, then click the button to get a score and feedback.</div>
-          <div class="progress"><div id="scoreBar"></div></div>
+    <section id="quizTab">
+      <section class="grid">
+        <div class="panel">
+          <div id="questions"></div>
         </div>
-
-        <div id="results"></div>
-
-        <div class="footer-note">
-          This version uses a smart in-browser marking model, not a real online AI backend. It checks your answer for the right ideas, terms, scripture references, and criticism points, and then gives <strong>Correct</strong>, <strong>Partly correct</strong>, or <strong>Not enough yet</strong>.
-        </div>
-      </aside>
+        <aside class="panel">
+          <h2 class="side-title">Results</h2>
+          <div class="score-box">
+            <div class="small">Overall mark</div>
+            <div class="big-score" id="overallScore">--</div>
+            <div class="small" id="overallSummary">Answer all five, then click the button to get a score and feedback. Short but accurate answers can still be correct.</div>
+            <div class="progress"><div id="scoreBar"></div></div>
+          </div>
+          <div id="results"></div>
+          <div class="footer-note">This version uses a smart in-browser marking model. It is designed to be generous: if your answer is short but clearly accurate, it can still count as correct. You still get the full model answer afterwards so you can improve.</div>
+        </aside>
+      </section>
     </section>
+
+    <section id="quotesTab" class="hidden">
+      <div class="quote-layout">
+        <div class="book-shell">
+          <div class="book-card" id="bookCard">
+            <div class="book-cover" id="bookCover">
+              <div class="book-emoji">📖</div>
+              <div class="book-title">Quote Bank</div>
+              <div class="book-sub">Click the book to open topic pages with key scripture, then click a verse to see the full quote, the note phrase highlighted, and an interpretation.</div>
+            </div>
+            <div class="page-stack"><div class="page" id="bookPage"></div></div>
+          </div>
+        </div>
+        <div class="quote-view">
+          <div class="quote-card">
+            <div class="quote-ref" id="quoteRef">Select a topic quote</div>
+            <p class="full-verse" id="fullVerse">Open the book, choose a topic, then click a scripture chip. The full verse will appear here with the phrase from your notes highlighted.</p>
+          </div>
+          <div class="quote-card">
+            <div class="quote-ref">Interpretation</div>
+            <div class="interp" id="quoteInterpretation">You’ll get a short explanation of what the verse means and why it matters for that topic.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop hidden" id="warningModal">
+    <div class="modal">
+      <h3>Before you mark your answers</h3>
+      <p>The AI can be wrong sometimes... so dont rely on ts. Dont be lazy, double check incorrect answers with Google/ur notes in ur book.</p>
+      <div class="modal-actions">
+        <button class="secondary" id="cancelMarkBtn">Cancel</button>
+        <button class="primary" id="acceptMarkBtn">Accept</button>
+      </div>
+    </div>
   </div>
 
   <script>
     const questionBank = [
-      {
-        type: "Explain",
-        topic: "Bible authority",
-        question: "Explain the Evangelical Protestant view that the Bible has absolute authority.",
-        keywords: ["verbal plenary inspiration", "god breathed", "2 tim", "dictated", "inerrant", "word of god", "religion and science", "authoritative"],
-        mustIncludeAny: [["verbal plenary inspiration", "god breathed", "dictated"], ["inerrant", "word of god", "absolute authority"]],
-        quote: "2 Timothy: Scripture is 'God-breathed'",
-        requiresScripture: false,
-        model: "A strong answer explains that Evangelical Protestants believe in verbal plenary inspiration, meaning all scripture is inspired or dictated by God. Because it is God's word, the Bible is treated as inerrant and fully authoritative."
-      },
-      {
-        type: "Criticism",
-        topic: "Bible authority",
-        question: "Give one criticism of the Evangelical Protestant belief in biblical inerrancy.",
-        keywords: ["historical errors", "scientific errors", "genesis", "contradictions", "literalism", "hard to reconcile", "science"],
-        mustIncludeAny: [["scientific errors", "historical errors", "contradictions", "literalism"]],
-        quote: "Example: Genesis and modern science can conflict.",
-        requiresScripture: false,
-        model: "One criticism is that biblical inerrancy is difficult to defend because the Bible appears to contain scientific or historical problems, such as creation narratives that conflict with modern science."
-      },
-      {
-        type: "Explain",
-        topic: "Catholicism",
-        question: "Explain why Catholics believe the Magisterium is needed to interpret the Bible.",
-        keywords: ["magisterium", "living tradition", "apostolic succession", "human error", "translation", "interpretation", "holy spirit", "church"],
-        mustIncludeAny: [["magisterium", "church"], ["apostolic succession", "living tradition", "interpretation"]],
-        quote: "Catholics rely on the Church's living tradition.",
-        requiresScripture: false,
-        model: "Catholics believe the Bible is inspired, but because humans translated and copied it, interpretation is needed. The Magisterium, guided by the Holy Spirit and rooted in apostolic succession, helps preserve correct doctrine."
-      },
-      {
-        type: "Define",
-        topic: "Catholicism",
-        question: "What is apostolic succession?",
-        keywords: ["unbroken chain", "bishops", "popes", "apostles", "authority", "magisterium", "passed down"],
-        mustIncludeAny: [["bishops", "apostles"], ["unbroken chain", "passed down", "popes"]],
-        quote: "Apostolic succession links today's Church to the apostles.",
-        requiresScripture: false,
-        model: "Apostolic succession is the belief that the authority and teaching of the Church have been passed down in an unbroken chain from the apostles through bishops and popes."
-      },
-      {
-        type: "Define",
-        topic: "Scripture",
-        question: "What is meant by canon in Christianity?",
-        keywords: ["collection of books", "inspired by god", "authoritative scripture", "old testament", "new testament"],
-        mustIncludeAny: [["collection of books", "authoritative scripture", "inspired by god"]],
-        quote: "Canon means the accepted set of inspired books.",
-        requiresScripture: false,
-        model: "Canon means the collection of books accepted as inspired by God and therefore authoritative scripture, especially the Old and New Testaments in Christianity."
-      },
-      {
-        type: "Explain",
-        topic: "Neo-Orthodoxy",
-        question: "Explain Karl Barth's view that the Bible contains the Word of God rather than simply being the Word of God.",
-        keywords: ["karl barth", "contains the word of god", "vehicle", "experience god", "authoritative when encountered", "not inerrant", "john 1:1"],
-        mustIncludeAny: [["barth", "karl barth"], ["contains the word of god", "experience god", "vehicle"]],
-        quote: "John 1:1 is often used in this discussion.",
-        requiresScripture: false,
-        model: "Barth rejected simple biblical inerrancy. He argued that scripture contains the Word of God and becomes authoritative when a believer encounters God through it. The Bible is therefore a vehicle for revelation rather than a flawless dictation."
-      },
-      {
-        type: "Explain",
-        topic: "Liberalism",
-        question: "How does the Social Gospel Movement treat the authority of the Bible?",
-        keywords: ["social gospel movement", "gospels", "social issues", "poverty", "war", "racism", "put into practice"],
-        mustIncludeAny: [["social gospel", "gospels"], ["social issues", "poverty", "war", "racism", "practice"]],
-        quote: "The focus is how to live, not how the text was inspired.",
-        requiresScripture: false,
-        model: "The Social Gospel Movement treats the Gospels as authoritative mainly for social action. It uses Jesus' teachings to respond to poverty, racism and war rather than focusing on inerrancy or dictation."
-      },
-      {
-        type: "Explain",
-        topic: "Process theology",
-        question: "Explain why process theologians reject biblical inspiration in the traditional sense.",
-        keywords: ["process theology", "god is not omnipotent", "cannot inspire", "human writings", "science", "quantum", "no miracles"],
-        mustIncludeAny: [["not omnipotent", "cannot inspire", "human writings"]],
-        quote: "In process theology the Bible is fully human.",
-        requiresScripture: false,
-        model: "Process theologians argue that God is not omnipotent in the classical sense and cannot simply dictate or guarantee writings. As a result, the Bible is treated as a human document rather than divinely inspired in the traditional sense."
-      },
-      {
-        type: "Compare",
-        topic: "Church authority",
-        question: "What is the Protestant doctrine of sola scriptura?",
-        keywords: ["sola scriptura", "martin luther", "scripture alone", "highest authority", "church depends on scripture", "self interpretation"],
-        mustIncludeAny: [["sola scriptura", "scripture alone"], ["luther", "highest authority", "church depends on scripture"]],
-        quote: "Luther spoke of the 'sure rule of God's Word'.",
-        requiresScripture: false,
-        model: "Sola scriptura is the Protestant view, associated with Martin Luther, that scripture alone is the final authority for Christian belief and practice. The Church does not stand above scripture but depends on it."
-      },
-      {
-        type: "Explain",
-        topic: "Church authority",
-        question: "Explain the priesthood of all believers.",
-        keywords: ["priesthood of all believers", "martin luther", "baptism", "1 peter 2", "royal priesthood", "all christians", "self interpretation"],
-        mustIncludeAny: [["priesthood of all believers", "royal priesthood"], ["all christians", "baptism", "1 peter 2"]],
-        quote: "1 Peter 2 refers to a 'royal priesthood'.",
-        requiresScripture: false,
-        model: "The priesthood of all believers means every baptised Christian can approach God and engage with faith directly rather than relying on a special priestly class alone. Protestants use this to support personal interpretation."
-      },
-      {
-        type: "Criticism",
-        topic: "Church authority",
-        question: "Give one criticism of relying on the Magisterium for authority.",
-        keywords: ["outdated", "corrupt", "indulgences", "homosexuality", "tradition", "less appealing", "church can be wrong"],
-        mustIncludeAny: [["outdated", "corrupt", "indulgences", "tradition"]],
-        quote: "Critics say church authority can preserve outdated views.",
-        requiresScripture: false,
-        model: "A criticism is that Church authority can preserve outdated or harmful teachings, and history shows corruption is possible, such as the abuse of indulgences."
-      },
-      {
-        type: "Explain",
-        topic: "Jesus",
-        question: "What does the title 'Son of God' suggest about Jesus' authority?",
-        keywords: ["fully divine", "inherits god's powers", "matthew 28:18", "all authority in heaven and on earth", "miracles", "trinity"],
-        mustIncludeAny: [["fully divine", "god's powers", "all authority"], ["son of god", "trinity", "miracles"]],
-        quote: "Matthew 28:18: 'All authority in heaven and on earth has been given to me.'",
-        requiresScripture: false,
-        model: "The title Son of God suggests Jesus is divine and shares God's authority. Christians often connect this with the Trinity, miracles and Matthew 28:18, where Jesus claims all authority in heaven and earth."
-      },
-      {
-        type: "Explain",
-        topic: "Jesus",
-        question: "What does the title 'Son of Man' emphasise about Jesus?",
-        keywords: ["fully human", "hardship", "suffering", "luke 9:58", "messianic secret", "conceal divinity"],
-        mustIncludeAny: [["fully human", "suffering", "hardship"], ["messianic secret", "conceal", "son of man"]],
-        quote: "Luke 9:58: 'The Son of Man has nowhere to lay his head.'",
-        requiresScripture: false,
-        model: "The title Son of Man emphasises Jesus' humanity, suffering and earthly experience. It can also be linked with the messianic secret, where Jesus does not fully reveal his divinity openly."
-      },
-      {
-        type: "Define",
-        topic: "Heresy",
-        question: "What was Arianism?",
-        keywords: ["arius", "jesus not fully divine", "human", "son of god title", "heresy", "council of nicaea"],
-        mustIncludeAny: [["arius", "arrianism", "not fully divine"], ["heresy", "nicaea", "human"]],
-        quote: "Arianism was condemned at Nicaea in 325 CE.",
-        requiresScripture: false,
-        model: "Arianism was the belief taught by Arius that Jesus was not fully divine in the same way as God the Father. It was condemned as heresy at the Council of Nicaea."
-      },
-      {
-        type: "Criticism",
-        topic: "Jesus ethics",
-        question: "Why might some Christians say Jesus' teaching against retaliation is difficult to take literally?",
-        keywords: ["impractical", "pacifism", "violence in temple", "idealistic", "counter intuitive", "daily actions", "metaphorical"],
-        mustIncludeAny: [["impractical", "idealistic", "pacifism", "violence in temple"]],
-        quote: "Some say Jesus gives an ideal to aim for rather than a strict law.",
-        requiresScripture: false,
-        model: "Some Christians say it is difficult to take literally because total pacifism can seem impractical, and Jesus himself used force in the temple. So the teaching may be read as an ideal about rejecting revenge rather than banning all resistance."
-      },
-      {
-        type: "Define",
-        topic: "God",
-        question: "What is ethical monotheism?",
-        keywords: ["one god", "worthy of worship", "moral obedience", "ten commandments", "covenant", "shema"],
-        mustIncludeAny: [["one god", "worthy of worship"], ["moral obedience", "covenant", "ten commandments", "shema"]],
-        quote: "Ethical monotheism links one God with moral obedience.",
-        requiresScripture: false,
-        model: "Ethical monotheism is the belief that there is only one God worthy of worship and that humans owe this God moral obedience, for example through the covenant and commandments."
-      },
-      {
-        type: "Explain",
-        topic: "God",
-        question: "Explain one reason why Christians describe God as omnipotent.",
-        keywords: ["only god", "unchallenged authority", "all things are possible", "matthew 19", "power", "sovereign"],
-        mustIncludeAny: [["all things are possible", "matthew 19", "only god", "sovereign"]],
-        quote: "Matthew 19: 'With God all things are possible.'",
-        requiresScripture: false,
-        model: "Christians describe God as omnipotent because as the one true God he is sovereign over creation. This is supported by passages like Matthew 19, which say that with God all things are possible."
-      },
-      {
-        type: "Explain",
-        topic: "God",
-        question: "What is the difference between creation ex nihilo and ex deo?",
-        keywords: ["ex nihilo", "out of nothing", "ex deo", "out of god", "pre existing matter", "panentheistic", "process theology"],
-        mustIncludeAny: [["ex nihilo", "out of nothing"], ["ex deo", "out of god", "pre existing matter"]],
-        quote: "Ex nihilo means creation from nothing; ex deo means creation out of God or existing divine reality.",
-        requiresScripture: false,
-        model: "Ex nihilo means God created the universe out of nothing. Ex deo means creation comes out of God or from matter already bound up with God, a view linked with process theology."
-      },
-      {
-        type: "Explain",
-        topic: "God",
-        question: "Why is anthropomorphic language about God controversial?",
-        keywords: ["human characteristics", "limits god", "physical limitations", "wish fulfilment", "freud", "creator of the universe"],
-        mustIncludeAny: [["human characteristics", "limits god", "physical limitations"]],
-        quote: "Examples include God 'walking' in Eden and 'resting' after creation.",
-        requiresScripture: false,
-        model: "Anthropomorphic language is controversial because giving God human features can make God seem limited or physical, which appears to conflict with divine transcendence and omnipotence. Freud also criticised this as wish-fulfilment."
-      },
-      {
-        type: "Explain",
-        topic: "God",
-        question: "How might Christians defend calling God 'Father' even against feminist criticism?",
-        keywords: ["metaphor", "love", "authority", "historical context", "lord's prayer", "matthew 6", "male language", "not biological"],
-        mustIncludeAny: [["metaphor", "father"], ["love", "authority", "historical context", "lord's prayer"]],
-        quote: "Matthew 6 begins 'Our Father'.",
-        requiresScripture: false,
-        model: "Some Christians say Father is a metaphor expressing God's care, authority and intimacy rather than literal male biology. They also argue it is rooted in Jesus' own language, such as the Lord's Prayer."
-      },
-      {
-        type: "Criticism",
-        topic: "Feminism",
-        question: "Give one feminist criticism of traditional Christian language about God.",
-        keywords: ["daphne hampson", "male norm", "patriarchal", "women", "male monotheism", "trinity", "subvert women"],
-        mustIncludeAny: [["patriarchal", "male norm", "hampson", "women"]],
-        quote: "Hampson argues male God-language is deeply problematic.",
-        requiresScripture: false,
-        model: "A feminist criticism is that male God-language presents men as the norm and reinforces patriarchy. Thinkers like Daphne Hampson argue this makes Christianity structurally unfair to women."
-      },
-      {
-        type: "Explain",
-        topic: "Process theology",
-        question: "Why do process theologians reject the idea that God is omnipotent?",
-        keywords: ["cannot create matter out of nothing", "chaotic matter resists god", "ex deo", "not unlimited power", "evolution", "persuades"],
-        mustIncludeAny: [["resists god", "chaotic matter", "persuades"], ["not omnipotent", "cannot create matter out of nothing", "ex deo"]],
-        quote: "In process theology God persuades rather than controls.",
-        requiresScripture: false,
-        model: "Process theologians reject omnipotence because they believe God works with pre-existing chaotic matter that can resist divine aims. God persuades creation rather than controlling it absolutely."
-      },
-      {
-        type: "Explain",
-        topic: "Trinity",
-        question: "What is perichoresis in Trinitarian doctrine?",
-        keywords: ["mutual indwelling", "father son spirit", "godhead", "three persons", "one substance"],
-        mustIncludeAny: [["mutual indwelling", "three persons"], ["father", "son", "spirit", "one substance", "godhead"]],
-        quote: "Perichoresis describes the mutual indwelling of the divine persons.",
-        requiresScripture: false,
-        model: "Perichoresis is the idea that the Father, Son and Holy Spirit mutually indwell one another while remaining distinct persons within the one Godhead."
-      },
-      {
-        type: "Explain",
-        topic: "Trinity",
-        question: "How does the Trinity help Christians explain both God's transcendence and immanence?",
-        keywords: ["godhead transcendent", "persons immanent", "father", "son in history", "spirit indwells", "paradox"],
-        mustIncludeAny: [["transcendent", "immanent"], ["son", "spirit", "godhead", "persons"]],
-        quote: "The whole Godhead may be transcendent while divine persons are active in the world.",
-        requiresScripture: false,
-        model: "Christians may say the divine essence or Godhead is transcendent, while the persons of the Trinity are immanent: the Son enters history and the Spirit indwells believers."
-      },
-      {
-        type: "Explain",
-        topic: "Trinity",
-        question: "Give a Trinitarian interpretation of John 10:30, 'The Father and I are one'.",
-        keywords: ["same substance", "one", "divine unity", "pre existent", "john 1", "before abraham was i am"],
-        mustIncludeAny: [["same substance", "divine unity", "one"], ["john 10:30", "pre existent", "john 1"]],
-        quote: "John 10:30 is often used to support Jesus' divinity.",
-        requiresScripture: true,
-        model: "A Trinitarian reading says Jesus is claiming unity of divine being with the Father. This fits wider Johannine language such as 'the Word was God' and Jesus' claims of pre-existence."
-      },
-      {
-        type: "Criticism",
-        topic: "Trinity",
-        question: "Give one non-Trinitarian reading of John 10:30.",
-        keywords: ["harmony of mission", "one purpose", "greek hen", "not same person", "doing father's work"],
-        mustIncludeAny: [["harmony", "mission", "one purpose", "hen", "doing father's work"]],
-        quote: "Some argue 'one' means unity of mission rather than identity of substance.",
-        requiresScripture: true,
-        model: "A non-Trinitarian reading says Jesus means he is one with the Father in purpose or mission, not literally the same divine substance."
-      },
-      {
-        type: "Explain",
-        topic: "Purpose of life",
-        question: "Name one main Christian purpose of life and explain it.",
-        keywords: ["glorify god", "personal relationship", "prepare for judgement", "bring about the kingdom of god", "kog"],
-        mustIncludeAny: [["glorify god", "prepare for judgement", "kingdom of god", "personal relationship"]],
-        quote: "Common answers include glorifying God, preparing for judgement, and helping bring about the Kingdom of God.",
-        requiresScripture: false,
-        model: "One Christian purpose of life is to glorify God by worship, obedience and reflecting divine goodness in the world. Other accepted purposes include preparing for judgement or helping bring about the Kingdom of God."
-      },
-      {
-        type: "Explain",
-        topic: "Purpose of life",
-        question: "How can prayer help Christians build a personal relationship with God?",
-        keywords: ["communication", "personal relationship", "closeness", "god", "regular prayer", "learn god's will"],
-        mustIncludeAny: [["communication", "relationship", "prayer"], ["closeness", "god's will", "regular"]],
-        quote: "Prayer is treated as communication with God.",
-        requiresScripture: false,
-        model: "Prayer helps Christians build a personal relationship with God because it is a direct form of communication, dependence and trust. Through prayer, believers seek closeness and alignment with God's will."
-      },
-      {
-        type: "Explain",
-        topic: "Judgement",
-        question: "What does the parable of the sheep and the goats teach about judgement?",
-        keywords: ["matthew 25", "helping the poor", "hungry", "moral actions", "judged by treatment of others", "kingdom"],
-        mustIncludeAny: [["sheep and goats", "matthew 25"], ["helping the poor", "hungry", "treatment of others", "judgement"]],
-        quote: "'I was hungry and you gave me something to eat.'",
-        requiresScripture: false,
-        model: "The parable teaches that people will be judged partly by how they treat others, especially the needy. Compassion and good works toward the vulnerable are central."
-      },
-      {
-        type: "Explain",
-        topic: "Kingdom of God",
-        question: "What does it mean to bring about the Kingdom of God on earth?",
-        keywords: ["god's will", "on earth as it is in heaven", "holistic", "justice", "community", "eradicate sin", "repent"],
-        mustIncludeAny: [["god's will", "kingdom of god", "on earth as it is in heaven"], ["justice", "community", "repent"]],
-        quote: "Matthew 6: 'Thy kingdom come, thy will be done, on earth as it is in heaven.'",
-        requiresScripture: false,
-        model: "It means helping society reflect God's will through justice, repentance, love and holy living so that earthly life increasingly mirrors heaven."
-      },
-      {
-        type: "Explain",
-        topic: "Resurrection",
-        question: "Why is Jesus' resurrection important for Christian beliefs about life after death?",
-        keywords: ["defeated death", "everlasting life", "atonement", "humans can rise", "heaven", "hope"],
-        mustIncludeAny: [["defeated death", "everlasting life", "life after death"], ["atonement", "hope", "humans can rise"]],
-        quote: "Jesus' resurrection is treated as the model and guarantee of future life.",
-        requiresScripture: false,
-        model: "Jesus' resurrection matters because it shows death has been conquered and gives Christians hope that eternal life with God is possible for humanity as well."
-      },
-      {
-        type: "Explain",
-        topic: "Soul",
-        question: "How did Plato understand the soul?",
-        keywords: ["immortal", "body", "world of forms", "dualism", "reincarnated", "contemplates the good"],
-        mustIncludeAny: [["immortal", "dualism", "world of forms"], ["body", "reincarnated", "contemplates the good"]],
-        quote: "Plato sees the soul as immortal and distinct from the body.",
-        requiresScripture: false,
-        model: "Plato taught that the soul is immortal and distinct from the body. At death it leaves the body, relates to the world of forms and is later reincarnated."
-      },
-      {
-        type: "Explain",
-        topic: "Resurrection",
-        question: "How does Augustine argue for bodily resurrection?",
-        keywords: ["city of god", "physical resurrection", "body and soul", "god can raise body", "purpose for body", "jesus bodily resurrection"],
-        mustIncludeAny: [["bodily resurrection", "body and soul", "city of god"], ["god can raise body", "purpose for body", "jesus bodily resurrection"]],
-        quote: "Augustine asks what hinders the earthly body from being raised to a heavenly body.",
-        requiresScripture: false,
-        model: "Augustine argues that God created body and soul together for a reason, so both should be redeemed. Since Christ was bodily raised, God can also resurrect human bodies."
-      },
-      {
-        type: "Compare",
-        topic: "Afterlife",
-        question: "What is the difference between particular judgement and general judgement in Catholic belief?",
-        keywords: ["particular judgement", "immediately after death", "individual", "general judgement", "end of time", "humanity as a whole", "second coming"],
-        mustIncludeAny: [["particular judgement", "immediately after death", "individual"], ["general judgement", "end of time", "second coming", "humanity as a whole"]],
-        quote: "Catholicism distinguishes immediate personal judgement from final universal judgement.",
-        requiresScripture: false,
-        model: "Particular judgement is the judgement of each individual immediately after death. General judgement is the final judgement at the end of time when Christ returns and all humanity is judged."
-      },
-      {
-        type: "Criticism",
-        topic: "Afterlife",
-        question: "Give one reason some Christians prefer a spiritual resurrection rather than a physical one.",
-        keywords: ["bodies decay", "cremation", "counter intuitive", "spiritual body", "1 corinthians 15", "changed"],
-        mustIncludeAny: [["bodies decay", "cremation", "spiritual body", "1 corinthians 15"]],
-        quote: "1 Corinthians 15 speaks of being raised a 'spiritual body'.",
-        requiresScripture: false,
-        model: "Some Christians prefer a spiritual resurrection because physical bodies decay, are cremated, and seem unsuited to eternal life. They use 1 Corinthians 15 and its language of a spiritual body."
-      },
-      {
-        type: "Explain",
-        topic: "Justification",
-        question: "What is justification by faith in St Paul?",
-        keywords: ["righteousness", "god's grace", "faith in jesus", "cannot earn salvation", "romans 3", "all have sinned"],
-        mustIncludeAny: [["faith", "grace", "righteousness"], ["romans 3", "all have sinned", "cannot earn"]],
-        quote: "Paul says humans are justified by God's grace through faith.",
-        requiresScripture: false,
-        model: "For Paul, justification means being made righteous before God not by obeying law perfectly but through God's grace received in faith in Christ."
-      },
-      {
-        type: "Compare",
-        topic: "Justification",
-        question: "How does St James challenge justification by faith alone?",
-        keywords: ["faith without works is dead", "james 2", "works show faith", "demons believe", "abraham"],
-        mustIncludeAny: [["faith without works is dead", "james 2"], ["works show faith", "demons believe", "abraham"]],
-        quote: "James 2: 'Faith by itself, if it has no works, is dead.'",
-        requiresScripture: false,
-        model: "James argues that faith alone is insufficient because real faith must produce action. He says faith without works is dead and uses Abraham as an example."
-      },
-      {
-        type: "Explain",
-        topic: "Predestination",
-        question: "What is predestination in Christian theology?",
-        keywords: ["god wills fate", "heaven", "hell", "foreknowledge", "eternal will", "chosen", "salvation"],
-        mustIncludeAny: [["god wills", "fate", "salvation", "heaven"], ["predestination", "foreknowledge", "eternal will"]],
-        quote: "Predestination says the destiny of persons is already known or willed by God.",
-        requiresScripture: false,
-        model: "Predestination is the belief that God already knows or wills the eternal destiny of individuals, especially regarding salvation."
-      },
-      {
-        type: "Criticism",
-        topic: "Predestination",
-        question: "Give one problem with predestination.",
-        keywords: ["free will", "problem of evil", "god creates people for hell", "accountability", "justice", "coercion"],
-        mustIncludeAny: [["free will", "problem of evil", "justice", "accountability"]],
-        quote: "A major challenge is whether humans are really free if their fate is fixed.",
-        requiresScripture: false,
-        model: "A problem with predestination is that it seems to undermine free will and moral responsibility, and it raises questions about God's justice if some are destined for hell."
-      },
-      {
-        type: "Explain",
-        topic: "Sanctity of life",
-        question: "What is the sanctity of life principle?",
-        keywords: ["life is sacred", "gift from god", "imago dei", "breath of life", "intrinsic value"],
-        mustIncludeAny: [["life is sacred", "gift from god"], ["imago dei", "intrinsic value", "breath of life"]],
-        quote: "Sanctity of life means human life is holy because it comes from God.",
-        requiresScripture: false,
-        model: "The sanctity of life principle says human life is sacred because it is given by God, reflects the image of God and has intrinsic value."
-      },
-      {
-        type: "Compare",
-        topic: "Sanctity of life",
-        question: "What is the difference between the strong and weak sanctity of life principles?",
-        keywords: ["strong principle", "always sacred", "never permissible", "weak principle", "quality of life", "circumstances"],
-        mustIncludeAny: [["strong", "always sacred", "never permissible"], ["weak", "quality of life", "circumstances"]],
-        quote: "The weak form allows quality-of-life reasoning in some cases.",
-        requiresScripture: false,
-        model: "The strong sanctity of life principle says life is always sacred and should not be intentionally ended. The weak version still values life but allows circumstances and quality of life to be considered."
-      },
-      {
-        type: "Explain",
-        topic: "Embryo research",
-        question: "Why does the Catholic Church oppose embryo research?",
-        keywords: ["life begins at conception", "personhood", "embryo human already", "murder", "thou shalt not kill", "warnock report rejected"],
-        mustIncludeAny: [["life begins at conception", "personhood"], ["embryo human already", "thou shalt not kill", "murder"]],
-        quote: "Catholic teaching treats the embryo as fully human from conception.",
-        requiresScripture: false,
-        model: "The Catholic Church opposes embryo research because it teaches that life begins at conception and the embryo already has personhood. Destroying it is therefore treated as killing innocent human life."
-      },
-      {
-        type: "Compare",
-        topic: "Embryo research",
-        question: "How does Peter Singer's view of personhood differ from the Catholic view?",
-        keywords: ["pleasure and pain", "nervous system", "14 days", "not persons yet", "catholic life at conception", "personhood"],
-        mustIncludeAny: [["pleasure", "pain", "nervous system", "14 days"], ["catholic", "life begins at conception", "personhood"]],
-        quote: "Singer links personhood to sentience, not conception.",
-        requiresScripture: false,
-        model: "Singer links personhood to the ability to feel pleasure or pain, so early embryos are not persons. Catholicism says the embryo is a person from conception regardless of developed sentience."
-      },
-      {
-        type: "Explain",
-        topic: "Just war",
-        question: "Why was Just War Theory developed?",
-        keywords: ["turn the other cheek", "too idealistic", "lesser evil", "defend innocent", "natural law", "augustine"],
-        mustIncludeAny: [["too idealistic", "turn the other cheek", "lesser evil"], ["defend innocent", "augustine", "natural law"]],
-        quote: "Just War Theory tries to limit war rather than celebrate it.",
-        requiresScripture: false,
-        model: "Just War Theory was developed because total pacifism seemed too idealistic for some Christians. It aimed to limit war morally and allow force only as a lesser evil to defend the innocent."
-      },
-      {
-        type: "Define",
-        topic: "Just war",
-        question: "What is jus ad bellum?",
-        keywords: ["starting a war", "conditions", "legitimate to start", "just cause", "last resort", "probability of success"],
-        mustIncludeAny: [["starting a war", "conditions", "just cause"], ["last resort", "probability of success", "legitimate"]],
-        quote: "Jus ad bellum means the rules for deciding whether war may begin.",
-        requiresScripture: false,
-        model: "Jus ad bellum refers to the criteria that must be met before starting a war, such as just cause, right intention, last resort and legitimate authority."
-      },
-      {
-        type: "Define",
-        topic: "Just war",
-        question: "What is jus in bello?",
-        keywords: ["during war", "rules of fighting", "discrimination", "non combatants", "proportionality of means"],
-        mustIncludeAny: [["during war", "rules of fighting"], ["discrimination", "non combatants", "proportionality"]],
-        quote: "Jus in bello means how war must be fought once it starts.",
-        requiresScripture: false,
-        model: "Jus in bello means the moral rules governing conduct during war, especially avoiding direct attacks on non-combatants and using proportionate means."
-      },
-      {
-        type: "Criticism",
-        topic: "Weapons of mass destruction",
-        question: "Why do many Christians say weapons of mass destruction fail Just War criteria?",
-        keywords: ["indiscriminate", "non combatants", "radiation", "disproportionate", "nuclear weapons", "jus in bello", "jus ad bellum"],
-        mustIncludeAny: [["indiscriminate", "non combatants", "disproportionate"], ["nuclear", "jus in bello", "jus ad bellum"]],
-        quote: "WMDs are criticised as both indiscriminate and disproportionate.",
-        requiresScripture: false,
-        model: "Many Christians say WMDs fail Just War Theory because they kill indiscriminately, including civilians, and their destruction is wildly disproportionate to most military goals."
-      },
-      {
-        type: "Define",
-        topic: "Environment",
-        question: "What is dominion?",
-        keywords: ["anthropocentric", "power over creation", "humans rule", "genesis 1", "subdue", "dominion over"],
-        mustIncludeAny: [["anthropocentric", "power over", "rule"], ["genesis 1", "subdue", "dominion"]],
-        quote: "Genesis 1 speaks of humanity having dominion.",
-        requiresScripture: false,
-        model: "Dominion is the view that humans have authority or power over the rest of creation and may rule it because of their special status before God."
-      },
-      {
-        type: "Explain",
-        topic: "Environment",
-        question: "Give one quote that supports dominion and explain it.",
-        keywords: ["dominion over the work of thy hands", "subdue", "psalm 8", "genesis 1:28", "human authority", "rule"],
-        mustIncludeAny: [["psalm 8", "genesis 1:28", "subdue", "dominion over the work of thy hands"]],
-        quote: "Examples: Psalm 8 or Genesis 1:28.",
-        requiresScripture: true,
-        model: "One supporting quote is Genesis 1:28, where humans are told to 'fill the earth and subdue it'. This is often read to mean humans have authority to rule over nature."
-      },
-      {
-        type: "Explain",
-        topic: "Environment",
-        question: "What is stewardship?",
-        keywords: ["care for creation", "responsibility", "earth and animals", "not exploit", "god's creation is good"],
-        mustIncludeAny: [["care for creation", "responsibility"], ["not exploit", "earth", "animals", "good"]],
-        quote: "Stewardship means caring for the earth as God's good creation.",
-        requiresScripture: false,
-        model: "Stewardship is the belief that humans should care for the earth responsibly as God's good creation rather than exploit it selfishly."
-      },
-      {
-        type: "Explain",
-        topic: "Environment",
-        question: "How does the idea that creation is 'very good' support stewardship?",
-        keywords: ["very good", "intrinsic value", "all creation", "care for it", "genesis 1:31", "not only humans"],
-        mustIncludeAny: [["very good", "genesis 1:31"], ["intrinsic value", "care for creation", "all creation"]],
-        quote: "Genesis 1:31 says creation is 'very good'.",
-        requiresScripture: false,
-        model: "If God calls creation very good, then non-human creation has value in itself. That supports stewardship because humans should protect what God values rather than destroy it."
-      },
-      {
-        type: "Explain",
-        topic: "Environment",
-        question: "What is eco-theology?",
-        keywords: ["theology of caring for environment", "religion and nature", "environmental crisis", "adapt dogma", "species", "land"],
-        mustIncludeAny: [["caring for the environment", "religion and nature"], ["environmental crisis", "eco theology"]],
-        quote: "Eco-theology links religious belief with environmental responsibility.",
-        requiresScripture: false,
-        model: "Eco-theology is theology focused on the environment, arguing that religious beliefs should guide care for nature, animals and the wider planet."
-      },
-      {
-        type: "Criticism",
-        topic: "Environment",
-        question: "Give one criticism of dominion.",
-        keywords: ["environmental destruction", "anthropocentric", "human arrogance", "cruelty to animals", "outdated", "ignores stewardship"],
-        mustIncludeAny: [["environmental destruction", "anthropocentric", "human arrogance", "cruelty to animals"]],
-        quote: "Critics say dominion can justify exploitation.",
-        requiresScripture: false,
-        model: "A criticism of dominion is that it can justify environmental destruction and cruelty to animals by placing human interests above the rest of creation."
-      },
-      {
-        type: "Explain",
-        topic: "Environment",
-        question: "How does Laudato Si support stewardship?",
-        keywords: ["gift for everyone", "climate change", "poorest communities", "deforestation", "fossil fuels need to go", "pope francis"],
-        mustIncludeAny: [["laudato si", "pope francis"], ["climate change", "poorest communities", "gift for everyone", "fossil fuels"]],
-        quote: "Pope Francis links stewardship with justice for the poor and the planet.",
-        requiresScripture: false,
-        model: "Laudato Si supports stewardship by teaching that the earth is God's gift for all, criticising pollution and fossil fuels, and stressing that environmental damage hurts the poorest most."
-      }
+      { type: "Explain", topic: "Bible authority", question: "Explain the Evangelical Protestant view that the Bible has absolute authority.", keywords: ["verbal plenary inspiration", "god breathed", "dictated", "inerrant", "word of god", "religion and science", "authoritative"], mustIncludeAny: [["verbal plenary inspiration", "god breathed", "dictated"], ["inerrant", "word of god", "absolute authority"]], quote: "2 Timothy: Scripture is 'God-breathed'", requiresScripture: false, model: "A strong answer explains that Evangelical Protestants believe in verbal plenary inspiration, meaning all scripture is inspired or dictated by God. Because it is God's word, the Bible is treated as inerrant and fully authoritative." },
+      { type: "Criticism", topic: "Bible authority", question: "Give one criticism of the Evangelical Protestant belief in biblical inerrancy.", keywords: ["historical errors", "scientific errors", "genesis", "contradictions", "literalism", "hard to reconcile", "science"], mustIncludeAny: [["scientific errors", "historical errors", "contradictions", "literalism"]], quote: "Example: Genesis and modern science can conflict.", requiresScripture: false, model: "One criticism is that biblical inerrancy is difficult to defend because the Bible appears to contain scientific or historical problems, such as creation narratives that conflict with modern science." },
+      { type: "Explain", topic: "Catholicism", question: "Explain why Catholics believe the Magisterium is needed to interpret the Bible.", keywords: ["magisterium", "living tradition", "apostolic succession", "human error", "translation", "interpretation", "holy spirit", "church"], mustIncludeAny: [["magisterium", "church"], ["apostolic succession", "living tradition", "interpretation"]], quote: "Catholics rely on the Church's living tradition.", requiresScripture: false, model: "Catholics believe the Bible is inspired, but because humans translated and copied it, interpretation is needed. The Magisterium, guided by the Holy Spirit and rooted in apostolic succession, helps preserve correct doctrine." },
+      { type: "Define", topic: "Catholicism", question: "What is apostolic succession?", keywords: ["unbroken chain", "bishops", "popes", "apostles", "authority", "magisterium", "passed down"], mustIncludeAny: [["bishops", "apostles"], ["unbroken chain", "passed down", "popes"]], quote: "Apostolic succession links today's Church to the apostles.", requiresScripture: false, model: "Apostolic succession is the belief that the authority and teaching of the Church have been passed down in an unbroken chain from the apostles through bishops and popes." },
+      { type: "Define", topic: "Scripture", question: "What is meant by canon in Christianity?", keywords: ["collection of books", "inspired by god", "authoritative scripture", "old testament", "new testament"], mustIncludeAny: [["collection of books", "authoritative scripture", "inspired by god"]], quote: "Canon means the accepted set of inspired books.", requiresScripture: false, model: "Canon means the collection of books accepted as inspired by God and therefore authoritative scripture, especially the Old and New Testaments in Christianity." },
+      { type: "Explain", topic: "God", question: "Explain one reason why Christians describe God as omnipotent.", keywords: ["only god", "unchallenged authority", "all things are possible", "power", "sovereign"], mustIncludeAny: [["all things are possible", "only god", "sovereign", "power"]], quote: "Matthew 19: 'With God all things are possible.'", requiresScripture: false, model: "Christians describe God as omnipotent because as the one true God he is sovereign over creation. This is supported by passages like Matthew 19, which say that with God all things are possible." },
+      { type: "Define", topic: "God", question: "What is ethical monotheism?", keywords: ["one god", "worthy of worship", "moral obedience", "ten commandments", "covenant", "shema"], mustIncludeAny: [["one god", "worthy of worship"], ["moral obedience", "covenant", "ten commandments", "shema"]], quote: "Ethical monotheism links one God with moral obedience.", requiresScripture: false, model: "Ethical monotheism is the belief that there is only one God worthy of worship and that humans owe this God moral obedience, for example through the covenant and commandments." },
+      { type: "Explain", topic: "Environment", question: "What is dominion?", keywords: ["anthropocentric", "power over creation", "humans rule", "subdue", "dominion over"], mustIncludeAny: [["anthropocentric", "power over", "rule"], ["subdue", "dominion"]], quote: "Genesis 1 speaks of humanity having dominion.", requiresScripture: false, model: "Dominion is the view that humans have authority or power over the rest of creation and may rule it because of their special status before God." },
+      { type: "Explain", topic: "Environment", question: "Give one quote that supports dominion and explain it.", keywords: ["dominion over the work of thy hands", "subdue", "psalm 8", "genesis 1:28", "human authority", "rule"], mustIncludeAny: [["psalm 8", "genesis 1:28", "subdue", "dominion over the work of thy hands"]], quote: "Examples: Psalm 8 or Genesis 1:28.", requiresScripture: true, model: "One supporting quote is Genesis 1:28, where humans are told to 'fill the earth and subdue it'. This is often read to mean humans have authority to rule over nature." },
+      { type: "Explain", topic: "Environment", question: "What is stewardship?", keywords: ["care for creation", "responsibility", "earth and animals", "not exploit", "god's creation is good"], mustIncludeAny: [["care for creation", "responsibility"], ["not exploit", "earth", "animals", "good"]], quote: "Stewardship means caring for the earth as God's good creation.", requiresScripture: false, model: "Stewardship is the belief that humans should care for the earth responsibly as God's good creation rather than exploit it selfishly." },
+      { type: "Explain", topic: "Justification", question: "What is justification by faith in St Paul?", keywords: ["righteousness", "god's grace", "faith in jesus", "cannot earn salvation", "all have sinned"], mustIncludeAny: [["faith", "grace", "righteousness"], ["all have sinned", "cannot earn"]], quote: "Paul says humans are justified by God's grace through faith.", requiresScripture: false, model: "For Paul, justification means being made righteous before God not by obeying law perfectly but through God's grace received in faith in Christ." }
+    ];
+
+    const quoteBank = [
+      { topic: "Bible authority", intro: "Useful for inspiration, authority, Catholic and Protestant views on scripture.", quotes: [
+        { ref: "2 Timothy 3:16", short: "'All Scripture is God-breathed'", full: "All Scripture is God-breathed and is useful for teaching, rebuking, correcting and training in righteousness.", highlight: "God-breathed", interpretation: "This supports strong views of biblical authority because it presents scripture as coming from God and therefore carrying divine authority for Christian teaching and doctrine." },
+        { ref: "John 1:1", short: "'The Word was with God, and the Word was God'", full: "In the beginning was the Word, and the Word was with God, and the Word was God.", highlight: "the Word was God", interpretation: "Karl Barth uses this kind of language to distinguish between the Bible and the deeper Word of God revealed through Christ." }
+      ]},
+      { topic: "God", intro: "Useful for omnipotence, monotheism, transcendence and God’s authority.", quotes: [
+        { ref: "Matthew 19:26", short: "'With God all things are possible'", full: "Jesus looked at them and said, 'With man this is impossible, but with God all things are possible.'", highlight: "with God all things are possible", interpretation: "This is a classic quote for God’s omnipotence. It supports the idea that God’s power is beyond ordinary human limitation." },
+        { ref: "Isaiah 43:10", short: "'Before me no god was formed'", full: "Before me no god was formed, nor shall there be any after me.", highlight: "no god was formed", interpretation: "This supports ethical monotheism because it presents the God of Israel as the only true God rather than one among many." },
+        { ref: "Exodus 3:14", short: "'I am who I am'", full: "God said to Moses, 'I am who I am.' And he said, 'Say this to the people of Israel: I am has sent me to you.'", highlight: "I am who I am", interpretation: "This is useful for God as ineffable or unknowable because the name points to a being who is beyond ordinary human categories and definitions." }
+      ]},
+      { topic: "Jesus' authority", intro: "Useful for Son of God, Son of Man, Trinity and Christology.", quotes: [
+        { ref: "Matthew 28:18", short: "'All authority in heaven and on earth'", full: "And Jesus came and said to them, 'All authority in heaven and on earth has been given to me.'", highlight: "All authority in heaven and on earth", interpretation: "This supports the title Son of God because it presents Jesus as possessing divine-level authority over all creation." },
+        { ref: "Luke 9:58", short: "'The Son of Man has nowhere to lay his head'", full: "And Jesus said to him, 'Foxes have holes, and birds of the air have nests, but the Son of Man has nowhere to lay his head.'", highlight: "The Son of Man has nowhere to lay his head", interpretation: "This highlights Jesus’ humanity, vulnerability and suffering, making it useful for explaining the title Son of Man." },
+        { ref: "John 10:30", short: "'The Father and I are one'", full: "I and the Father are one.", highlight: "The Father and I are one", interpretation: "Trinitarians use this to support unity of being between Jesus and the Father, while others read it more metaphorically as unity of mission." }
+      ]},
+      { topic: "Sanctity of life", intro: "Useful for personhood, embryo issues, dignity and life as gift.", quotes: [
+        { ref: "Genesis 1:27", short: "'God created mankind in his own image'", full: "So God created mankind in his own image, in the image of God he created them; male and female he created them.", highlight: "in his own image", interpretation: "This supports sanctity of life because human beings are seen as bearing the image of God and therefore possessing intrinsic value and dignity." },
+        { ref: "Genesis 2:7", short: "'breathed into his nostrils the breath of life'", full: "Then the LORD God formed a man from the dust of the ground and breathed into his nostrils the breath of life, and the man became a living being.", highlight: "breath of life", interpretation: "This supports the idea that life is a divine gift, which is why many Christians oppose intentionally ending innocent human life." }
+      ]},
+      { topic: "Dominion and stewardship", intro: "Useful for environmental ethics, dominion, eco-theology and renewability.", quotes: [
+        { ref: "Genesis 1:28", short: "'fill the earth and subdue it'", full: "Be fruitful and multiply and fill the earth and subdue it, and have dominion over the fish of the sea and over the birds of the heavens and over every living thing that moves on the earth.", highlight: "subdue it", interpretation: "This is the key dominion quote. Some Christians read it as giving humanity authority over nature, while others argue it should be balanced by responsibility." },
+        { ref: "Psalm 8:6", short: "'dominion over the works of your hands'", full: "You have given him dominion over the works of your hands; you have put all things under his feet.", highlight: "dominion over the works of your hands", interpretation: "This supports dominion by presenting humans as elevated within creation, though critics worry that this can encourage exploitation." },
+        { ref: "Genesis 1:31", short: "'it was very good'", full: "God saw all that he had made, and it was very good.", highlight: "very good", interpretation: "This supports stewardship because if all creation is good, it has value beyond human usefulness and deserves care and protection." },
+        { ref: "Numbers 35:33", short: "'Do not pollute the land'", full: "Do not pollute the land where you are. Bloodshed pollutes the land, and atonement cannot be made for the land on which blood has been shed, except by the blood of the one who shed it.", highlight: "Do not pollute the land", interpretation: "This is often adapted in environmental ethics as a simple scriptural line against damaging the land and wider created order." }
+      ]}
     ];
 
     const questionsWrap = document.getElementById('questions');
@@ -891,270 +663,171 @@
     const poolBadge = document.getElementById('poolBadge');
     const markBtn = document.getElementById('markBtn');
     const newSetBtn = document.getElementById('newSetBtn');
+    const quizTab = document.getElementById('quizTab');
+    const quotesTab = document.getElementById('quotesTab');
+    const quizControls = document.getElementById('quizControls');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const bookCard = document.getElementById('bookCard');
+    const bookCover = document.getElementById('bookCover');
+    const bookPage = document.getElementById('bookPage');
+    const quoteRef = document.getElementById('quoteRef');
+    const fullVerse = document.getElementById('fullVerse');
+    const quoteInterpretation = document.getElementById('quoteInterpretation');
+    const warningModal = document.getElementById('warningModal');
+    const cancelMarkBtn = document.getElementById('cancelMarkBtn');
+    const acceptMarkBtn = document.getElementById('acceptMarkBtn');
 
     let currentSet = [];
     let currentMode = 'daily';
-    const STORAGE_KEYS = {
-      streak: 'daily5_streak_data_v1'
-    };
+    const STORAGE_KEYS = { streak: 'daily5_streak_data_v1' };
 
-    function normalize(text) {
-      return (text || '')
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
-
-    function hashString(str) {
-      let hash = 2166136261;
-      for (let i = 0; i < str.length; i++) {
-        hash ^= str.charCodeAt(i);
-        hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
-      }
-      return Math.abs(hash >>> 0);
-    }
-
-    function mulberry32(seed) {
-      return function() {
-        let t = seed += 0x6D2B79F5;
-        t = Math.imul(t ^ t >>> 15, t | 1);
-        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
-      }
-    }
-
-    function shuffledIndices(length, seed) {
-      const rand = mulberry32(seed);
-      const arr = Array.from({ length }, (_, i) => i);
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(rand() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    function getDailySet() {
-      const today = new Date();
-      const key = today.toISOString().slice(0, 10);
-      const seed = hashString(key);
-      const order = shuffledIndices(questionBank.length, seed);
-      const chosen = order.slice(0, Math.min(5, questionBank.length)).map(i => questionBank[i]);
-      return { key, questions: chosen };
-    }
-
-    function getPracticeSet() {
-      const seed = Date.now() + Math.floor(Math.random() * 999999);
-      const order = shuffledIndices(questionBank.length, seed);
-      return order.slice(0, Math.min(5, questionBank.length)).map(i => questionBank[i]);
-    }
-
-    function getTodayKey() {
-      return new Date().toISOString().slice(0, 10);
-    }
-
-    function daysBetween(a, b) {
-      const start = new Date(a + 'T00:00:00');
-      const end = new Date(b + 'T00:00:00');
-      return Math.round((end - start) / 86400000);
-    }
-
-    function getStreakData() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEYS.streak);
-        if (!raw) return { streak: 0, lastCompletedDate: null, completedDates: [] };
-        const parsed = JSON.parse(raw);
-        return {
-          streak: Number(parsed.streak) || 0,
-          lastCompletedDate: parsed.lastCompletedDate || null,
-          completedDates: Array.isArray(parsed.completedDates) ? parsed.completedDates : []
-        };
-      } catch {
-        return { streak: 0, lastCompletedDate: null, completedDates: [] };
-      }
-    }
-
-    function saveStreakData(data) {
-      localStorage.setItem(STORAGE_KEYS.streak, JSON.stringify(data));
-    }
-
-    function markDailyCompletion() {
-      const today = getTodayKey();
-      const data = getStreakData();
-      if (data.completedDates.includes(today)) return data;
-
-      let newStreak = 1;
-      if (data.lastCompletedDate) {
-        const gap = daysBetween(data.lastCompletedDate, today);
-        if (gap === 1) newStreak = data.streak + 1;
-        else if (gap === 0) newStreak = data.streak;
-      }
-
-      const updated = {
-        streak: newStreak,
-        lastCompletedDate: today,
-        completedDates: [...data.completedDates, today]
-      };
-      saveStreakData(updated);
-      return updated;
-    }
-
-    function updateStreakBadge() {
-      const data = getStreakData();
-      const badge = document.getElementById('streakBadge');
-      if (badge) badge.textContent = `🔥 ${data.streak} day streak`;
-    }
+    function normalize(text) { return (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
+    function hashString(str) { let hash = 2166136261; for (let i = 0; i < str.length; i++) { hash ^= str.charCodeAt(i); hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24); } return Math.abs(hash >>> 0); }
+    function mulberry32(seed) { return function() { let t = seed += 0x6D2B79F5; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; } }
+    function shuffledIndices(length, seed) { const rand = mulberry32(seed); const arr = Array.from({ length }, (_, i) => i); for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+    function getTodayKey() { return new Date().toISOString().slice(0, 10); }
+    function daysBetween(a, b) { const start = new Date(a + 'T00:00:00'); const end = new Date(b + 'T00:00:00'); return Math.round((end - start) / 86400000); }
+    function getStreakData() { try { const raw = localStorage.getItem(STORAGE_KEYS.streak); if (!raw) return { streak: 0, lastCompletedDate: null, completedDates: [] }; const parsed = JSON.parse(raw); return { streak: Number(parsed.streak) || 0, lastCompletedDate: parsed.lastCompletedDate || null, completedDates: Array.isArray(parsed.completedDates) ? parsed.completedDates : [] }; } catch { return { streak: 0, lastCompletedDate: null, completedDates: [] }; } }
+    function saveStreakData(data) { localStorage.setItem(STORAGE_KEYS.streak, JSON.stringify(data)); }
+    function markDailyCompletion() { const today = getTodayKey(); const data = getStreakData(); if (data.completedDates.includes(today)) return data; let newStreak = 1; if (data.lastCompletedDate) { const gap = daysBetween(data.lastCompletedDate, today); if (gap === 1) newStreak = data.streak + 1; else if (gap === 0) newStreak = data.streak; } const updated = { streak: newStreak, lastCompletedDate: today, completedDates: [...data.completedDates, today] }; saveStreakData(updated); return updated; }
+    function updateStreakBadge() { const data = getStreakData(); document.getElementById('streakBadge').textContent = `🔥 ${data.streak} day streak`; }
+    function getDailySet() { const key = getTodayKey(); const seed = hashString(key); const order = shuffledIndices(questionBank.length, seed); return { key, questions: order.slice(0, Math.min(5, questionBank.length)).map(i => questionBank[i]) }; }
+    function getPracticeSet() { const seed = Date.now() + Math.floor(Math.random() * 999999); const order = shuffledIndices(questionBank.length, seed); return order.slice(0, Math.min(5, questionBank.length)).map(i => questionBank[i]); }
 
     function renderQuestions() {
       questionsWrap.innerHTML = currentSet.map((q, i) => `
         <article class="q-card">
           <div class="q-head">
-            <div>
-              <div class="helper">Question ${i + 1} · ${q.topic}</div>
-              <h3 class="q-title">${q.question}</h3>
-            </div>
+            <div><div class="helper">Question ${i + 1} · ${q.topic}</div><h3 class="q-title">${q.question}</h3></div>
             <div class="q-type">${q.type}</div>
           </div>
-          <textarea id="answer-${i}" placeholder="Type your full answer here..."></textarea>
-          <div class="helper">Tip: include key terms and a clear explanation. Only add scripture if the question specifically asks for it.</div>
+          <textarea id="answer-${i}" placeholder="Type your answer here..."></textarea>
+          <div class="helper">Tip: short but accurate answers can still be correct. Only use scripture if the question specifically asks for it.</div>
         </article>
       `).join('');
       resultsWrap.innerHTML = '';
       overallScore.textContent = '--';
-      overallSummary.textContent = 'Answer all five, then click the button to get a score and feedback.';
+      overallSummary.textContent = 'Answer all five, then click the button to get a score and feedback. Short but accurate answers can still be correct.';
       scoreBar.style.width = '0%';
       updateStreakBadge();
     }
 
-    function includesKeyword(answer, keyword) {
-      const a = normalize(answer);
-      const k = normalize(keyword);
-      return a.includes(k);
-    }
-
-    function countMatches(answer, keywords) {
-      let total = 0;
-      keywords.forEach(k => {
-        if (includesKeyword(answer, k)) total++;
-      });
-      return total;
-    }
+    function includesKeyword(answer, keyword) { return normalize(answer).includes(normalize(keyword)); }
 
     function evaluateQuestion(question, answer) {
       const text = normalize(answer);
-      if (!text || text.length < 12) {
-        return {
-          percentage: 0,
-          label: 'Not enough yet',
-          cls: 'incorrect',
-          feedback: 'This answer is too short to judge properly. Add more explanation and key terms.',
-          hits: []
-        };
-      }
-
+      if (!text || text.length < 3) return { percentage: 0, label: 'Not enough yet', cls: 'incorrect', feedback: 'Type at least one small accurate point so the marker can judge it.', hits: [] };
+      const scripturePattern = /(john|matthew|mark|luke|genesis|psalm|psalms|romans|corinthians|timothy|isaiah|deuteronomy|exodus|leviticus|numbers|job|galatians|proverbs|acts|james)/;
       const matchedKeywords = question.keywords.filter(k => includesKeyword(text, k));
-      const keywordRatio = matchedKeywords.length / question.keywords.length;
-
+      const contentKeywords = question.keywords.filter(k => !scripturePattern.test(normalize(k)));
+      const scoredHits = question.requiresScripture ? matchedKeywords : matchedKeywords.filter(k => !scripturePattern.test(normalize(k)));
+      const keywordPool = question.requiresScripture ? question.keywords : (contentKeywords.length ? contentKeywords : question.keywords);
+      const keywordRatio = scoredHits.length / Math.max(1, keywordPool.length);
       let mustScore = 0;
-      if (question.mustIncludeAny && question.mustIncludeAny.length) {
-        question.mustIncludeAny.forEach(group => {
-          if (group.some(term => includesKeyword(text, term))) mustScore++;
-        });
-      }
+      if (question.mustIncludeAny && question.mustIncludeAny.length) question.mustIncludeAny.forEach(group => { const groupToCheck = question.requiresScripture ? group : (group.filter(term => !scripturePattern.test(normalize(term))).length ? group.filter(term => !scripturePattern.test(normalize(term))) : group); if (groupToCheck.some(term => includesKeyword(text, term))) mustScore++; });
       const mustRatio = question.mustIncludeAny?.length ? mustScore / question.mustIncludeAny.length : 1;
-
       const wordCount = text.split(' ').filter(Boolean).length;
-      const lengthBonus = Math.min(wordCount / 90, 1) * 0.12;
-      const hasScriptureRef = /(john|matthew|mark|luke|genesis|psalm|psalms|romans|corinthians|timothy|isaiah|deuteronomy|exodus|leviticus|numbers|job|galatians|proverbs|acts|james)/.test(text);
+      const lengthBonus = Math.min(wordCount / 45, 1) * 0.08;
+      const hasScriptureRef = scripturePattern.test(text);
       const scriptureBonus = question.requiresScripture && hasScriptureRef ? 0.08 : 0;
       const scripturePenalty = question.requiresScripture && !hasScriptureRef ? 0.08 : 0;
-
-      let score = (keywordRatio * 0.5) + (mustRatio * 0.3) + lengthBonus + scriptureBonus - scripturePenalty;
+      let score = (keywordRatio * 0.62) + (mustRatio * 0.28) + lengthBonus + scriptureBonus - scripturePenalty;
+      if (mustRatio >= 0.5 && scoredHits.length >= 2) score = Math.max(score, 0.76);
+      if (mustRatio >= 0.5 && scoredHits.length >= 3) score = Math.max(score, 0.86);
+      if (scoredHits.length >= 1 && mustRatio >= 0.5 && wordCount <= 12) score = Math.max(score, 0.68);
       score = Math.max(0, Math.min(1, score));
       const percentage = Math.round(score * 100);
-
-      let label = 'Not enough yet';
-      let cls = 'incorrect';
-      if (percentage >= 74) {
-        label = 'Correct';
-        cls = 'correct';
-      } else if (percentage >= 42) {
-        label = 'Partly correct';
-        cls = 'partial';
-      }
-
+      let label = 'Not enough yet', cls = 'incorrect';
+      if (percentage >= 66) { label = 'Correct'; cls = 'correct'; } else if (percentage >= 36) { label = 'Partly correct'; cls = 'partial'; }
       let feedback = '';
-      if (percentage >= 74) {
-        feedback = `Good answer. You included enough of the key ideas.${question.requiresScripture ? ' A direct scripture reference would strengthen it.' : ''}`;
-      } else if (percentage >= 42) {
-        const missing = question.keywords.filter(k => !matchedKeywords.includes(k)).slice(0, 4);
-        feedback = `You have part of it, but you need more precision. Try adding: ${missing.join(', ')}.${question.requiresScripture ? ' This question also wants a scripture reference.' : ''}`;
-      } else {
-        feedback = `This misses too many core points. A stronger answer would mention things like: ${question.keywords.slice(0, 4).join(', ')}.${question.requiresScripture ? ' Include a scripture reference too.' : ''}`;
-      }
-
+      if (percentage >= 66) feedback = `That is accurate enough to count as correct. Use the model answer below to make it fuller next time.${question.requiresScripture ? ' Add a scripture reference because this question asks for one.' : ''}`;
+      else if (percentage >= 36) { const missing = keywordPool.filter(k => !scoredHits.includes(k)).slice(0, 4); feedback = `You are close. A small extra point would probably make this fully correct. Try adding: ${missing.join(', ')}.${question.requiresScripture ? ' This question also wants a scripture reference.' : ''}`; }
+      else feedback = `Not enough there yet. Even a short but accurate answer can score well here. Try mentioning: ${keywordPool.slice(0, 4).join(', ')}.${question.requiresScripture ? ' Include a scripture reference too.' : ''}`;
       return { percentage, label, cls, feedback, hits: matchedKeywords };
     }
 
     function markAnswers() {
-      const evaluations = currentSet.map((q, i) => {
-        const answer = document.getElementById(`answer-${i}`).value;
-        return { question: q, answer, result: evaluateQuestion(q, answer) };
-      });
-
-      const total = evaluations.reduce((sum, item) => sum + item.result.percentage, 0);
-      const avg = Math.round(total / evaluations.length);
+      const evaluations = currentSet.map((q, i) => ({ question: q, answer: document.getElementById(`answer-${i}`).value, result: evaluateQuestion(q, document.getElementById(`answer-${i}`).value) }));
+      const avg = Math.round(evaluations.reduce((sum, item) => sum + item.result.percentage, 0) / evaluations.length);
       overallScore.textContent = `${avg}%`;
       scoreBar.style.width = `${avg}%`;
-
       const correctCount = evaluations.filter(x => x.result.label === 'Correct').length;
       const partialCount = evaluations.filter(x => x.result.label === 'Partly correct').length;
       let streakMessage = '';
-      if (currentMode === 'daily') {
-        const streakData = markDailyCompletion();
-        updateStreakBadge();
-        streakMessage = ` Daily streak: 🔥 ${streakData.streak}.`;
-      }
-      overallSummary.textContent = `${correctCount}/5 fully correct, ${partialCount}/5 partly correct. The marking checks for the right content rather than exact wording.${streakMessage}`;
-
+      if (currentMode === 'daily') { const streakData = markDailyCompletion(); updateStreakBadge(); streakMessage = ` Daily streak: 🔥 ${streakData.streak}.`; }
+      overallSummary.textContent = `${correctCount}/5 fully correct, ${partialCount}/5 partly correct. The marking checks whether your answer is accurate enough, not whether it is long.${streakMessage}`;
       resultsWrap.innerHTML = evaluations.map((item, i) => `
         <div class="result-card">
-          <div class="result-top">
-            <strong>Q${i + 1}: ${item.question.topic}</strong>
-            <span class="pill ${item.result.cls}">${item.result.label} · ${item.result.percentage}%</span>
-          </div>
+          <div class="result-top"><strong>Q${i + 1}: ${item.question.topic}</strong><span class="pill ${item.result.cls}">${item.result.label} · ${item.result.percentage}%</span></div>
           <div class="small"><strong>Feedback:</strong> ${item.result.feedback}</div>
           <div class="small" style="margin-top:8px;"><strong>Model answer idea:</strong> ${item.question.model}</div>
           <div class="small" style="margin-top:8px;"><strong>${item.question.requiresScripture ? 'Scripture hint' : 'Extra support hint'}:</strong> ${item.question.quote}</div>
-          <div class="topic-list">
-            ${item.result.hits.length ? item.result.hits.slice(0, 8).map(hit => `<span class="topic">✓ ${hit}</span>`).join('') : '<span class="topic">No strong key points spotted yet</span>'}
-          </div>
+          <div class="topic-list">${item.result.hits.length ? item.result.hits.slice(0, 8).map(hit => `<span class="topic">✓ ${hit}</span>`).join('') : '<span class="topic">No strong key points spotted yet</span>'}</div>
         </div>
       `).join('');
     }
 
-    function loadDailySet() {
-      currentMode = 'daily';
-      const daily = getDailySet();
-      currentSet = daily.questions;
-      dayBadge.textContent = `Daily set for ${daily.key}`;
-      poolBadge.textContent = `${questionBank.length} questions in the pool`;
-      renderQuestions();
+    function loadDailySet() { currentMode = 'daily'; const daily = getDailySet(); currentSet = daily.questions; dayBadge.textContent = `Daily set for ${daily.key}`; poolBadge.textContent = `${questionBank.length} questions in the pool`; renderQuestions(); }
+    function loadPracticeSet() { currentMode = 'practice'; currentSet = getPracticeSet(); dayBadge.textContent = 'Practice set (random)'; poolBadge.textContent = `${questionBank.length} questions in the pool`; renderQuestions(); }
+
+    function highlightPhrase(full, phrase) {
+      if (!phrase) return full;
+      const escaped = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(escaped, 'i');
+      return full.replace(regex, match => `<mark class="note-highlight">${match}</mark>`);
     }
 
-    function loadPracticeSet() {
-      currentMode = 'practice';
-      currentSet = getPracticeSet();
-      dayBadge.textContent = 'Practice set (random)';
-      poolBadge.textContent = `${questionBank.length} questions in the pool`;
-      renderQuestions();
+    function showQuote(topicIndex, quoteIndex) {
+      const item = quoteBank[topicIndex].quotes[quoteIndex];
+      quoteRef.textContent = `${quoteBank[topicIndex].topic} · ${item.ref}`;
+      fullVerse.innerHTML = highlightPhrase(item.full, item.highlight);
+      quoteInterpretation.innerHTML = `<strong>What it means:</strong> ${item.interpretation}`;
+      document.querySelectorAll('.quote-chip').forEach(chip => chip.classList.remove('active'));
+      const selected = document.querySelector(`[data-topic-index="${topicIndex}"][data-quote-index="${quoteIndex}"]`);
+      if (selected) selected.classList.add('active');
     }
 
-    markBtn.addEventListener('click', markAnswers);
+    function renderQuoteBook() {
+      bookPage.innerHTML = `
+        <h2 class="quill-title">Scripture notebook</h2>
+        <div class="quill-note">Each topic opens into quick quote prompts. Click any scripture for the full verse, the exact phrase from your notes highlighted, and a revision-friendly interpretation.</div>
+        ${quoteBank.map((section, topicIndex) => `
+          <div class="topic-entry">
+            <h3>${section.topic}</h3>
+            <div class="quill-note" style="margin-bottom:10px;">${section.intro}</div>
+            <div class="quote-chip-wrap">
+              ${section.quotes.map((q, quoteIndex) => `<button class="quote-chip" data-topic-index="${topicIndex}" data-quote-index="${quoteIndex}">${q.ref} · ${q.short}</button>`).join('')}
+            </div>
+          </div>
+        `).join('')}
+      `;
+      document.querySelectorAll('.quote-chip').forEach(chip => chip.addEventListener('click', () => showQuote(Number(chip.dataset.topicIndex), Number(chip.dataset.quoteIndex))));
+      showQuote(0, 0);
+    }
+
+    function setTab(tab) {
+      tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      quizTab.classList.toggle('hidden', tab !== 'quiz');
+      quotesTab.classList.toggle('hidden', tab !== 'quotes');
+      quizControls.classList.toggle('hidden', tab !== 'quiz');
+    }
+
+    tabButtons.forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
+    bookCover.addEventListener('click', () => bookCard.classList.toggle('open'));
+    markBtn.addEventListener('click', () => warningModal.classList.remove('hidden'));
     newSetBtn.addEventListener('click', loadPracticeSet);
+    cancelMarkBtn.addEventListener('click', () => warningModal.classList.add('hidden'));
+    acceptMarkBtn.addEventListener('click', () => {
+      warningModal.classList.add('hidden');
+      markAnswers();
+    });
+    warningModal.addEventListener('click', (e) => {
+      if (e.target === warningModal) warningModal.classList.add('hidden');
+    });
 
     loadDailySet();
     updateStreakBadge();
+    renderQuoteBook();
   </script>
 </body>
 </html>
