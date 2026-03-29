@@ -2339,7 +2339,7 @@
     }
 
     function updateEssayTypeOptions() {
-      if (currentSubject === 'politics') {
+      if (currentSubject === 'politics1' || currentSubject === 'politics2') {
         essayType.innerHTML = `
           <option value="30">30 marker – Evaluate (AO1/AO2/AO3)</option>
         `;
@@ -2501,7 +2501,7 @@
 
       updateEssayTypeOptions();
 
-      if (currentSubject === 'politics') {
+      if (currentSubject === 'politics1' || currentSubject === 'politics2') {
         essayResultsWrap.innerHTML = `
           <div class="footer-note">
             <strong>30 marker – Evaluate (Edexcel Politics)</strong>
