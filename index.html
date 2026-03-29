@@ -903,9 +903,15 @@
     </button>
   
     <button class="subject-btn" id="subjectPoliticsBtn" data-subject="politics">
+      <div class="icon">🪧</div>
+      <div class="label">Politics 1</div>
+      <div class="small-label">UK Democracy</div>
+    </button>
+
+    <button class="subject-btn" id="subjectPoliticsBtn" data-subject="politics">
       <div class="icon">🏛️</div>
-      <div class="label">Politics</div>
-      <div class="small-label">UK politics + ideologies</div>
+      <div class="label">Politics 2</div>
+      <div class="small-label">UK Government</div>
     </button>
 </aside>
 
@@ -1549,193 +1555,153 @@
       },
 
       politics: {
-        title: 'Politics',
+        title: 'Politics 1',
         icon: '🏛️',
-        subtitle: 'Edexcel A-level Politics: UK Parliament + Democracy',
+        subtitle: 'Edexcel A-level Politics: UK Democracy',
         bookCoverSub: '',
         hasQuotes: false,
         questionBank: [
-          {
-            type:'Define',
-            topic:'Participation',
-            question:'What is a participation crisis in politics?',
-            keywords:['lack of engagement','significant number of citizens','political process','not vote','not join political parties','not offer themselves for public office','formal institutions decline'],
-            mustIncludeAny:[
-              ['lack of engagement','significant number of citizens'],
-              ['political process','not vote','not join political parties','public office'],
-              ['formal institutions','decline']
-            ],
-            quote:'Definition: a lack of engagement by a significant number of citizens in the political process.',
-            requiresScripture:false,
-            model:'A participation crisis is a lack of engagement by a significant number of citizens in the political process, for example by not voting, not joining parties or not standing for public office, especially when engagement with formal democratic institutions declines.'
-          },
-          {
-            type:'Explain',
-            topic:'Participation',
-            question:'What forms of behaviour are used to identify a participation crisis?',
-            keywords:['choosing not to vote','not join political parties','not become members','not offer themselves for public office','formal participation'],
-            mustIncludeAny:[
-              ['not vote'],
-              ['not join political parties','not become members'],
-              ['not offer themselves for public office']
-            ],
-            quote:'A participation crisis is seen in declining engagement with formal democratic activity.',
-            requiresScripture:false,
-            model:'It is identified through declining formal participation, such as not voting, not joining political parties and not standing for public office.'
-          },
-          {
-            type:'Explain',
-            topic:'Participation',
-            question:'Why is participation considered crucial in a democracy?',
-            keywords:['democracy to function','representative','citizens have a voice','held accountable','decisions that affect their lives'],
-            mustIncludeAny:[
-              ['democracy to function','representative'],
-              ['citizens have a voice','held accountable']
-            ],
-            quote:'Participation is crucial for democracy to function and for representatives to be accountable.',
-            requiresScripture:false,
-            model:'Participation is crucial because democracy depends on citizens having a voice in the decisions that affect them and on representatives being held accountable.'
-          },
-        
-          {
-            type:'Define',
-            topic:'Pressure groups and corporations',
-            question:'What does “influence” mean in the context of influencing government policy?',
-            keywords:['actual change','policies','serve the interest','company','government policy'],
-            mustIncludeAny:[
-              ['actual change','policies'],
-              ['serve the interest','company','government policy']
-            ],
-            quote:'“Influence” refers to actual change to policies to serve the interest of a company.',
-            requiresScripture:false,
-            model:'Influence means producing an actual change in government policy so that it serves the interests of a company or organisation.'
-          },
-        
-          {
-            type:'Define',
-            topic:'Democracy',
-            question:'What is a democratic deficit?',
-            keywords:['flaw in the democratic process','decisions taken by people who lack legitimacy','insufficient democratic input','not sufficiently subject to democratic accountability','institutions fall short of democracy','public discredited'],
-            mustIncludeAny:[
-              ['flaw in the democratic process','lack legitimacy'],
-              ['insufficient democratic input','democratic accountability'],
-              ['institutions fall short','democracy']
-            ],
-            quote:'A democratic deficit is a flaw in the democratic process where decisions are taken by people who lack legitimacy.',
-            requiresScripture:false,
-            model:'A democratic deficit is a flaw in the democratic process in which decisions are taken by people or institutions that lack legitimacy, democratic input or sufficient accountability.'
-          },
-          {
-            type:'Explain',
-            topic:'Democracy',
-            question:'Why does a democratic deficit undermine democracy?',
-            keywords:['institutions fall short','democratic accountability','public become discredited','less democratic'],
-            mustIncludeAny:[
-              ['institutions fall short','democratic accountability'],
-              ['public become discredited','less democratic']
-            ],
-            quote:'Democratic deficits arise when institutions fall short of democratic accountability.',
-            requiresScripture:false,
-            model:'A democratic deficit undermines democracy because institutions fall short of proper democratic accountability, which can make the public lose trust in the system.'
-          },
-          {
-            type:'Define',
-            topic:'Democracy',
-            question:'What is direct democracy?',
-            keywords:['citizens make decisions on policy','without the use of representatives','referendums','citizens juries','initiatives','e-petitions'],
-            mustIncludeAny:[
-              ['citizens make decisions on policy'],
-              ['without the use of representatives'],
-              ['referendums','citizens juries','initiatives','e-petitions']
-            ],
-            quote:'Direct democracy allows citizens to make decisions on policy without representatives.',
-            requiresScripture:false,
-            model:'Direct democracy is a system where citizens make decisions on policy themselves without relying on representatives, for example through referendums or initiatives.'
-          },
-          {
-            type:'Define',
-            topic:'Democracy',
-            question:'What is representative democracy?',
-            keywords:['major political decisions','elected politicians','not directly through the public','representatives'],
-            mustIncludeAny:[
-              ['major political decisions','elected politicians'],
-              ['not directly through the public','representatives']
-            ],
-            quote:'The UK is a representative democracy, where major political decisions are made by elected politicians.',
-            requiresScripture:false,
-            model:'Representative democracy is a system in which major political decisions are made by elected representatives rather than directly by the public.'
-          },
-          {
-            type:'Compare',
-            topic:'Democracy',
-            question:'What is the difference between direct democracy and representative democracy?',
-            keywords:['direct democracy','citizens make decisions','without representatives','representative democracy','elected politicians','make major decisions'],
-            mustIncludeAny:[
-              ['direct democracy','citizens make decisions','without representatives'],
-              ['representative democracy','elected politicians','make major decisions']
-            ],
-            quote:'Direct democracy involves citizens deciding directly; representative democracy uses elected politicians.',
-            requiresScripture:false,
-            model:'Direct democracy means citizens decide policy directly themselves, whereas representative democracy means elected politicians make most major decisions on behalf of the public.'
-          },
-        
-          {
-            type:'Define',
-            topic:'Constitution',
-            question:'What is an uncodified constitution?',
-            keywords:['uncodified constitution','ultimate sovereignty lies in parliament','can override any decisions','not in one single written document','flexibility'],
-            mustIncludeAny:[
-              ['uncodified constitution'],
-              ['ultimate sovereignty lies in parliament','override any decisions'],
-              ['flexibility']
-            ],
-            quote:'In the UK we have an uncodified constitution, meaning ultimate sovereignty lies in parliament.',
-            requiresScripture:false,
-            model:'An uncodified constitution is a constitution not contained in one single written document, where parliament remains sovereign and can change constitutional rules through ordinary law.'
-          },
-          {
-            type:'Explain',
-            topic:'Constitution',
-            question:'What does constitutional flexibility mean in the UK system?',
-            keywords:['flexibility','respond to current issues easily','sovereignty remains in Westminster','adapt quickly','not entrenched'],
-            mustIncludeAny:[
-              ['flexibility'],
-              ['respond to current issues easily'],
-              ['sovereignty remains in Westminster','adapt quickly']
-            ],
-            quote:'An uncodified constitution gives the government flexibility to respond to current issues easily.',
-            requiresScripture:false,
-            model:'Constitutional flexibility means the government can respond and adapt to current issues more easily because the constitution is not rigidly entrenched and sovereignty remains in Westminster.'
-          },
-          {
-            type:'Compare',
-            topic:'Constitution',
-            question:'What is the difference between a codified and an uncodified constitution?',
-            keywords:['codified','entrenched','higher law','written document','uncodified','flexible','parliamentary sovereignty'],
-            mustIncludeAny:[
-              ['codified','entrenched','higher law'],
-              ['uncodified','flexible','parliamentary sovereignty']
-            ],
-            quote:'A codified constitution entrenches rules as higher law, whereas an uncodified constitution is more flexible.',
-            requiresScripture:false,
-            model:'A codified constitution is written in a single authoritative document and entrenches key rules as higher law, whereas an uncodified constitution is more flexible and can be changed more easily by parliament.'
-          },
-          {
-            type:'Define',
-            topic:'Parliament',
-            question:'What does “the Opposition” mean in the House of Commons?',
-            keywords:['all political parties not in government','official opposition','second largest party','house of commons','parliamentary opposition'],
-            mustIncludeAny:[
-              ['all political parties not in government','parliamentary opposition'],
-              ['official opposition','second largest party','house of commons']
-            ],
-            quote:'The Opposition refers both to all parties not in government and specifically to the official opposition.',
-            requiresScripture:false,
-            model:'The Opposition refers to all parties in parliament that are not in government and, more specifically, to the official opposition, which is the second largest party in the House of Commons.'
+            {type:'Define',topic:'The State',question:'What is the state?',keywords:['collective name','institutions','administer a country','civil service','judiciary','law enforcement','non-political','permanent'],mustIncludeAny:[['collective name','institutions'],['administer a country'],['civil service','judiciary','law enforcement']],quote:'The state is the permanent institutions that run a country.',requiresScripture:false,model:'The state is the collective name for the permanent institutions that administer a country, such as the civil service, judiciary and law enforcement agencies.'},
+          
+            {type:'Define',topic:'The State',question:'What is a state?',keywords:['country','government jurisdiction','territory','recognised by other states'],mustIncludeAny:[['country'],['government jurisdiction','territory'],['recognised by other states']],quote:'A state is a recognised political unit with authority over territory.',requiresScripture:false,model:'A state is a country whose government has jurisdiction over a territory and is recognised by other states.'},
+          
+            {type:'Define',topic:'Government',question:'What is government?',keywords:['process of organising the state','political direction','institutions','apply political principles','running of the state'],mustIncludeAny:[['organising the state','political direction'],['institutions'],['apply political principles','running of the state']],quote:'Government organises the state and gives it direction.',requiresScripture:false,model:'Government refers both to the process of organising the state and giving it political direction, and to the institutions that apply political principles to the running of the state.'},
+          
+            {type:'Define',topic:'Legitimacy',question:'What is legitimacy?',keywords:['degree','right to exercise power','valid claim to rule','state','government'],mustIncludeAny:[['right to exercise power'],['valid claim to rule'],['state','government']],quote:'Legitimacy means rule is seen as rightful.',requiresScripture:false,model:'Legitimacy refers to the degree to which a state or government is seen as having the right to exercise power and therefore has a valid claim to rule.'},
+          
+            {type:'Define',topic:'Consent',question:'What is consent in politics?',keywords:['people governed','support','tolerate','system of government'],mustIncludeAny:[['people governed'],['support','tolerate'],['system of government']],quote:'Consent means the governed accept the system.',requiresScripture:false,model:'Consent means that the people being governed support, or at least tolerate, the system of government that has been set up for them.'},
+          
+            {type:'Define',topic:'Power',question:'What is power?',keywords:['ability','force somebody','do something','would not do otherwise'],mustIncludeAny:[['ability'],['force somebody'],['would not do otherwise']],quote:'Power is the ability to make others act.',requiresScripture:false,model:'Power is the ability to force somebody to do something they would not otherwise do.'},
+          
+            {type:'Define',topic:'Authority',question:'What is authority?',keywords:['right to exercise power','rather than exercise of power itself'],mustIncludeAny:[['right to exercise power'],['rather than exercise of power itself']],quote:'Authority is legitimate power.',requiresScripture:false,model:'Authority is the right to exercise power, rather than the exercise of power itself.'},
+          
+            {type:'Define',topic:'Sovereignty',question:'What is sovereignty?',keywords:['ultimate political power','source of all political authority'],mustIncludeAny:[['ultimate political power'],['source of all political authority']],quote:'Sovereignty means final political authority.',requiresScripture:false,model:'Sovereignty means ultimate political power and the source of all political authority.'},
+          
+            {type:'Define',topic:'Rule of Law',question:'What is the rule of law?',keywords:['all citizens','treated equally','under the law'],mustIncludeAny:[['all citizens'],['treated equally'],['under the law']],quote:'The rule of law means equality before the law.',requiresScripture:false,model:'The rule of law is the principle that all citizens are treated equally under the law.'},
+          
+            {type:'Define',topic:'Democracy',question:'What is democracy?',keywords:['government should serve the interests of the people','citizens','influence decisions of government','political system'],mustIncludeAny:[['serve the interests of the people'],['citizens'],['influence decisions of government']],quote:'Democracy means government should reflect the people.',requiresScripture:false,model:'Democracy is a political system organised on the basis that government should serve the interests of the people and that citizens should be able to influence government decisions.'},
+          
+            {type:'Define',topic:'Citizenship',question:'What is citizenship?',keywords:['members of the political community','rights','political institutions','right to live within a state','benefits','obligations'],mustIncludeAny:[['rights'],['political institutions'],['benefits','obligations']],quote:'Citizenship brings both rights and duties.',requiresScripture:false,model:'Citizenship means being a member of a political community with rights in relation to political institutions, the right to live within a state and enjoy its benefits, and also certain obligations.'},
+          
+            {type:'Define',topic:'Participation',question:'What is participation?',keywords:['opportunities','citizens','become involved','political process'],mustIncludeAny:[['opportunities'],['citizens'],['involved','political process']],quote:'Participation means taking part in politics.',requiresScripture:false,model:'Participation means the opportunities available for citizens to become involved in the political process.'},
+          
+            {type:'Define',topic:'Referendum',question:'What is a referendum?',keywords:['popular vote','people','determine','important political issue','resolve a political issue'],mustIncludeAny:[['popular vote'],['people'],['important political issue','resolve a political issue']],quote:'A referendum lets the public decide an issue directly.',requiresScripture:false,model:'A referendum is a popular vote in which the people, rather than representatives, determine or resolve an important political issue.'},
+          
+            {type:'Define',topic:'Representation',question:'What is representation?',keywords:['elect representatives','make decisions on their behalf','rather than making those decisions themselves'],mustIncludeAny:[['elect representatives'],['make decisions on their behalf'],['rather than making those decisions themselves']],quote:'Representation means decisions are made by elected figures.',requiresScripture:false,model:'Representation means that people elect representatives to make decisions on their behalf instead of making those decisions directly themselves.'},
+          
+            {type:'Define',topic:'Democratic Deficit',question:'What is a democratic deficit?',keywords:['fear that democracy is being undermined','weakened','variety of ways'],mustIncludeAny:[['democracy is being undermined','weakened'],['variety of ways']],quote:'A democratic deficit means democracy is seen as weakened.',requiresScripture:false,model:'A democratic deficit is the idea that democracy is being undermined or weakened in a variety of ways.'},
+          
+            {type:'Define',topic:'Democratic Renewal',question:'What is democratic renewal?',keywords:['measures designed','deal with the democratic deficit'],mustIncludeAny:[['measures designed'],['deal with the democratic deficit']],quote:'Democratic renewal means reforms to strengthen democracy.',requiresScripture:false,model:'Democratic renewal refers to measures designed to deal with the democratic deficit and strengthen democracy.'},
+          
+            {type:'Define',topic:'Political Parties',question:'What is a political party?',keywords:['organisation','develops political policies and goals','convert into political actions'],mustIncludeAny:[['organisation'],['policies and goals'],['political actions']],quote:'A party seeks to turn ideas into policy.',requiresScripture:false,model:'A political party is an organisation that develops a set of political policies and goals and seeks to convert them into political action.'},
+          
+            {type:'Define',topic:'Political Parties',question:'What is factionalism?',keywords:['group of members','political party','shares beliefs','not fully in accord','party policy'],mustIncludeAny:[['group of members'],['shares beliefs'],['not fully in accord','party policy']],quote:'Factionalism means internal disagreement in a party.',requiresScripture:false,model:'Factionalism is when a group of members within a political party shares beliefs that are not fully in line with generally accepted party policy.'},
+          
+            {type:'Define',topic:'Ideologies',question:'What is meant by left and right in politics?',keywords:['commonly used','everyday political discussion','describe political views'],mustIncludeAny:[['commonly used'],['describe political views']],quote:'Left and right are broad labels for political views.',requiresScripture:false,model:'Left and right are broad terms commonly used in political discussion to describe different political views and positions.'},
+          
+            {type:'Define',topic:'Ideologies',question:'What is conservatism?',keywords:['state of mind','political movement','averse to excessive change','reform','sceptical','liberalism','socialism','traditions'],mustIncludeAny:[['averse to excessive change','reform'],['sceptical','liberalism','socialism'],['traditions']],quote:'Conservatism values tradition and cautious change.',requiresScripture:false,model:'Conservatism is a political ideology or state of mind that is naturally averse to excessive change and reform, is sceptical of ideologies such as liberalism and socialism, and prefers tradition.'},
+          
+            {type:'Define',topic:'Ideologies',question:'What is liberalism?',keywords:['political ideology','freedom','rights','tolerance','high on its scale of values'],mustIncludeAny:[['political ideology'],['freedom','rights','tolerance']],quote:'Liberalism prioritises freedom and rights.',requiresScripture:false,model:'Liberalism is a political ideology that places freedom, rights and tolerance high on its scale of values.'},
+          
+            {type:'Define',topic:'Ideologies',question:'What is socialism?',keywords:['political ideology','equality of opportunity','equality of outcome','social justice','collectivism','reform or remove capitalism'],mustIncludeAny:[['equality of opportunity','equality of outcome'],['social justice','collectivism'],['reform or remove capitalism']],quote:'Socialism prioritises equality and collectivism.',requiresScripture:false,model:'Socialism is a political ideology that places equality of opportunity and outcome, social justice and collectivism high on its scale of values and aims to heavily reform or remove capitalism.'},
+          
+            {type:'Compare',topic:'Political Competition',question:'What is the difference between consensus politics and adversary politics?',keywords:['consensus politics','major political forces agree','major issues','adversary politics','disagree'],mustIncludeAny:[['consensus politics','agree'],['adversary politics','disagree'],['major issues']],quote:'Consensus means broad agreement; adversary means deep disagreement.',requiresScripture:false,model:'Consensus politics is when the main political forces agree on most major issues, whereas adversary politics is when they disagree on most or all major issues.'},
+          
+            {type:'Define',topic:'Elections',question:'What is an electoral manifesto?',keywords:['statement','produced by political parties','election season','plans for policy','running political institutions'],mustIncludeAny:[['statement'],['political parties'],['plans for policy','running political institutions']],quote:'A manifesto sets out a party’s election promises.',requiresScripture:false,model:'An electoral manifesto is a statement produced by a political party during an election campaign that sets out its plans for policy and the running of the political institutions of the state.'},
+          
+            {type:'Define',topic:'Elections',question:'What is an electoral mandate?',keywords:['authority to govern','granted to the winning party','voters','right to implement manifesto'],mustIncludeAny:[['authority to govern'],['winning party','voters'],['right to implement manifesto']],quote:'A mandate gives the winner authority to carry out its promises.',requiresScripture:false,model:'An electoral mandate is the authority to govern granted to the winning party by voters, giving it the right to implement its manifesto.'},
+          
+            {type:'Define',topic:'Elections',question:'What is an electoral system?',keywords:['converts votes into seats','appointment of a single leader','president','mayor'],mustIncludeAny:[['converts votes into seats'],['appointment of a single leader','president','mayor']],quote:'An electoral system turns votes into outcomes.',requiresScripture:false,model:'An electoral system is the method used to convert votes in an election into seats or into the appointment of a single leader such as a president or mayor.'},
+          
+            {type:'Define',topic:'Elections',question:'What is proportional representation?',keywords:['electoral system','converts votes into seats','broadly proportional way'],mustIncludeAny:[['electoral system'],['converts votes into seats'],['broadly proportional']],quote:'PR aims to match seats to vote share.',requiresScripture:false,model:'Proportional representation describes electoral systems that convert votes into seats in a broadly proportional way.'},
+          
+            {type:'Define',topic:'Elections',question:'What is a party system?',keywords:['structure of parties','political system','number of parties','compete effectively'],mustIncludeAny:[['structure of parties'],['political system'],['number of parties','compete effectively']],quote:'A party system describes how parties compete.',requiresScripture:false,model:'A party system refers to the typical structure of parties within a political system and describes how many parties compete effectively.'},
+          
+            {type:'Compare',topic:'Elections',question:'What is the difference between plurality systems and majoritarian systems?',keywords:['plurality','highest amount of votes','do not need over 50%','majoritarian','absolute majority','over 50%'],mustIncludeAny:[['plurality','highest amount of votes'],['do not need over 50%'],['majoritarian','absolute majority','over 50%']],quote:'Plurality only needs the most votes; majoritarian needs over half.',requiresScripture:false,model:'Plurality systems require only the highest number of votes to win, whereas majoritarian systems require an absolute majority of more than 50%.'},
+          
+            {type:'Define',topic:'Elections',question:'What is electoral reform?',keywords:['process','electoral system','changed'],mustIncludeAny:[['process'],['electoral system'],['changed']],quote:'Electoral reform means changing the voting system.',requiresScripture:false,model:'Electoral reform is the process by which the electoral system is changed.'},
+          
+            {type:'Define',topic:'Government Formation',question:'What are coalitions?',keywords:['governments','formed','two or more parties','representatives'],mustIncludeAny:[['governments'],['formed'],['two or more parties']],quote:'Coalitions are governments made up of multiple parties.',requiresScripture:false,model:'Coalitions are governments formed using representatives from two or more political parties.'},
+          
+            {type:'Define',topic:'Pressure Groups',question:'What is a pressure group?',keywords:['association','formal or informal','further interests of its members','promote a particular issue'],mustIncludeAny:[['association'],['formal or informal'],['interests of its members','promote a particular issue']],quote:'Pressure groups try to influence policy without being parties.',requiresScripture:false,model:'A pressure group is an association, formal or informal, that seeks either to further the interests of its own members or to promote a particular issue.'},
+          
+            {type:'Compare',topic:'Pressure Groups',question:'What is the difference between sectional groups and promotional groups?',keywords:['sectional groups','specific section of society','promotes their interests','trade union','employers association','promotional groups','promote a cause','cause groups','issue groups'],mustIncludeAny:[['sectional groups','specific section of society','their interests'],['trade union','employers association'],['promotional groups','promote a cause','cause groups','issue groups']],quote:'Sectional groups defend members; promotional groups defend causes.',requiresScripture:false,model:'Sectional groups represent a specific section of society and promote the interests of their members, such as trade unions or employers’ associations, whereas promotional groups seek to promote a cause or issue rather than the interests of their own members.'},
+          
+            {type:'Compare',topic:'Pressure Groups',question:'What is the difference between insider groups and outsider groups?',keywords:['insider groups','operate inside the political system','contacts with ministers','MPs','official committees','consulted by government','outsider groups','no special links','mobilising public opinion'],mustIncludeAny:[['insider groups','inside the political system'],['contacts with ministers','MPs','official committees','consulted by government'],['outsider groups','no special links','mobilising public opinion']],quote:'Insiders work with government; outsiders pressure it from outside.',requiresScripture:false,model:'Insider groups operate within the political system through contact with ministers, MPs and official committees and are often consulted by government, whereas outsider groups have no special links and try to influence decision-makers by mobilising public opinion.'},
+          
+            {type:'Define',topic:'Power Distribution',question:'What is pluralism?',keywords:['political system','wide range of beliefs','ideologies','ideas','allowed to flourish','power distributed among many groups'],mustIncludeAny:[['political system'],['wide range of beliefs','ideologies','ideas'],['power distributed among many groups']],quote:'Pluralism means power is spread among many groups.',requiresScripture:false,model:'Pluralism is a political system in which a wide range of beliefs, ideologies and ideas are allowed to flourish and power is distributed among many groups.'},
+          
+            {type:'Define',topic:'Power Distribution',question:'What is elitism?',keywords:['tendency','power monopolised','small groups','influential people'],mustIncludeAny:[['power monopolised'],['small groups'],['influential people']],quote:'Elitism means a small group dominates power.',requiresScripture:false,model:'Elitism is the tendency for power to be monopolised by small groups of influential people.'},
+          ]
+      },
+      
+      politics: {
+        title: 'Politics 2',
+        icon: '🏛️',
+        subtitle: 'Edexcel A-level Politics: UK Government',
+        bookCoverSub: '',
+        hasQuotes: false,
+        questionBank: [
+          {type:'Define',topic:'Constitution',question:'What is a constitution?',keywords:['set of principles','codified or uncodified','distribution of power','relationships between institutions','limits of government jurisdiction','rights of citizens','method of amending'],mustIncludeAny:[['set of principles'],['codified or uncodified'],['distribution of power','relationships between institutions'],['rights of citizens','method of amending']],quote:'A constitution lays down the rules of the political system.',requiresScripture:false,model:'A constitution is a set of principles, codified or uncodified, that establishes the distribution of power in the political system, the relationships between institutions, the limits of government, the rights of citizens and the method of amendment.'},
+          
+            {type:'Define',topic:'Constitution',question:'What is constitutionalism?',keywords:['government is limited','constitutional rules','rule of law'],mustIncludeAny:[['government is limited'],['constitutional rules'],['rule of law']],quote:'Constitutionalism means government is limited by rules.',requiresScripture:false,model:'Constitutionalism is the principle that government is limited by constitutional rules and the rule of law.'},
+          
+            {type:'Compare',topic:'Constitution',question:'What is the difference between a federal constitution and a unitary constitution?',keywords:['federal constitution','legal sovereignty divided','central government','regional governments','unitary constitution','legal sovereignty concentrated','central institutions'],mustIncludeAny:[['federal constitution','legal sovereignty divided'],['central government','regional governments'],['unitary constitution','legal sovereignty concentrated','central institutions']],quote:'Federal divides sovereignty; unitary concentrates it.',requiresScripture:false,model:'A federal constitution divides legal sovereignty between central and regional governments, whereas a unitary constitution concentrates legal sovereignty in the central institutions.'},
+          
+            {type:'Define',topic:'Constitution',question:'What is quasi-federalism?',keywords:['great deal of power devolved','legal sovereignty retained at the centre'],mustIncludeAny:[['great deal of power devolved'],['legal sovereignty retained at the centre']],quote:'Quasi-federalism devolves power without dividing sovereignty.',requiresScripture:false,model:'Quasi-federalism is a situation in which a great deal of power is devolved but legal sovereignty is retained at the centre.'},
+          
+            {type:'Define',topic:'Constitution',question:'What is constitutional reform?',keywords:['process','fundamental system of government','changed'],mustIncludeAny:[['process'],['fundamental system of government'],['changed']],quote:'Constitutional reform means changing the basic system.',requiresScripture:false,model:'Constitutional reform is the process by which the fundamental system of government is changed.'},
+          
+            {type:'Define',topic:'Constitution',question:'What is codification?',keywords:['process','constitution','set in a single document','organised way'],mustIncludeAny:[['process'],['constitution'],['single document','organised way']],quote:'Codification means putting constitutional rules into one document.',requiresScripture:false,model:'Codification is the process by which a constitution is set out in a single organised document.'},
+          
+            {type:'Compare',topic:'Constitution',question:'What is the difference between codified and uncodified constitutions?',keywords:['codified constitutions','single document','uncodified constitutions','multiple sources'],mustIncludeAny:[['codified constitutions','single document'],['uncodified constitutions','multiple sources']],quote:'Codified is one document; uncodified comes from many sources.',requiresScripture:false,model:'A codified constitution is set down in a single document, whereas an uncodified constitution is derived from multiple sources.'},
+          
+            {type:'Define',topic:'Parliamentary Sovereignty',question:'What is parliamentary sovereignty?',keywords:['parliament is the source of all political power','all enforceable laws','approved by parliament'],mustIncludeAny:[['parliament is the source of all political power'],['all enforceable laws'],['approved by parliament']],quote:'Parliamentary sovereignty means parliament is legally supreme.',requiresScripture:false,model:'Parliamentary sovereignty is the principle that parliament is the source of all political power and that all enforceable laws must be approved by parliament.'},
+          
+            {type:'Define',topic:'Parliament',question:'What is parliamentary reform?',keywords:['process','reforms','membership','powers','procedures','either or both houses of parliament'],mustIncludeAny:[['process'],['reforms','membership','powers','procedures'],['either or both houses of parliament']],quote:'Parliamentary reform changes how parliament works.',requiresScripture:false,model:'Parliamentary reform is the process by which the membership, powers or procedures of either or both houses of parliament are changed.'},
+          
+            {type:'Define',topic:'Rights',question:'What are human rights?',keywords:['basic rights','all citizens','expect to enjoy'],mustIncludeAny:[['basic rights'],['all citizens'],['expect to enjoy']],quote:'Human rights are basic protections for all citizens.',requiresScripture:false,model:'Human rights are the basic rights that all citizens can expect to enjoy.'},
+          
+            {type:'Define',topic:'Devolution',question:'What is devolution?',keywords:['process','power transferred to regions','central government','no change in sovereignty'],mustIncludeAny:[['process'],['power transferred to regions'],['central government'],['no change in sovereignty']],quote:'Devolution shifts power without shifting sovereignty.',requiresScripture:false,model:'Devolution is the process by which power is transferred from central government to regional bodies without any change in sovereignty.'},
+          
+            {type:'Define',topic:'Constitution',question:'What is constitutional government?',keywords:['government limited by a constitution','constitutional principles'],mustIncludeAny:[['government limited by a constitution'],['constitutional principles']],quote:'Constitutional government means limited government.',requiresScripture:false,model:'Constitutional government is government that is limited by a constitution and by constitutional principles.'},
+          
+            {type:'Define',topic:'Sovereignty',question:'What is legal sovereignty?',keywords:['location of ultimate power to make laws','source of all legal power','political system'],mustIncludeAny:[['ultimate power to make laws'],['source of all legal power'],['political system']],quote:'Legal sovereignty means final law-making authority.',requiresScripture:false,model:'Legal sovereignty is the location of ultimate power to make laws and the source of all legal power within a political system.'},
+          
+            {type:'Define',topic:'Legislature',question:'What is a legislature?',keywords:['political institution','create laws','pass them','scrutinise the work of government'],mustIncludeAny:[['political institution'],['create laws','pass them'],['scrutinise the work of government']],quote:'A legislature makes laws and checks government.',requiresScripture:false,model:'A legislature is the political institution whose main role is to create or pass laws and to scrutinise the work of the government.'},
+          
+            {type:'Define',topic:'Government Systems',question:'What is parliamentary government?',keywords:['system','government drawn from parliament'],mustIncludeAny:[['system'],['government drawn from parliament']],quote:'In parliamentary government the executive comes from parliament.',requiresScripture:false,model:'Parliamentary government is a system in which government is drawn from parliament.'},
+          
+            {type:'Define',topic:'Government Systems',question:'What is the Westminster model?',keywords:['description','political system','UK','parliament lies at the centre'],mustIncludeAny:[['description'],['UK'],['parliament lies at the centre']],quote:'The Westminster model describes the UK system centred on parliament.',requiresScripture:false,model:'The Westminster model is a description of the UK political system in which parliament lies at the centre.'},
+          
+            {type:'Define',topic:'Legislature',question:'What is bicameralism?',keywords:['political system','legislature divided into two houses'],mustIncludeAny:[['political system'],['legislature divided into two houses']],quote:'Bicameralism means two legislative chambers.',requiresScripture:false,model:'Bicameralism is a political system in which the legislature is divided into two houses.'},
+          
+            {type:'Define',topic:'Government Systems',question:'What is presidential government?',keywords:['executive derives power','somewhere other than the legislature'],mustIncludeAny:[['executive derives power'],['other than the legislature']],quote:'In presidential systems the executive does not come from the legislature.',requiresScripture:false,model:'Presidential government is a system in which the executive derives its power from somewhere other than the legislature.'},
+          
+            {type:'Define',topic:'Constitutional Principles',question:'What is separation of powers?',keywords:['constitutional principle','three branches of government','separate membership','separate powers','check each others powers'],mustIncludeAny:[['constitutional principle'],['three branches of government'],['separate membership','separate powers'],['check each others powers']],quote:'Separation of powers divides power between branches.',requiresScripture:false,model:'Separation of powers is the constitutional principle that the three branches of government should have separate membership and powers and should be able to check one another.'},
+          
+            {type:'Define',topic:'Constitutional Principles',question:'What is fusion of powers?',keywords:['government has the power of parliament','dominate parliament','executive part of the legislature'],mustIncludeAny:[['power of parliament'],['dominate parliament'],['executive part of the legislature']],quote:'Fusion of powers means executive and legislature overlap.',requiresScripture:false,model:'Fusion of powers means the executive is part of the legislature and can dominate parliament because government exercises parliamentary power.'},
+          
+            {type:'Define',topic:'Government Systems',question:'What is representative government?',keywords:['form of government','political power','largely exercised by elected representatives'],mustIncludeAny:[['form of government'],['political power'],['elected representatives']],quote:'Representative government means elected people govern on behalf of citizens.',requiresScripture:false,model:'Representative government is a form of government in which political power is largely exercised by elected representatives.'},
+          
+            {type:'Define',topic:'Government Systems',question:'What is responsible government?',keywords:['mechanisms','government made responsible','actions and policies','justify actions','held accountable'],mustIncludeAny:[['mechanisms'],['made responsible'],['justify actions','held accountable']],quote:'Responsible government means government can be called to account.',requiresScripture:false,model:'Responsible government refers to the mechanisms by which government is made responsible for its actions and policies and is forced to justify them and be held accountable.'},
+          
+            {type:'Define',topic:'Parliament',question:'What is a second chamber?',keywords:['second house of parliament','normally subordinate to the first house'],mustIncludeAny:[['second house of parliament'],['subordinate to the first house']],quote:'A second chamber is the upper or secondary legislative house.',requiresScripture:false,model:'A second chamber is the second house of parliament, normally seen as subordinate to the first house.'},
+          
+            {type:'Define',topic:'Cabinet and Ministers',question:'What is collective responsibility?',keywords:['cabinet decisions','collectively supported','all members of government','in public','whole government stands or falls as a whole'],mustIncludeAny:[['cabinet decisions'],['collectively supported','all members of government'],['stands or falls as a whole']],quote:'Collective responsibility means ministers publicly back cabinet decisions.',requiresScripture:false,model:'Collective responsibility is the convention that all cabinet decisions must be publicly supported by all members of government and that the whole government stands or falls together on those decisions.'},
+          
+            {type:'Define',topic:'Cabinet and Ministers',question:'What is cabinet government?',keywords:['system of government','cabinet','central policy-making body'],mustIncludeAny:[['system of government'],['cabinet'],['central policy-making body']],quote:'Cabinet government means the cabinet is central.',requiresScripture:false,model:'Cabinet government is a system of government in which the cabinet is the central policy-making body.'},
+          
+            {type:'Define',topic:'Prime Minister',question:'What is prime-ministerial government?',keywords:['political circumstances','prime minister dominates policy making'],mustIncludeAny:[['political circumstances'],['prime minister dominates policy making']],quote:'Prime-ministerial government means the PM dominates policy.',requiresScripture:false,model:'Prime-ministerial government refers to political circumstances in which the prime minister dominates policy-making.'},
+          
+            {type:'Define',topic:'Cabinet and Ministers',question:'What is individual ministerial responsibility?',keywords:['convention','minister should resign','serious political or personal error','department makes an error'],mustIncludeAny:[['convention'],['minister should resign'],['serious political or personal error','department makes an error']],quote:'Ministers are expected to answer for their own department.',requiresScripture:false,model:'Individual ministerial responsibility is the convention that a minister should resign if they, or their department, make a serious political or personal error.'},
+          
+            {type:'Define',topic:'Civil Service',question:'What is civil service neutrality?',keywords:['constitutional principle','civil servants','political neutrality','neutral advice','ministers','not involved in party politics'],mustIncludeAny:[['constitutional principle'],['civil servants'],['political neutrality','neutral advice'],['not involved in party politics']],quote:'Civil servants should serve the government of the day impartially.',requiresScripture:false,model:'Civil service neutrality is the constitutional principle that civil servants must remain politically neutral, give neutral advice to ministers and not become involved in party politics.'},
+          
+            {type:'Define',topic:'Government Principles',question:'What is open government?',keywords:['principle','processes of government','open to the public','scrutiny from parliament'],mustIncludeAny:[['principle'],['processes of government'],['open to the public'],['scrutiny from parliament']],quote:'Open government means transparency and scrutiny.',requiresScripture:false,model:'Open government is the principle that the processes of government should be open to the public and to scrutiny by parliament.'}
+            ]
           }
-        ]
-      }
-    };
+      };
 
     const questionsWrap = document.getElementById('questions');
     const resultsWrap = document.getElementById('results');
