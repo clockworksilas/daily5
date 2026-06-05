@@ -892,6 +892,42 @@
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
     .login-status { margin-top: 12px; font-size: .92rem; color: var(--muted); min-height: 1.3em; }
 
+
+
+    .custom-quiz-layout { display: grid; grid-template-columns: .95fr 1.25fr; gap: 20px; align-items: start; }
+    .quiz-builder-grid { display: grid; gap: 14px; }
+    .topic-check-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 10px; }
+    .topic-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(80,50,20,.12);
+      color: var(--text);
+      font-weight: 800;
+      line-height: 1.35;
+    }
+    .topic-check input { margin-top: 3px; transform: scale(1.15); }
+    .quiz-options { display: grid; gap: 10px; margin-top: 12px; }
+    .quiz-option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.64);
+      border: 1px solid rgba(80,50,20,.12);
+      cursor: pointer;
+      line-height: 1.5;
+    }
+    .quiz-option input { margin-top: 4px; }
+    .quiz-option.correct-choice { border-color: rgba(47,106,52,.36); background: rgba(166,215,164,.22); }
+    .quiz-option.wrong-choice { border-color: rgba(158,56,56,.28); background: rgba(201,102,102,.13); }
+    .custom-quiz-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .custom-quiz-actions button { box-shadow: none; }
+
     @media (max-width: 1080px) {
       body.sidebar-open { padding-left: 0; }
 
@@ -909,7 +945,7 @@
 
       .subject-brand { display: none; }
       .subject-btn { min-height: unset; }
-      .grid, .quote-layout, .essay-grid, .essay-controls { grid-template-columns: 1fr; }
+      .grid, .quote-layout, .essay-grid, .essay-controls, .custom-quiz-layout { grid-template-columns: 1fr; }
       .book { width: min(100%, 680px); height: 900px; }
       .book-pages { height: 900px; }
       .page-sheet { min-height: 872px; }
@@ -972,6 +1008,7 @@
     <div class="top-tabs-shell">
       <div class="top-tabs">
         <div class="tab-btn active" data-tab="quiz">✍️ Daily 5 Questions</div>
+        <div class="tab-btn" data-tab="customQuiz">✅ Quiz</div>
         <div class="tab-btn" data-tab="quotes">📖 Quote Book</div>
         <div class="tab-btn" data-tab="notes">📥 Notes Download</div>
         <div class="tab-btn" data-tab="exam">📝 Exam Marker</div>
@@ -1012,6 +1049,53 @@
           <div class="footer-note">AI checks subjective answers first and falls back to local marking if needed.</div>
         </aside>
       </section>
+    </section>
+
+    <section id="customQuizTab" class="hidden">
+      <div class="custom-quiz-layout">
+        <div class="panel">
+          <h2 class="side-title">Build a Quiz</h2>
+          <div class="quiz-builder-grid">
+            <div>
+              <label class="helper" for="customQuizMode">Question style</label>
+              <select id="customQuizMode">
+                <option value="mcq">Multiple choice</option>
+                <option value="extended">Extended answer</option>
+              </select>
+            </div>
+            <div>
+              <label class="helper" for="customQuizCount">How many questions?</label>
+              <input class="input" id="customQuizCount" type="number" min="1" max="30" value="5" />
+            </div>
+            <div>
+              <div class="helper">Pick topics from the current subject’s Daily 5 question bank</div>
+              <div class="custom-quiz-actions">
+                <button class="secondary" id="selectAllTopicsBtn" type="button">Select all topics</button>
+                <button class="secondary" id="clearTopicsBtn" type="button">Clear topics</button>
+              </div>
+              <div id="customTopicList" class="topic-check-grid"></div>
+            </div>
+            <div class="custom-quiz-actions">
+              <button class="primary" id="generateCustomQuizBtn" type="button">Generate Quiz</button>
+              <button class="secondary" id="markCustomQuizBtn" type="button" disabled>Mark Quiz</button>
+            </div>
+            <div class="footer-note">
+              Multiple choice will ask your Worker/Groq endpoint for options if available, then falls back to safe local options from your question bank. Extended answer uses the same marking approach as Daily 5.
+            </div>
+          </div>
+        </div>
+        <aside class="panel">
+          <h2 class="side-title">Quiz</h2>
+          <div class="score-box">
+            <div class="small">Quiz mark</div>
+            <div class="big-score" id="customQuizScore">--</div>
+            <div class="small" id="customQuizSummary">Choose topics, style and question count, then generate a quiz.</div>
+            <div class="progress"><div id="customQuizScoreBar"></div></div>
+          </div>
+          <div id="customQuizQuestions"></div>
+          <div id="customQuizResults"></div>
+        </aside>
+      </div>
     </section>
 
     <section id="quotesTab" class="hidden">
@@ -2026,6 +2110,24 @@
           description: 'Philosophy notes document.',
           viewUrl: 'https://docs.google.com/document/d/18bvMc8y7yIYbroU2_nROAEugoRtPzsHN/edit?usp=sharing&ouid=114527665560664232151&rtpof=true&sd=true',
           downloadUrl: 'https://docs.google.com/document/d/18bvMc8y7yIYbroU2_nROAEugoRtPzsHN/export?format=docx'
+        },
+        {
+          title: 'Evil and Suffering',
+          description: 'Philosophy notes document.',
+          viewUrl: 'https://drive.google.com/file/d/1quXuJg1FOLt0kX2bY9In_RLXYgro-3ba/view',
+          downloadUrl: 'https://drive.google.com/uc?export=download&id=1quXuJg1FOLt0kX2bY9In_RLXYgro-3ba'
+        },
+        {
+          title: 'Arguments For God',
+          description: 'Philosophy notes document.',
+          viewUrl: 'https://drive.google.com/file/d/1jZ_zI199iyq-iNagKc1vqHxV29Hdtr0K/view',
+          downloadUrl: 'https://drive.google.com/uc?export=download&id=1jZ_zI199iyq-iNagKc1vqHxV29Hdtr0K'
+        },
+        {
+          title: 'Religious Experience',
+          description: 'Philosophy notes document.',
+          viewUrl: 'https://drive.google.com/file/d/1DAEqq_mfQdvThg59LjMZNxrnhssr2E6f/view',
+          downloadUrl: 'https://drive.google.com/uc?export=download&id=1DAEqq_mfQdvThg59LjMZNxrnhssr2E6f'
         }
       ],
       ethics: [],
@@ -2045,6 +2147,19 @@
     const markBtn = document.getElementById('markBtn');
     const newSetBtn = document.getElementById('newSetBtn');
     const quizTab = document.getElementById('quizTab');
+    const customQuizTab = document.getElementById('customQuizTab');
+    const customQuizMode = document.getElementById('customQuizMode');
+    const customQuizCount = document.getElementById('customQuizCount');
+    const customTopicList = document.getElementById('customTopicList');
+    const selectAllTopicsBtn = document.getElementById('selectAllTopicsBtn');
+    const clearTopicsBtn = document.getElementById('clearTopicsBtn');
+    const generateCustomQuizBtn = document.getElementById('generateCustomQuizBtn');
+    const markCustomQuizBtn = document.getElementById('markCustomQuizBtn');
+    const customQuizQuestions = document.getElementById('customQuizQuestions');
+    const customQuizResults = document.getElementById('customQuizResults');
+    const customQuizScore = document.getElementById('customQuizScore');
+    const customQuizSummary = document.getElementById('customQuizSummary');
+    const customQuizScoreBar = document.getElementById('customQuizScoreBar');
     const quotesTab = document.getElementById('quotesTab');
     const notesTab = document.getElementById('notesTab');
     const examTab = document.getElementById('examTab');
@@ -2094,6 +2209,8 @@
     let currentSubject = 'theology';
     let currentSet = [];
     let currentMode = 'daily';
+    let customQuizSet = [];
+    let customQuizQuestionStyle = 'mcq';
     let currentPageIndex = 0;
     let latestEssayMarking = null;
     const pageSize = 4;
@@ -2394,6 +2511,272 @@
       } catch {
         return null;
       }
+    }
+
+
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char]));
+    }
+
+    function getTopicCounts() {
+      const counts = new Map();
+      getCurrentQuestionBank().forEach(q => counts.set(q.topic, (counts.get(q.topic) || 0) + 1));
+      return Array.from(counts.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+    }
+
+    function renderCustomQuizSetup() {
+      const topics = getTopicCounts();
+      customTopicList.innerHTML = topics.length ? topics.map(([topic, count]) => `
+        <label class="topic-check">
+          <input type="checkbox" class="custom-topic-checkbox" value="${escapeHtml(topic)}" checked>
+          <span>${escapeHtml(topic)} <span class="small">(${count})</span></span>
+        </label>
+      `).join('') : '<div class="footer-note">No topics are available because this subject has no Daily 5 question bank yet.</div>';
+
+      customQuizSet = [];
+      customQuizQuestions.innerHTML = '';
+      customQuizResults.innerHTML = '';
+      customQuizScore.textContent = '--';
+      customQuizSummary.textContent = 'Choose topics, style and question count, then generate a quiz.';
+      customQuizScoreBar.style.width = '0%';
+      markCustomQuizBtn.disabled = true;
+    }
+
+    function getSelectedCustomTopics() {
+      return Array.from(document.querySelectorAll('.custom-topic-checkbox:checked')).map(input => input.value);
+    }
+
+    async function generateMultipleChoiceOptionsWithAI(questions) {
+      const password = getSavedPassword();
+      if (!password || !questions.length) return null;
+
+      try {
+        const res = await fetch(`${WORKER_BASE_URL}/api/multiple-choice`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            password,
+            subject: currentSubject,
+            questions: questions.map(q => ({
+              topic: q.topic,
+              type: q.type,
+              question: q.question,
+              model: q.model,
+              keywords: q.keywords
+            }))
+          })
+        });
+
+        if (!res.ok) {
+          if (res.status === 401) clearSavedPassword();
+          return null;
+        }
+
+        const data = await res.json().catch(() => null);
+        if (!data || !data.ok || !Array.isArray(data.items)) return null;
+
+        return data.items.map((item, index) => {
+          const options = Array.isArray(item.options) ? item.options.filter(Boolean).slice(0, 4) : [];
+          const correctIndex = Number.isInteger(item.correctIndex) ? item.correctIndex : 0;
+          if (options.length < 2) return null;
+          return {
+            ...questions[index],
+            mcqOptions: options,
+            correctIndex: Math.max(0, Math.min(options.length - 1, correctIndex)),
+            mcqSource: 'Groq'
+          };
+        }).filter(Boolean);
+      } catch {
+        return null;
+      }
+    }
+
+    function buildLocalMultipleChoiceQuestion(question, allQuestions, seed) {
+      const distractors = allQuestions
+        .filter(q => q !== question && q.model && normalize(q.model) !== normalize(question.model))
+        .map(q => q.model)
+        .slice(0, 80);
+      const order = shuffledIndices(distractors.length, seed).slice(0, 3);
+      const options = [question.model || question.quote || 'No model answer added yet.', ...order.map(i => distractors[i])].filter(Boolean);
+      const shuffled = shuffledIndices(options.length, seed + 99).map(i => options[i]);
+      return {
+        ...question,
+        mcqOptions: shuffled,
+        correctIndex: shuffled.findIndex(option => option === options[0]),
+        mcqSource: 'Local fallback'
+      };
+    }
+
+    async function generateCustomQuiz() {
+      const selectedTopics = getSelectedCustomTopics();
+      const questionStyle = customQuizMode.value;
+      const count = Math.max(1, Math.min(30, Number(customQuizCount.value) || 5));
+      const pool = getCurrentQuestionBank().filter(q => selectedTopics.includes(q.topic));
+
+      if (!selectedTopics.length || !pool.length) {
+        customQuizSummary.textContent = 'Pick at least one topic first.';
+        return;
+      }
+
+      customQuizQuestionStyle = questionStyle;
+      generateCustomQuizBtn.disabled = true;
+      generateCustomQuizBtn.textContent = questionStyle === 'mcq' ? 'Generating options...' : 'Generating quiz...';
+      customQuizResults.innerHTML = '';
+      customQuizScore.textContent = '--';
+      customQuizScoreBar.style.width = '0%';
+
+      const seed = Date.now() + Math.floor(Math.random() * 999999);
+      const picked = shuffledIndices(pool.length, seed).slice(0, Math.min(count, pool.length)).map(i => pool[i]);
+
+      if (questionStyle === 'mcq') {
+        const aiItems = await generateMultipleChoiceOptionsWithAI(picked);
+        customQuizSet = aiItems && aiItems.length === picked.length
+          ? aiItems
+          : picked.map((q, i) => buildLocalMultipleChoiceQuestion(q, getCurrentQuestionBank(), seed + i));
+      } else {
+        customQuizSet = picked;
+      }
+
+      renderCustomQuizQuestions();
+      generateCustomQuizBtn.disabled = false;
+      generateCustomQuizBtn.textContent = 'Generate Quiz';
+      markCustomQuizBtn.disabled = false;
+    }
+
+    function renderCustomQuizQuestions() {
+      if (!customQuizSet.length) {
+        customQuizQuestions.innerHTML = '<div class="footer-note">No quiz generated yet.</div>';
+        return;
+      }
+
+      customQuizQuestions.innerHTML = customQuizSet.map((q, i) => {
+        if (customQuizQuestionStyle === 'mcq') {
+          return `
+            <article class="q-card">
+              <div class="q-head">
+                <div>
+                  <div class="helper">Question ${i + 1} · ${escapeHtml(q.topic)} · ${escapeHtml(q.mcqSource || 'Options')}</div>
+                  <h3 class="q-title">${escapeHtml(q.question)}</h3>
+                </div>
+                <div class="q-type">Multiple choice</div>
+              </div>
+              <div class="quiz-options">
+                ${(q.mcqOptions || []).map((option, optionIndex) => `
+                  <label class="quiz-option" data-custom-option="${i}-${optionIndex}">
+                    <input type="radio" name="custom-mcq-${i}" value="${optionIndex}">
+                    <span>${escapeHtml(option)}</span>
+                  </label>
+                `).join('')}
+              </div>
+            </article>
+          `;
+        }
+
+        return `
+          <article class="q-card">
+            <div class="q-head">
+              <div>
+                <div class="helper">Question ${i + 1} · ${escapeHtml(q.topic)}</div>
+                <h3 class="q-title">${escapeHtml(q.question)}</h3>
+              </div>
+              <div class="q-type">Extended answer</div>
+            </div>
+            <div class="textarea-anim-wrap">
+              <textarea id="custom-answer-${i}" placeholder="Type your answer here..."></textarea>
+            </div>
+            <div class="helper">This uses the same answer style as Daily 5.</div>
+          </article>
+        `;
+      }).join('');
+
+      customQuizResults.innerHTML = '';
+      customQuizScore.textContent = '--';
+      customQuizSummary.textContent = `${customQuizSet.length} ${customQuizQuestionStyle === 'mcq' ? 'multiple-choice' : 'extended-answer'} questions generated.`;
+      customQuizScoreBar.style.width = '0%';
+    }
+
+    async function markCustomQuiz() {
+      if (!customQuizSet.length) return;
+
+      if (customQuizQuestionStyle === 'mcq') {
+        const results = customQuizSet.map((q, i) => {
+          const selected = document.querySelector(`input[name="custom-mcq-${i}"]:checked`);
+          const selectedIndex = selected ? Number(selected.value) : -1;
+          const correct = selectedIndex === q.correctIndex;
+          return { question: q, selectedIndex, correct };
+        });
+
+        results.forEach((item, i) => {
+          (item.question.mcqOptions || []).forEach((_, optionIndex) => {
+            const row = document.querySelector(`[data-custom-option="${i}-${optionIndex}"]`);
+            if (!row) return;
+            row.classList.toggle('correct-choice', optionIndex === item.question.correctIndex);
+            row.classList.toggle('wrong-choice', optionIndex === item.selectedIndex && !item.correct);
+          });
+        });
+
+        const correctCount = results.filter(item => item.correct).length;
+        const percentage = Math.round((correctCount / results.length) * 100);
+        customQuizScore.textContent = `${percentage}%`;
+        customQuizScoreBar.style.width = `${percentage}%`;
+        customQuizSummary.textContent = `${correctCount}/${results.length} correct.`;
+        customQuizResults.innerHTML = results.map((item, i) => `
+          <div class="result-card">
+            <div class="result-top">
+              <strong>Q${i + 1}: ${escapeHtml(item.question.topic)}</strong>
+              <span class="pill ${item.correct ? 'correct' : 'incorrect'}">${item.correct ? 'Correct' : 'Incorrect'}</span>
+            </div>
+            <div class="small"><strong>Correct answer:</strong> ${escapeHtml(item.question.mcqOptions[item.question.correctIndex])}</div>
+            <div class="small" style="margin-top:8px;"><strong>Extra support hint:</strong> ${escapeHtml(item.question.quote || 'No quote/hint added yet.')}</div>
+          </div>
+        `).join('');
+        return;
+      }
+
+      const evaluations = [];
+      for (let i = 0; i < customQuizSet.length; i++) {
+        const q = customQuizSet[i];
+        const answer = document.getElementById(`custom-answer-${i}`)?.value || '';
+        const trimmed = answer.trim();
+        let result;
+
+        if (trimmed.length < MIN_MEANINGFUL_CHARS) {
+          result = {
+            percentage: 0,
+            label: 'Not enough yet',
+            cls: 'incorrect',
+            feedback: 'You need to type at least a small accurate point before it can be marked.',
+            hits: [],
+            aiModelAnswer: q.model
+          };
+        } else {
+          result = await gradeWithAI(q, answer);
+          if (!result) result = evaluateQuestion(q, answer);
+        }
+
+        evaluations.push({ question: q, answer, result });
+      }
+
+      const avg = Math.round(evaluations.reduce((sum, item) => sum + item.result.percentage, 0) / evaluations.length);
+      const correctCount = evaluations.filter(x => x.result.label === 'Correct').length;
+      const partialCount = evaluations.filter(x => x.result.label === 'Partly correct').length;
+      customQuizScore.textContent = `${avg}%`;
+      customQuizScoreBar.style.width = `${avg}%`;
+      customQuizSummary.textContent = `${correctCount}/${evaluations.length} fully correct, ${partialCount}/${evaluations.length} partly correct.`;
+      customQuizResults.innerHTML = evaluations.map((item, i) => `
+        <div class="result-card">
+          <div class="result-top">
+            <strong>Q${i + 1}: ${escapeHtml(item.question.topic)}</strong>
+            <span class="pill ${item.result.cls}">${item.result.label} · ${item.result.percentage}%</span>
+          </div>
+          <div class="small"><strong>Feedback:</strong> ${escapeHtml(item.result.feedback)}</div>
+          <div class="small" style="margin-top:8px;"><strong>Model answer idea:</strong> ${escapeHtml(item.result.aiModelAnswer || item.question.model || 'No model answer added yet.')}</div>
+          <div class="topic-list">
+            ${item.result.hits && item.result.hits.length ? item.result.hits.slice(0, 8).map(hit => `<span class="topic">✓ ${escapeHtml(hit)}</span>`).join('') : '<span class="topic">No strong key points spotted yet</span>'}
+          </div>
+        </div>
+      `).join('');
     }
 
     function renderEmptyState(kind) {
@@ -2797,12 +3180,18 @@
       });
 
       quizTab.classList.toggle('hidden', tab !== 'quiz');
+      customQuizTab.classList.toggle('hidden', tab !== 'customQuiz');
       quotesTab.classList.toggle('hidden', tab !== 'quotes');
       notesTab.classList.toggle('hidden', tab !== 'notes');
       examTab.classList.toggle('hidden', tab !== 'exam');
       quizControls.classList.toggle('hidden', tab !== 'quiz');
 
-      if (tab === 'quotes') {
+      if (tab === 'customQuiz') {
+        heroTitle.textContent = `${bank.title} Quiz`;
+        heroSubtitle.textContent = 'Choose topics from the Daily 5 bank, then make either multiple-choice or extended-answer questions.';
+        heroBadges.classList.add('hidden');
+        renderCustomQuizSetup();
+      } else if (tab === 'quotes') {
         heroTitle.textContent = `${bank.title} Quote Book`;
         heroSubtitle.textContent = 'A flick-through booklet with full quotes, highlighted key phrases, and interpretations.';
         heroBadges.classList.add('hidden');
@@ -2910,6 +3299,8 @@
       latestEssayMarking = null;
       updateSubjectUi();
       loadDailySet();
+      const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab || 'quiz';
+      setTab(activeTab);
     }
 
     function unlockApp() {
@@ -2957,6 +3348,17 @@
     }
 
     tabButtons.forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
+
+    selectAllTopicsBtn.addEventListener('click', () => {
+      document.querySelectorAll('.custom-topic-checkbox').forEach(input => input.checked = true);
+    });
+
+    clearTopicsBtn.addEventListener('click', () => {
+      document.querySelectorAll('.custom-topic-checkbox').forEach(input => input.checked = false);
+    });
+
+    generateCustomQuizBtn.addEventListener('click', generateCustomQuiz);
+    markCustomQuizBtn.addEventListener('click', markCustomQuiz);
     newSetBtn.addEventListener('click', loadPracticeSet);
 
     markBtn.addEventListener('click', () => {
