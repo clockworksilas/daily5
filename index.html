@@ -652,6 +652,47 @@
     .essay-list li { margin-bottom: 8px; }
     .essay-grade { font-size: 1.05rem; font-weight: 800; color: #466e3f; }
 
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .notes-card {
+      border-radius: 20px;
+      padding: 18px;
+      background: linear-gradient(180deg, var(--paper-clean), var(--paper-edge));
+      border: 2px solid rgba(111,82,45,0.12);
+      box-shadow: 0 10px 20px var(--paper-shadow);
+    }
+
+    .notes-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      color: #2f2418;
+    }
+
+    .notes-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .notes-download-link {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: .98rem;
+      font-weight: 800;
+      background: linear-gradient(180deg, #f0d58e, #dcae53);
+      color: #2b2114;
+      border: 1px solid rgba(90,64,28,0.14);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.14);
+    }
+
+    .notes-download-link:hover { transform: translateY(-1px); }
+
     .answer-falling { animation: answerFall 700ms ease-in forwards; transform-origin: center top; }
 
     .answer-hammered {
@@ -932,6 +973,7 @@
       <div class="top-tabs">
         <div class="tab-btn active" data-tab="quiz">✍️ Daily 5 Questions</div>
         <div class="tab-btn" data-tab="quotes">📖 Quote Book</div>
+        <div class="tab-btn" data-tab="notes">📥 Notes Download</div>
         <div class="tab-btn" data-tab="exam">📝 Exam Marker</div>
       </div>
     </div>
@@ -1007,6 +1049,13 @@
             <div class="interp" id="quoteInterpretation">You’ll get a short explanation of what the quote means and why it matters.</div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section id="notesTab" class="hidden">
+      <div class="panel">
+        <h2 class="side-title">Notes Download</h2>
+        <div id="notesList" class="notes-grid"></div>
       </div>
     </section>
 
@@ -1969,6 +2018,21 @@
           }
       };
 
+    const notesBanks = {
+      theology: [],
+      philosophy: [
+        {
+          title: 'Religious Language',
+          description: 'Philosophy notes document.',
+          viewUrl: 'https://docs.google.com/document/d/18bvMc8y7yIYbroU2_nROAEugoRtPzsHN/edit?usp=sharing&ouid=114527665560664232151&rtpof=true&sd=true',
+          downloadUrl: 'https://docs.google.com/document/d/18bvMc8y7yIYbroU2_nROAEugoRtPzsHN/export?format=docx'
+        }
+      ],
+      ethics: [],
+      politics1: [],
+      politics2: []
+    };
+
     const questionsWrap = document.getElementById('questions');
     const resultsWrap = document.getElementById('results');
     const overallScore = document.getElementById('overallScore');
@@ -1982,10 +2046,12 @@
     const newSetBtn = document.getElementById('newSetBtn');
     const quizTab = document.getElementById('quizTab');
     const quotesTab = document.getElementById('quotesTab');
+    const notesTab = document.getElementById('notesTab');
     const examTab = document.getElementById('examTab');
     const quizControls = document.getElementById('quizControls');
     const tabButtons = document.querySelectorAll('.tab-btn');
     const quotesTabBtn = document.querySelector('.tab-btn[data-tab="quotes"]');
+    const notesList = document.getElementById('notesList');
     const warningModal = document.getElementById('warningModal');
     const cancelMarkBtn = document.getElementById('cancelMarkBtn');
     const acceptMarkBtn = document.getElementById('acceptMarkBtn');
@@ -2047,6 +2113,10 @@
 
     function getCurrentQuoteBank() {
       return getCurrentBank().quoteBank || [];
+    }
+
+    function getCurrentNotesBank() {
+      return notesBanks[currentSubject] || [];
     }
 
     function normalize(text) {
@@ -2610,6 +2680,27 @@
       nextPageBtn.disabled = currentPageIndex === totalPages - 1;
     }
 
+    function renderNotesPage() {
+      const notes = getCurrentNotesBank();
+
+      if (!notes.length) {
+        notesList.innerHTML = `
+          <div class="footer-note">
+            No notes downloads have been added for <strong>${getCurrentBank().title}</strong> yet.
+          </div>
+        `;
+        return;
+      }
+
+      notesList.innerHTML = notes.map(note => `
+        <article class="notes-card">
+          <h3>${note.title}</h3>
+          <p>${note.description || 'Download this notes document.'}</p>
+          <a class="notes-download-link" href="${note.downloadUrl || note.viewUrl}" target="_blank" rel="noopener">Download notes</a>
+        </article>
+      `).join('');
+    }
+
     function updateEssayTypeOptions() {
       if (currentSubject === 'politics1' || currentSubject === 'politics2') {
         essayType.innerHTML = `
@@ -2707,6 +2798,7 @@
 
       quizTab.classList.toggle('hidden', tab !== 'quiz');
       quotesTab.classList.toggle('hidden', tab !== 'quotes');
+      notesTab.classList.toggle('hidden', tab !== 'notes');
       examTab.classList.toggle('hidden', tab !== 'exam');
       quizControls.classList.toggle('hidden', tab !== 'quiz');
 
@@ -2714,15 +2806,20 @@
         heroTitle.textContent = `${bank.title} Quote Book`;
         heroSubtitle.textContent = 'A flick-through booklet with full quotes, highlighted key phrases, and interpretations.';
         heroBadges.classList.add('hidden');
+      } else if (tab === 'notes') {
+        heroTitle.textContent = `${bank.title} Notes Download`;
+        heroSubtitle.textContent = 'Download your revision notes for this subject.';
+        heroBadges.classList.add('hidden');
+        renderNotesPage();
       } else if (tab === 'exam') {
         heroTitle.textContent = 'Exam Marker';
-        heroSubtitle.textContent = currentSubject === 'politics'
+        heroSubtitle.textContent = currentSubject === 'politics1' || currentSubject === 'politics2'
           ? 'Mark 30-mark Edexcel Politics evaluation essays.'
           : `Mark full essays in different modes for ${bank.title}.`;
         heroBadges.classList.add('hidden');
       } else {
         heroTitle.textContent = 'Daily 5 Questions';
-        heroSubtitle.textContent = `A full revision site for ${bank.title}${quotesAllowed ? ' with a daily question bank, quote book, and exam essay marker.' : ' with a daily question bank and exam essay marker.'}`;
+        heroSubtitle.textContent = `A full revision site for ${bank.title}${quotesAllowed ? ' with a daily question bank, quote book, notes downloads, and exam essay marker.' : ' with a daily question bank, notes downloads, and exam essay marker.'}`;
         heroBadges.classList.remove('hidden');
       }
     }
@@ -2748,6 +2845,8 @@
 
       if (!quotesTab.classList.contains('hidden')) {
         heroTitle.textContent = `${bank.title} Quote Book`;
+      } else if (!notesTab.classList.contains('hidden')) {
+        heroTitle.textContent = `${bank.title} Notes Download`;
       } else if (!examTab.classList.contains('hidden')) {
         heroTitle.textContent = 'Exam Marker';
       } else {
@@ -2755,7 +2854,9 @@
       }
 
       if (!quizTab.classList.contains('hidden')) {
-        heroSubtitle.textContent = `A full revision site for ${bank.title}${quotesAllowed ? ' with a daily question bank, quote book, and exam essay marker.' : ' with a daily question bank and exam essay marker.'}`;
+        heroSubtitle.textContent = `A full revision site for ${bank.title}${quotesAllowed ? ' with a daily question bank, quote book, notes downloads, and exam essay marker.' : ' with a daily question bank, notes downloads, and exam essay marker.'}`;
+      } else if (!notesTab.classList.contains('hidden')) {
+        heroSubtitle.textContent = 'Download your revision notes for this subject.';
       }
 
       poolBadge.textContent = `${getCurrentQuestionBank().length} questions in the pool`;
@@ -2771,6 +2872,7 @@
         quoteInterpretation.textContent = 'There is no quote book for this subject.';
       }
 
+      renderNotesPage();
       updateEssayTypeOptions();
 
       if (currentSubject === 'politics1' || currentSubject === 'politics2') {
