@@ -2625,9 +2625,33 @@
       return Array.from(document.querySelectorAll('.custom-topic-checkbox:checked')).map(input => input.value);
     }
 
+    function optionKey(value) {
+      return normalize(value).replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+
+    function getDistractorExamplesForAI(question, allQuestions, seed) {
+      const correctKey = optionKey(question.model || question.quote || question.question);
+      const candidates = allQuestions
+        .filter(q => q !== question && q.model && optionKey(q.model) !== correctKey)
+        .map(q => ({
+          topic: q.topic,
+          type: q.type,
+          answer: q.model
+        }));
+
+      const sameTopic = candidates.filter(q => q.topic === question.topic);
+      const sameType = candidates.filter(q => q.type === question.type && q.topic !== question.topic);
+      const rest = candidates.filter(q => q.topic !== question.topic && q.type !== question.type);
+      return [...sameTopic, ...sameType, ...rest]
+        .filter((item, index, arr) => arr.findIndex(x => optionKey(x.answer) === optionKey(item.answer)) === index)
+        .slice(0, 12);
+    }
+
     async function generateMultipleChoiceOptionsWithAI(questions) {
       const password = getSavedPassword();
       if (!password || !questions.length) return null;
+
+      const bank = getCurrentQuestionBank();
 
       try {
         const res = await fetch(`${WORKER_BASE_URL}/api/multiple-choice`, {
@@ -2636,12 +2660,15 @@
           body: JSON.stringify({
             password,
             subject: currentSubject,
-            questions: questions.map(q => ({
+            questions: questions.map((q, index) => ({
+              id: index,
               topic: q.topic,
               type: q.type,
               question: q.question,
               model: q.model,
-              keywords: q.keywords
+              quote: q.quote,
+              keywords: q.keywords,
+              distractorExamples: getDistractorExamplesForAI(q, bank, Date.now() + index)
             }))
           })
         });
@@ -2654,35 +2681,70 @@
         const data = await res.json().catch(() => null);
         if (!data || !data.ok || !Array.isArray(data.items)) return null;
 
-        return data.items.map((item, index) => {
-          const options = Array.isArray(item.options) ? item.options.filter(Boolean).slice(0, 4) : [];
+        const byId = new Map(data.items.map((item, index) => [Number.isInteger(item.id) ? item.id : index, item]));
+
+        return questions.map((question, index) => {
+          const item = byId.get(index);
+          if (!item) return null;
+
+          const rawOptions = Array.isArray(item.options) ? item.options : [];
+          const seen = new Set();
+          const options = rawOptions
+            .map(option => cleanOptionText(option))
+            .filter(option => {
+              const key = optionKey(option);
+              if (!key || seen.has(key)) return false;
+              seen.add(key);
+              return true;
+            })
+            .slice(0, 4);
+
           const correctIndex = Number.isInteger(item.correctIndex) ? item.correctIndex : 0;
-          if (options.length < 2) return null;
+          if (options.length !== 4 || correctIndex < 0 || correctIndex > 3) return null;
+
           return {
-            ...questions[index],
+            ...question,
             mcqOptions: options,
-            correctIndex: Math.max(0, Math.min(options.length - 1, correctIndex)),
-            mcqSource: 'Groq'
+            correctIndex,
+            mcqSource: 'Groq hard mode'
           };
-        }).filter(Boolean);
+        });
       } catch {
         return null;
       }
     }
 
+    function cleanOptionText(value) {
+      return String(value || '')
+        .replace(/^[A-D][).:-]\s*/i, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
     function buildLocalMultipleChoiceQuestion(question, allQuestions, seed) {
-      const distractors = allQuestions
-        .filter(q => q !== question && q.model && normalize(q.model) !== normalize(question.model))
-        .map(q => q.model)
+      const correct = cleanOptionText(question.model || question.quote || 'No model answer added yet.');
+      const correctKey = optionKey(correct);
+      const candidates = allQuestions
+        .filter(q => q !== question && q.model && optionKey(q.model) !== correctKey)
+        .map(q => ({
+          answer: cleanOptionText(q.model),
+          topicMatch: q.topic === question.topic ? 2 : 0,
+          typeMatch: q.type === question.type ? 1 : 0,
+          lengthGap: Math.abs(cleanOptionText(q.model).length - correct.length)
+        }))
+        .sort((a, b) => (b.topicMatch + b.typeMatch) - (a.topicMatch + a.typeMatch) || a.lengthGap - b.lengthGap)
+        .map(q => q.answer)
+        .filter((answer, index, arr) => arr.findIndex(x => optionKey(x) === optionKey(answer)) === index)
         .slice(0, 80);
-      const order = shuffledIndices(distractors.length, seed).slice(0, 3);
-      const options = [question.model || question.quote || 'No model answer added yet.', ...order.map(i => distractors[i])].filter(Boolean);
+
+      const order = shuffledIndices(candidates.length, seed).slice(0, 3);
+      const options = [correct, ...order.map(i => candidates[i])].filter(Boolean).slice(0, 4);
       const shuffled = shuffledIndices(options.length, seed + 99).map(i => options[i]);
       return {
         ...question,
         mcqOptions: shuffled,
-        correctIndex: shuffled.findIndex(option => option === options[0]),
-        mcqSource: 'Local fallback'
+        correctIndex: shuffled.findIndex(option => option === correct),
+        mcqSource: 'Local hard fallback'
       };
     }
 
@@ -2709,9 +2771,7 @@
 
       if (questionStyle === 'mcq') {
         const aiItems = await generateMultipleChoiceOptionsWithAI(picked);
-        customQuizSet = aiItems && aiItems.length === picked.length
-          ? aiItems
-          : picked.map((q, i) => buildLocalMultipleChoiceQuestion(q, getCurrentQuestionBank(), seed + i));
+        customQuizSet = picked.map((q, i) => aiItems?.[i] || buildLocalMultipleChoiceQuestion(q, getCurrentQuestionBank(), seed + i));
       } else {
         customQuizSet = picked;
       }
