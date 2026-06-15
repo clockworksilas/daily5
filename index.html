@@ -930,6 +930,40 @@
     .custom-quiz-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
     .custom-quiz-actions button { box-shadow: none; }
 
+
+    .ad-wrapper {
+      position: relative;
+      z-index: 2;
+      margin: 18px 0;
+    }
+
+    .ad-label {
+      margin: 0 0 8px;
+      text-align: center;
+      color: rgba(246,247,239,0.72);
+      font-size: .74rem;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .ad-panel {
+      border-radius: 20px;
+      padding: 12px;
+      background: rgba(255,253,246,0.94);
+      border: 2px solid rgba(111,82,45,0.12);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.14);
+      overflow: hidden;
+    }
+
+    .ad-panel .adsbygoogle {
+      min-height: 120px;
+    }
+
+    .ad-grid .adsbygoogle {
+      min-height: 240px;
+    }
+
     @media (max-width: 1080px) {
       body.sidebar-open { padding-left: 0; }
 
@@ -1036,6 +1070,22 @@
       </div>
     </section>
 
+    <div class="ad-wrapper ad-top">
+      <div class="ad-label">Advertisement</div>
+      <div class="ad-panel">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3746902388542801"
+             data-ad-slot="4105774261"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </div>
+
+
     <section id="quizTab">
       <section class="grid">
         <div class="panel"><div id="questions"></div></div>
@@ -1049,6 +1099,22 @@
           </div>
           <div id="results"></div>
           <div class="footer-note">AI checks subjective answers first and falls back to local marking if needed.</div>
+
+          <div class="ad-wrapper">
+            <div class="ad-label">Advertisement</div>
+            <div class="ad-panel">
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-client="ca-pub-3746902388542801"
+                   data-ad-slot="4105774261"
+                   data-ad-format="auto"
+                   data-full-width-responsive="true"></ins>
+              <script>
+                   (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+            </div>
+          </div>
+
         </aside>
       </section>
     </section>
@@ -1212,6 +1278,21 @@
         </aside>
       </section>
     </section>
+
+    <div class="ad-wrapper ad-grid">
+      <div class="ad-label">Advertisement</div>
+      <div class="ad-panel">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="autorelaxed"
+             data-ad-client="ca-pub-3746902388542801"
+             data-ad-slot="5408081795"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </div>
+
   </div>
 
   <div class="modal-backdrop hidden" id="warningModal">
