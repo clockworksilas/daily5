@@ -1028,7 +1028,7 @@
     </button>
 </aside>
 
-  <div class="modal-backdrop" id="loginModal">
+  <div class="modal-backdrop hidden" id="loginModal">
     <div class="modal">
       <h3>Enter password to access the website</h3>
       <p>This checks the password with your Cloudflare Worker before unlocking the site and enabling AI marking.</p>
@@ -1040,7 +1040,7 @@
     </div>
   </div>
 
-  <div class="wrap hidden" id="appWrap">
+  <div class="wrap" id="appWrap">
     <div class="top-tabs-shell">
       <div class="top-tabs">
         <div class="tab-btn active" data-tab="quiz">✍️ Daily 5 Questions</div>
@@ -2534,6 +2534,8 @@
       localStorage.removeItem(STORAGE_KEYS.sitePassword);
     }
 
+    clearSavedPassword();
+
     function getStreakKey() {
       return STORAGE_KEYS.streakPrefix + currentSubject;
     }
@@ -2613,8 +2615,6 @@
     }
 
     async function gradeWithAI(question, answer) {
-      const password = getSavedPassword();
-      if (!password) return null;
       const trimmed = (answer || '').trim();
       if (trimmed.length < MIN_MEANINGFUL_CHARS) return null;
 
@@ -2623,7 +2623,6 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            password,
             subject: currentSubject,
             question: question.question,
             topic: question.topic,
@@ -2635,7 +2634,6 @@
         });
 
         if (!res.ok) {
-          if (res.status === 401) clearSavedPassword();
           return null;
         }
 
@@ -2663,8 +2661,6 @@
     }
 
     async function rewriteAnswerWithAI(question, answer) {
-      const password = getSavedPassword();
-      if (!password) return null;
       const trimmed = (answer || '').trim();
       if (trimmed.length < MIN_MEANINGFUL_CHARS) return null;
 
@@ -2673,7 +2669,6 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            password,
             subject: currentSubject,
             question: question.question,
             topic: question.topic,
@@ -2685,7 +2680,6 @@
         });
 
         if (!res.ok) {
-          if (res.status === 401) clearSavedPassword();
           return null;
         }
 
@@ -2698,15 +2692,12 @@
     }
 
     async function markEssayWithAI(question, questionType, answer) {
-      const password = getSavedPassword();
-      if (!password) return null;
 
       try {
         const res = await fetch(`${WORKER_BASE_URL}/api/essay-mark`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            password,
             subject: currentSubject,
             question,
             questionType,
@@ -2715,7 +2706,6 @@
         });
 
         if (!res.ok) {
-          if (res.status === 401) clearSavedPassword();
           return null;
         }
 
@@ -2728,15 +2718,12 @@
     }
 
     async function improveEssayWithAI(question, questionType, answer, limitations, targets) {
-      const password = getSavedPassword();
-      if (!password) return null;
 
       try {
         const res = await fetch(`${WORKER_BASE_URL}/api/essay-improve`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            password,
             subject: currentSubject,
             question,
             questionType,
@@ -2747,7 +2734,6 @@
         });
 
         if (!res.ok) {
-          if (res.status === 401) clearSavedPassword();
           return null;
         }
 
@@ -2816,8 +2802,7 @@
     }
 
     async function generateMultipleChoiceOptionsWithAI(questions) {
-      const password = getSavedPassword();
-      if (!password || !questions.length) return null;
+      if (!questions.length) return null;
 
       const bank = getCurrentQuestionBank();
 
@@ -2826,7 +2811,6 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            password,
             subject: currentSubject,
             questions: questions.map((q, index) => ({
               id: index,
@@ -2842,7 +2826,6 @@
         });
 
         if (!res.ok) {
-          if (res.status === 401) clearSavedPassword();
           return null;
         }
 
@@ -3640,17 +3623,7 @@
     }
 
     async function boot() {
-      const saved = getSavedPassword();
-      if (saved) {
-        loginStatus.textContent = 'Checking saved access...';
-        const ok = await verifyPassword(saved).catch(() => false);
-        if (ok) {
-          unlockApp();
-          return;
-        }
-        clearSavedPassword();
-        loginStatus.textContent = 'Saved password expired or failed. Enter it again.';
-      }
+      unlockApp();
     }
 
     tabButtons.forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
