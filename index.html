@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daily 5 Questions Complete</title>
-		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3746902388542801"
-     crossorigin="anonymous"></script>
+  <title>Revision Hub | Theology, Philosophy, Ethics and UK Politics Study Practice</title>
+  <meta name="description" content="Original revision questions, topic explanations, quotation guidance and exam-practice tools for theology, philosophy, ethics and UK politics students.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#203a2d">
   <style>
     :root {
       --bg: #203a2d;
@@ -931,39 +932,62 @@
     .custom-quiz-actions button { box-shadow: none; }
 
 
-    .ad-wrapper {
-      position: relative;
-      z-index: 2;
-      margin: 18px 0;
+    .publisher-content {
+      display: grid;
+      gap: 18px;
+      margin: 0 0 22px;
     }
 
-    .ad-label {
-      margin: 0 0 8px;
+    .content-intro, .guide-card, .trust-card, .site-footer {
+      background: linear-gradient(180deg, #fffef9, #f4ecd7);
+      border: 2px solid rgba(111,82,45,0.14);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.13);
+      color: var(--text);
+    }
+
+    .content-intro { border-radius: 24px; padding: 24px; }
+    .content-intro h2, .guide-card h3, .trust-card h2, .trust-card h3 { color: #2f2418; }
+    .content-intro h2 { margin: 0 0 10px; font-size: 1.55rem; }
+    .content-intro p, .guide-card p, .trust-card p, .trust-card li, .site-footer { line-height: 1.75; }
+    .content-intro p { margin: 0 0 12px; }
+    .content-intro p:last-child { margin-bottom: 0; }
+
+    .guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .guide-card { border-radius: 20px; padding: 20px; }
+    .guide-card h3 { margin: 0 0 8px; font-size: 1.15rem; }
+    .guide-card p { margin: 0 0 10px; color: var(--muted); }
+    .guide-card ul { margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.7; }
+
+    .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 24px; }
+    .trust-card { border-radius: 22px; padding: 22px; scroll-margin-top: 20px; }
+    .trust-card h2 { margin: 0 0 10px; font-size: 1.35rem; }
+    .trust-card h3 { margin: 18px 0 8px; font-size: 1.05rem; }
+    .trust-card p { margin: 0 0 10px; color: var(--muted); }
+    .trust-card ul { margin: 8px 0 0; padding-left: 20px; color: var(--muted); }
+
+    .site-footer {
+      border-radius: 22px;
+      padding: 20px;
+      margin-top: 22px;
       text-align: center;
-      color: rgba(246,247,239,0.72);
-      font-size: .74rem;
-      font-weight: 900;
-      letter-spacing: .12em;
-      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
+    .footer-links a { color: #3f633b; font-weight: 800; text-underline-offset: 3px; }
+
+    .review-note {
+      border-left: 5px solid #4f8a5b;
+      background: #f1f8ec;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: #36543a;
+      line-height: 1.65;
+      margin-top: 14px;
     }
 
-    .ad-panel {
-      border-radius: 20px;
-      padding: 12px;
-      background: rgba(255,253,246,0.94);
-      border: 2px solid rgba(111,82,45,0.12);
-      box-shadow: 0 12px 26px rgba(0,0,0,0.14);
-      overflow: hidden;
+    @media (max-width: 900px) {
+      .guide-grid, .trust-grid { grid-template-columns: 1fr; }
     }
-
-    .ad-panel .adsbygoogle {
-      min-height: 120px;
-    }
-
-    .ad-grid .adsbygoogle {
-      min-height: 240px;
-    }
-
     @media (max-width: 1080px) {
       body.sidebar-open { padding-left: 0; }
 
@@ -1042,12 +1066,12 @@
 
   <div class="wrap" id="appWrap">
     <div class="top-tabs-shell">
-      <div class="top-tabs">
-        <div class="tab-btn active" data-tab="quiz">✍️ Daily 5 Questions</div>
-        <div class="tab-btn" data-tab="customQuiz">✅ Quiz</div>
-        <div class="tab-btn" data-tab="quotes">📖 Quote Book</div>
-        <div class="tab-btn" data-tab="notes">📥 Notes Download</div>
-        <div class="tab-btn" data-tab="exam">📝 Exam Marker</div>
+      <div class="top-tabs" role="tablist" aria-label="Study tools">
+        <button type="button" class="tab-btn active" data-tab="quiz" role="tab">✍️ Daily 5 Questions</button>
+        <button type="button" class="tab-btn" data-tab="customQuiz" role="tab">✅ Quiz</button>
+        <button type="button" class="tab-btn" data-tab="quotes" role="tab">📖 Quote Book</button>
+        <button type="button" class="tab-btn" data-tab="notes" role="tab">📥 Notes Download</button>
+        <button type="button" class="tab-btn" data-tab="exam" role="tab">📝 Exam Marker</button>
       </div>
     </div>
 
@@ -1055,7 +1079,7 @@
       <div class="hero-top">
         <div>
           <h1 id="heroTitle">Daily 5 Questions</h1>
-          <p class="sub" id="heroSubtitle">A full revision site with a large daily question bank, quote book, and an exam essay marker.</p>
+          <p class="sub" id="heroSubtitle">Original retrieval practice, quotation guidance and exam-answer feedback for focused revision.</p>
           <div class="badge-row" id="heroBadges">
             <div class="badge" id="subjectBadge">Subject: Theology</div>
             <div class="badge" id="dayBadge">Day set loading...</div>
@@ -1070,20 +1094,35 @@
       </div>
     </section>
 
-    <div class="ad-wrapper ad-top">
-      <div class="ad-label">Advertisement</div>
-      <div class="ad-panel">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-3746902388542801"
-             data-ad-slot="4105774261"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
-    </div>
+    <main class="publisher-content" aria-label="Revision Hub study content">
+      <article class="content-intro">
+        <h2>How Revision Hub helps you study</h2>
+        <p>Revision Hub is an original study-practice website for students revising theology, philosophy, ethics and UK politics. It combines short retrieval questions, topic-based quizzes, quotation explanations and exam-answer practice so that learners can move from remembering key knowledge to applying it in written responses.</p>
+        <p>The question banks and model answers are organised by subject and topic. They are designed as revision prompts rather than replacements for lessons, textbooks or official examination-board materials. Students should compare feedback with their course specification and teacher guidance.</p>
+        <div class="review-note"><strong>Editorial approach:</strong> study prompts are selected and organised for educational usefulness. AI-assisted marking is clearly labelled, may make mistakes and should always be checked against trusted course materials.</div>
+      </article>
+
+      <section class="guide-grid" aria-label="Study guidance">
+        <article class="guide-card">
+          <h3>1. Retrieve knowledge</h3>
+          <p>Use Daily 5 for a manageable practice routine. Try each answer from memory before checking feedback.</p>
+          <ul><li>Define key terms precisely.</li><li>Include a scholar, example or quotation where relevant.</li><li>Return to missed topics later.</li></ul>
+        </article>
+        <article class="guide-card">
+          <h3>2. Understand evidence</h3>
+          <p>The Quote Book gives context and interpretation, helping you use evidence rather than simply memorising isolated words.</p>
+          <ul><li>Explain what the quotation means.</li><li>Connect it to the topic.</li><li>State how it supports or challenges a view.</li></ul>
+        </article>
+        <article class="guide-card">
+          <h3>3. Practise evaluation</h3>
+          <p>The Exam Marker supports reflection on structure, knowledge and argument. Treat the score as guidance, not an official grade.</p>
+          <ul><li>Answer the exact command word.</li><li>Build balanced paragraphs.</li><li>Reach a justified conclusion.</li></ul>
+        </article>
+      </section>
+    </main>
+
+    <!-- Ad units intentionally disabled during policy review. Re-enable only on content-rich views after approval. -->
+    <!-- Ad placement removed for AdSense policy review. -->
 
 
     <section id="quizTab">
@@ -1098,22 +1137,9 @@
             <div class="progress"><div id="scoreBar"></div></div>
           </div>
           <div id="results"></div>
-          <div class="footer-note">AI checks subjective answers first and falls back to local marking if needed.</div>
+          <div class="footer-note">AI-assisted feedback may be used for subjective answers. Always verify important points with trusted course materials.</div>
 
-          <div class="ad-wrapper">
-            <div class="ad-label">Advertisement</div>
-            <div class="ad-panel">
-              <ins class="adsbygoogle"
-                   style="display:block"
-                   data-ad-client="ca-pub-3746902388542801"
-                   data-ad-slot="4105774261"
-                   data-ad-format="auto"
-                   data-full-width-responsive="true"></ins>
-              <script>
-                   (adsbygoogle = window.adsbygoogle || []).push({});
-              </script>
-            </div>
-          </div>
+          <!-- Ad placement removed for AdSense policy review. -->
 
         </aside>
       </section>
@@ -1279,26 +1305,50 @@
       </section>
     </section>
 
-    <div class="ad-wrapper ad-grid">
-      <div class="ad-label">Advertisement</div>
-      <div class="ad-panel">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="autorelaxed"
-             data-ad-client="ca-pub-3746902388542801"
-             data-ad-slot="5408081795"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
-    </div>
+    <!-- Ad placement removed for AdSense policy review. -->
+
+    <section class="trust-grid" aria-label="Site information and policies">
+      <article class="trust-card" id="about">
+        <h2>About Revision Hub</h2>
+        <p>Revision Hub has one clear purpose: to help students practise and review course knowledge. The site focuses on theology, philosophy, ethics and UK politics, with questions grouped into recognisable curriculum topics.</p>
+        <p>Content is written as concise study guidance. It is not affiliated with an examination board, school or university, and it does not promise particular grades.</p>
+      </article>
+
+      <article class="trust-card" id="editorial-policy">
+        <h2>Editorial and corrections policy</h2>
+        <p>Question prompts, model answers and explanations should be accurate, readable and useful for revision. Material is reviewed for clarity, duplication and relevance before publication.</p>
+        <p>Where AI is used for marking or rewriting, the interface identifies that use. Automated feedback is not treated as a factual authority. Learners are encouraged to verify disputed points with teachers, specifications and reputable academic sources.</p>
+      </article>
+
+      <article class="trust-card" id="privacy">
+        <h2>Privacy</h2>
+        <p>The site may store basic preferences and revision progress in the browser so features such as streaks can work. Text submitted for AI-assisted marking may be sent to the site’s processing service solely to return feedback.</p>
+        <p>Do not enter names, addresses, school details or other sensitive personal information into answer boxes. Advertising code is disabled in this review-ready version. Before enabling advertising, publish a complete consent and cookie setup appropriate to the countries where the site is offered.</p>
+      </article>
+
+      <article class="trust-card" id="study-safety">
+        <h2>Responsible use</h2>
+        <p>This website is a revision aid, not a substitute for teaching, official mark schemes or independent research. Quotations should be checked against the edition or translation required by the learner’s course.</p>
+        <p>Students should use the tools to identify gaps, then return to their notes and trusted sources. The site does not encourage clicking advertisements and keeps learning controls visually distinct from any future ad placements.</p>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      <nav class="footer-links" aria-label="Site information">
+        <a href="#about">About</a>
+        <a href="#editorial-policy">Editorial policy</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#study-safety">Responsible use</a>
+      </nav>
+      <div>Revision Hub — original educational practice content for independent revision.</div>
+    </footer>
 
   </div>
 
   <div class="modal-backdrop hidden" id="warningModal">
     <div class="modal">
       <h3>Before you mark your answers</h3>
-      <p>The AI can be wrong sometimes... so dont rely on ts. Dont be lazy, double check incorrect answers with Google/ur notes in ur book.</p>
+      <p>AI feedback can be inaccurate. Do not rely on it as your only source. Check disputed answers against your course specification, teacher guidance and trusted notes.</p>
       <div class="modal-actions">
         <button class="secondary" id="cancelMarkBtn">Cancel</button>
         <button class="primary" id="acceptMarkBtn">Accept</button>
